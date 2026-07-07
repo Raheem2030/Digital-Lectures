@@ -1,0 +1,2219 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة التحكم الصيدلانية | الكيمياء التحليلية الصيدلانية 1</title>
+  
+  <!-- CDNs المعتمدة بالتنسيق الفاخر للوحة التحكم -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@800;900&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- سكريبت تيليجرام لتطبيقات الويب المصغرة (TMA SDK) لربط اللوحة بنظام الاهتزاز وتثبيت الأبعاد -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+  <!-- تهيئة MathJax لعرض المعادلات الرياضية والكيميائية بدقة فائقة -->
+  <script>
+    window.MathJax = {
+      tex: { 
+        inlineMath: [['$', '$'], ['\\(', '\\)']], 
+        displayMath: [['$$', '$$'], ['\\[', '\\]']] 
+      },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <style>
+    body {
+      font-family: 'IBM Plex Sans Arabic', sans-serif;
+      background-color: #0b0f19 !important;
+      color: #F3F4F6;
+      overflow-x: hidden;
+    }
+    
+    h1, h2, h3, h4, h5, h6, .cairo-font {
+      font-family: 'Cairo', sans-serif;
+      font-weight: 900;
+    }
+
+    :root {
+      --dominant-violet: #8B5CF6;
+      --gold-neon: #F59E0B;
+      --charcoal-bg: #0b0f19;
+      --margin-gray: #94A3B8;
+    }
+
+    /* تأثيرات البطاقات الزجاجية الأنيقة */
+    .cyber-card {
+      background: rgba(17, 24, 39, 0.7);
+      border: 1px solid rgba(139, 92, 246, 0.15);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(12px);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .cyber-card:hover {
+      border-color: var(--dominant-violet);
+      box-shadow: 0 0 30px rgba(139, 92, 246, 0.2);
+    }
+
+    .gold-glow-border {
+      border: 1px solid rgba(245, 158, 11, 0.15);
+      box-shadow: 0 0 15px rgba(245, 158, 11, 0.02);
+    }
+    
+    .gold-glow-border:hover {
+      border-color: var(--gold-neon);
+      box-shadow: 0 0 25px rgba(245, 158, 11, 0.2);
+    }
+
+    /* حركة دوران الفلاش كارد ثلاثية الأبعاد */
+    .flashcard-scene {
+      perspective: 1000px;
+    }
+    
+    .flashcard-inner {
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-style: preserve-3d;
+    }
+    
+    .flashcard-flipped {
+      transform: rotateY(180deg);
+    }
+    
+    .flashcard-front, .flashcard-back {
+      backface-visibility: hidden;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    
+    .flashcard-back {
+      transform: rotateY(180deg);
+    }
+
+    /* تخصيص شريط التمرير */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0b0f19;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(139, 92, 246, 0.3);
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(139, 92, 246, 0.6);
+    }
+
+    /* تصميم أنبوب التفاعل والمحاكاة */
+    .burner-area {
+      position: relative;
+      height: 280px;
+      background-color: #05070c;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+      overflow: hidden;
+      border: 1px solid #1f2937;
+    }
+    .burner-base {
+      width: 60px;
+      height: 80px;
+      background: linear-gradient(to right, #4b5563, #9ca3af, #4b5563);
+      border-radius: 4px 4px 0 0;
+      position: relative;
+      z-index: 5;
+    }
+    .burner-nozzle {
+      width: 20px;
+      height: 30px;
+      background: linear-gradient(to right, #1f2937, #4b5563, #1f2937);
+      margin-bottom: -5px;
+      z-index: 5;
+    }
+    .flame {
+      width: 36px;
+      height: 100px;
+      background: radial-gradient(circle at bottom, #3b82f6 15%, rgba(59,130,246,0) 70%);
+      border-radius: 50% 50% 20% 20% / 60% 60% 40% 40%;
+      animation: flicker 0.15s infinite alternate;
+      transform-origin: bottom center;
+      margin-bottom: -15px;
+      filter: blur(1px);
+      transition: background 0.5s, box-shadow 0.5s;
+    }
+    @keyframes flicker {
+      0% { transform: scaleX(0.95) scaleY(0.98) rotate(-0.5deg); }
+      100% { transform: scaleX(1.05) scaleY(1.02) rotate(0.5deg); }
+    }
+    .tube-area {
+      height: 280px;
+      background-color: #05070c;
+      border-radius: 8px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 1px solid #1f2937;
+      position: relative;
+    }
+    .test-tube {
+      width: 36px;
+      height: 180px;
+      border: 3px solid #d1d5db;
+      border-top: none;
+      border-radius: 0 0 20px 20px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      overflow: hidden;
+      background-color: rgba(255,255,255,0.02);
+      box-shadow: inset 0 0 10px rgba(255,255,255,0.05);
+    }
+    .liquid {
+      width: 100%;
+      height: 50%;
+      background-color: rgba(255,255,255,0.15);
+      transition: all 0.8s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+    }
+    .precipitate {
+      width: 100%;
+      height: 0%;
+      background-color: transparent;
+      transition: all 1.2s ease;
+      border-radius: 0 0 16px 16px;
+    }
+    .dropper {
+      position: absolute;
+      top: 10px;
+      width: 12px;
+      height: 50px;
+      background-color: #e5e7eb;
+      border-radius: 2px;
+      display: none;
+      animation: drop-fluid 1.2s ease-in-out infinite;
+    }
+    @keyframes drop-fluid {
+      0% { transform: translateY(0); opacity: 0; }
+      30% { opacity: 1; }
+      70% { transform: translateY(50px); opacity: 1; }
+      100% { transform: translateY(90px); opacity: 0; }
+    }
+  </style>
+</head>
+<body class="bg-[#0b0f19] text-gray-100 min-h-screen flex flex-col justify-between">
+
+  <!-- الهيدر الرئيسي الفخم للوحة التحكم -->
+  <header class="border-b border-violet-900/30 bg-gray-950/60 p-4 md:p-6 sticky top-0 z-50 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+      <div class="flex items-center gap-4">
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-violet-600 to-amber-500 flex items-center justify-center shadow-lg shadow-violet-900/20">
+          <span class="text-xl">🧪</span>
+        </div>
+        <div>
+          <h1 id="app-lecture-title" class="text-xl md:text-2xl font-black bg-gradient-to-r from-white via-violet-200 to-amber-300 bg-clip-text text-transparent">
+            الكيمياء التحليلية الصيدلانية 1
+          </h1>
+          <p id="app-lecture-subtitle" class="text-xs text-zinc-400 mt-0.5">جامعة حماة | كلية الصيدلة - السنة الثانية</p>
+        </div>
+      </div>
+
+      <!-- نظام التبويب الرئيسي ثلاثي الأبعاد -->
+      <nav class="flex flex-wrap gap-2">
+        <button onclick="switchTab('study-tab')" id="btn-study-tab" class="px-4 py-2 rounded-lg text-xs md:text-sm font-bold transition-all bg-violet-600 text-white shadow-lg shadow-violet-900/30">
+          📚 المستودع والكويز
+        </button>
+        <button onclick="switchTab('simulator-tab')" id="btn-simulator-tab" class="px-4 py-2 rounded-lg text-xs md:text-sm font-bold transition-all bg-zinc-900 text-zinc-400 hover:text-white">
+          🔬 المختبر الافتراضي الذكي
+        </button>
+        <button onclick="switchTab('flashcard-tab')" id="btn-flashcard-tab" class="px-4 py-2 rounded-lg text-xs md:text-sm font-bold transition-all bg-zinc-900 text-zinc-400 hover:text-white">
+          🃏 بطاقات المراجعة
+        </button>
+        <button onclick="switchTab('bookmarks-tab')" id="btn-bookmarks-tab" class="px-4 py-2 rounded-lg text-xs md:text-sm font-bold transition-all bg-zinc-900 text-zinc-400 hover:text-white flex items-center gap-1.5">
+          ⭐ مراجعتا الخاصة <span id="bookmarks-badge" class="bg-amber-500 text-black text-[9px] px-1.5 py-0.5 rounded-full font-black hidden">0</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- جسم لوحة التحكم المركزي -->
+  <main class="max-w-7xl mx-auto w-full flex-grow p-4 md:p-6">
+
+    <!-- التبويبة الأولى: المستودع المعرفي والمخطط الهرمي -->
+    <div id="study-tab" class="tab-pane block animate-fadeIn">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        
+        <!-- الجانب الأيمن: المخطط الهرمي للعناوين -->
+        <div class="lg:col-span-4 bg-gray-950/60 p-4 rounded-2xl border border-zinc-800/80 space-y-4 max-h-[80vh] overflow-y-auto">
+          <h3 class="text-sm font-black text-amber-500 tracking-wider flex items-center gap-2 pb-2 border-b border-zinc-900">
+            <span>🗺️</span> المخطط الهرمي للمحاضرة
+          </h3>
+          <p class="text-[11px] text-zinc-400">اختر أحد فصول المحاضرة ومواضيعها لاستعراض الشروحات التفصيلية والكويز المخصص.</p>
+          
+          <!-- قائمة العناوين الهرمية الديناميكية المتباينة بمسافات البادئة -->
+          <div id="hierarchy-tree-container" class="space-y-1.5">
+            <!-- سيتم توليد شجرة العناوين برمجياً هنا -->
+          </div>
+        </div>
+
+        <!-- الجانب الأيسر: ساحة عرض المحتوى العلمي المتغير والاختبارات -->
+        <div class="lg:col-span-8 space-y-6">
+          
+          <!-- كارت التوجيه الأولي قبل تحديد أي عنوان -->
+          <div id="empty-content-state" class="cyber-card p-12 rounded-2xl text-center space-y-4">
+            <span class="text-4xl block animate-pulse">📖</span>
+            <h3 class="text-lg font-black text-white">ابدأ رحلتك المعرفية الآن</h3>
+            <p class="text-xs text-zinc-400 max-w-md mx-auto">الرجاء اختيار أحد المواضيع من المخطط الهرمي الأيمن لعرض بطاقات الشرح الأكاديمي، الكواشف التفاعلية، واختبار الإتقان التكراري المطور.</p>
+          </div>
+
+          <!-- بطاقة المحتوى الديناميكية النشطة -->
+          <div id="active-content-viewport" class="hidden space-y-6">
+            
+            <!-- عنوان الفقرة النشطة -->
+            <div class="flex justify-between items-center bg-gray-950/40 p-4 rounded-xl border border-zinc-900">
+              <h2 id="active-topic-title" class="text-base md:text-lg font-black text-white"></h2>
+              <span id="topic-status-badge" class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20">قيد الدراسة</span>
+            </div>
+
+            <!-- حاوية البطاقات الأكاديمية المتسلسلة (Card Chain Container) -->
+            <div id="academic-cards-chain" class="space-y-4">
+              <!-- سيتم توليد كروت الشرح المتنوعة هنا تلقائياً -->
+            </div>
+
+            <!-- حاوية نظام الكويز التكراري المطور الخاص بالفقرة المفتوحة -->
+            <div id="topic-quiz-card" class="cyber-card p-6 rounded-2xl border-2 border-violet-900/30 relative overflow-hidden">
+              <div class="absolute top-0 right-0 w-32 h-32 bg-violet-600/5 rounded-full blur-2xl"></div>
+              
+              <div class="flex justify-between items-center border-b border-zinc-900 pb-3 mb-4">
+                <div>
+                  <h3 class="text-sm font-black text-violet-400 flex items-center gap-2">
+                    <span>🎯</span> كويز التقييم والترسيخ التكراري للفقرة
+                  </h3>
+                  <p class="text-[11px] text-zinc-400">لن يتم اعتبار الفقرة مكتملة بنجاح حتى تجيب على كافة الأسئلة بشكل صحيح 100%.</p>
+                </div>
+                <div class="text-left">
+                  <span class="text-[10px] text-zinc-400 block font-bold">الأسئلة المتبقية:</span>
+                  <span id="quiz-queue-count" class="text-xs font-bold text-amber-500 font-mono">0 / 0</span>
+                </div>
+              </div>
+
+              <!-- شريط التقدم الفردي للفقرة -->
+              <div class="w-full bg-zinc-950 h-1.5 rounded-full mb-4 overflow-hidden">
+                <div id="quiz-progress-fill" class="bg-violet-600 h-full w-0 transition-all duration-300"></div>
+              </div>
+
+              <!-- منطقة السؤال النشط والخيارات -->
+              <div id="quiz-active-area" class="space-y-4">
+                <div class="p-4 bg-black/40 rounded-xl border border-zinc-900 relative">
+                  <!-- زر حفظ الكويز الحالي -->
+                  <div class="absolute left-3 top-3">
+                    <button id="quiz-bookmark-btn" onclick="toggleActiveQuizBookmark()" class="focus:outline-none transition-all p-1.5 rounded-lg bg-zinc-950/80 hover:bg-zinc-800 border border-zinc-800 text-zinc-400" title="حفظ هذا السؤال في مراجعتي">
+                      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="quiz-bookmark-icon">
+                        <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                      </svg>
+                    </button>
+                  </div>
+                  <p id="quiz-question-text" class="text-xs md:text-sm font-bold text-gray-100 leading-relaxed pr-8"></p>
+                </div>
+                <div id="quiz-options-grid" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <!-- أزرار الخيارات التفاعلية -->
+                </div>
+                <!-- لوحة التنبيه الذكية للتفسير العلمي بعد الإجابة -->
+                <div id="quiz-feedback-panel" class="hidden p-4 rounded-xl text-xs transition-all duration-300">
+                  <!-- يضخ التفسير العلمي هنا -->
+                </div>
+              </div>
+
+              <!-- لوحة النجاح واكتمال دراسة الفقرة -->
+              <div id="quiz-success-panel" class="hidden flex flex-col items-center justify-center py-6 text-center space-y-3">
+                <div class="w-12 h-12 rounded-full bg-emerald-500/10 border border-emerald-500/40 flex items-center justify-center text-emerald-400 text-xl animate-bounce">🏆</div>
+                <h4 class="text-sm font-black text-white">تم إتقان دراسة الفقرة وحل كامل كويزاتها بنجاح!</h4>
+                <p class="text-[11px] text-zinc-400">لقد تم حفظ حالة اكتمال هذه الفقرة محلياً وعرض شارة الإنجاز بجانب عنوانها.</p>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- التبويبة الثانية: المختبر الافتراضي الذكي -->
+    <div id="simulator-tab" class="tab-pane hidden animate-fadeIn">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        
+        <!-- الجانب الأيمن: لوحة التحكم بالمختبر والخيارات المخبرية -->
+        <div class="lg:col-span-5 bg-gray-950/60 p-5 rounded-2xl border border-zinc-800/80 space-y-5">
+          <div class="border-b border-zinc-900 pb-3">
+            <h3 class="text-base font-black text-amber-500">🧪 مختبر الكواشف الصيدلانية السريرية والسموم</h3>
+            <p class="text-xs text-zinc-400 mt-1">تفاعل مدمج لمحاكاة اختبارات الكشف اللهبي، المعادن السامة، والمستحضرات الدوائية والسمية من واقع المحاضرة الأولى.</p>
+          </div>
+
+          <!-- اختيار نوع الاختبار -->
+          <div class="space-y-2">
+            <label class="block text-xs font-bold text-gray-300">1. اختر نوع الفحص والاختبار:</label>
+            <select id="test-type-select" onchange="toggleSimSections()" class="w-full p-2.5 rounded-lg bg-zinc-900 border border-violet-500/30 text-xs md:text-sm focus:border-violet-500 outline-none">
+              <option value="flame">🔥 كشف اللهب للأيونات المعدنية</option>
+              <option value="wet">🧪 كشف الرواسب والكواشف الكيميائية للسموم</option>
+            </select>
+          </div>
+
+          <!-- منطقة تحكم اختبار اللهب -->
+          <div id="sim-flame-controls" class="space-y-4">
+            <div class="space-y-2">
+              <label class="block text-xs font-bold text-gray-300">اختر الأيون المعدني للفحص:</label>
+              <select id="metal-select" onchange="runFlameTest()" class="w-full p-2.5 rounded-lg bg-zinc-900 border border-zinc-800 text-xs md:text-sm focus:border-violet-500 outline-none">
+                <option value="">-- اختر المعدن --</option>
+                <option value="sodium">صوديوم (Na) - أصفر فاقع</option>
+                <option value="potassium">بوتاسيوم (K) - بنفسجي باهت</option>
+                <option value="copper">نحاس (Cu) - أخضر مزرق باهت</option>
+                <option value="boron">بورون (B) - أخضر مصفر ساطع</option>
+                <option value="calcium">كالسيوم (Ca) - أصفر إلى برتقالي محمر</option>
+                <option value="lithium">ليثيوم (Li) - أحمر قرمزي</option>
+                <option value="magnesium">مغنيزيوم (Mg) - أبيض ساطع</option>
+              </select>
+            </div>
+            <div class="p-3 bg-zinc-900/50 rounded-xl border border-zinc-800/40 text-[11px] leading-relaxed text-zinc-300" id="flame-explanation">
+              اختر أيوناً معدنياً لتقريب سلك البلاتين من اللهب الافتراضي لملاحظة الضوء المنبعث وتفسيره الطيفي الحركي.
+            </div>
+          </div>
+
+          <!-- منطقة تحكم كواشف الرواسب -->
+          <div id="sim-wet-controls" class="space-y-4 hidden">
+            <div class="space-y-2">
+              <label class="block text-xs font-bold text-gray-300">اختر العينة المجهولة للدراسة:</label>
+              <select id="sample-select" onchange="updateReagents()" class="w-full p-2.5 rounded-lg bg-zinc-900 border border-zinc-800 text-xs md:text-sm focus:border-violet-500 outline-none">
+                <option value="">-- اختر المادة المراد تحليلها --</option>
+                <option value="halide-cl">عينة هالوجينات (كلوريد Cl-)</option>
+                <option value="halide-i">عينة هالوجينات (يوديد I-)</option>
+                <option value="plant-flav">خلاصة نباتية (فلافونيدات)</option>
+                <option value="plant-glyc">خلاصة نباتية (غليكوزيدات)</option>
+                <option value="toxic-as">خلاصة سموم معدنية (زرنيخ As)</option>
+                <option value="toxic-hg">خلاصة سموم معدنية (زئبق Hg)</option>
+                <option value="toxic-pb">خلاصة سموم معدنية (رصاص Pb)</option>
+                <option value="toxic-ba">خلاصة سموم معدنية (باريوم Ba)</option>
+                <option value="drug-sal">مستحضر دوائي (حمض الصفصاف)</option>
+                <option value="drug-cod">مستحضر دوائي (كودئين)</option>
+              </select>
+            </div>
+            
+            <div class="space-y-2">
+              <label class="block text-xs font-bold text-gray-300">اختر الكاشف الكيميائي المضاف:</label>
+              <select id="reagent-select" class="w-full p-2.5 rounded-lg bg-zinc-900 border border-zinc-800 text-xs md:text-sm focus:border-violet-500 outline-none">
+                <option value="">-- اختر الكاشف المناسب من بروتوكول المحاضرة --</option>
+              </select>
+            </div>
+
+            <button onclick="triggerReaction()" class="w-full py-2.5 bg-violet-600 hover:bg-violet-700 font-bold rounded-lg text-xs md:text-sm text-white transition-all shadow-lg shadow-violet-900/30">
+              أضف الكاشف وابدأ التفاعل الحركي 🧪
+            </button>
+
+            <div class="p-3 bg-zinc-900/50 rounded-xl border border-zinc-800/40 text-[11px] leading-relaxed text-zinc-300 animate-pulse" id="reaction-explanation">
+              حدد عينة الدراسة أولاً لفرز الكواشف المطابقة لبروتوكول المحاضرة، ثم اضغط على تفعيل الترسيب واللون.
+            </div>
+          </div>
+
+        </div>
+
+        <!-- الجانب الأيسر: منطقة العرض التفاعلية والبصرية للأنابيب واللهب -->
+        <div class="lg:col-span-7 bg-gray-950/40 p-6 rounded-2xl border border-zinc-800/80 flex flex-col items-center justify-center min-h-[350px]">
+          
+          <!-- فضاء اختبار اللهب -->
+          <div id="sim-flame-viewport" class="w-full max-w-sm">
+            <h4 class="text-xs font-black text-zinc-400 text-center mb-3">موقد بنسن وطيف انبعاث الشوارد</h4>
+            <div class="burner-area">
+              <div class="flame" id="gas-flame"></div>
+              <div class="burner-nozzle"></div>
+              <div class="burner-base"></div>
+            </div>
+          </div>
+
+          <!-- فضاء كواشف الرواسب والأنابيب -->
+          <div id="sim-wet-viewport" class="w-full max-w-sm hidden">
+            <h4 class="text-xs font-black text-zinc-400 text-center mb-3">أنبوب التفاعل المخبري والترسيب الحركي</h4>
+            <div class="tube-area">
+              <div class="dropper" id="dropper-fluid"></div>
+              <div class="test-tube">
+                <div class="liquid" id="tube-liquid">
+                  <div class="precipitate" id="tube-precipitate"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- التبويبة الثالثة: الفلاش كاردز (Flashcards Engine) -->
+    <div id="flashcard-tab" class="tab-pane hidden animate-fadeIn">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        
+        <!-- الجانب الأيمن: شجرة تصفية الفلاش كاردز بحسب المواضيع -->
+        <div class="lg:col-span-4 bg-gray-950/60 p-4 rounded-2xl border border-zinc-800/80 space-y-3">
+          <h3 class="text-sm font-black text-amber-500 tracking-wider flex items-center gap-2 pb-2 border-b border-zinc-900">
+            <span>🗂️</span> تصفية الفلاش كاردز الهرمي
+          </h3>
+          <div class="space-y-1" id="flashcard-filter-tree">
+            <!-- يولد برمجياً فلتر العناوين المنسوب بالإزاحة الشجرية -->
+          </div>
+        </div>
+
+        <!-- الجانب الأيسر: منطقة عرض البطاقات التفاعلية ثنائية الوجه -->
+        <div class="lg:col-span-8 flex flex-col items-center space-y-6">
+          <div class="w-full max-w-xl text-center">
+            <span class="text-[10px] text-zinc-400 uppercase tracking-widest block mb-1">محرك مراجعة الذاكرة النشطة</span>
+            <h3 class="text-sm font-black text-white">البطاقات التعليمية الشاملة</h3>
+            <p class="text-xs text-zinc-500 mt-1">اضغط على البطاقة لقلبها ومعاينة الإجابة العلمية الدقيقة في الخلف.</p>
+          </div>
+
+          <!-- مشهد البطاقة ثلاثي الأبعاد -->
+          <div class="w-full max-w-xl h-72 flashcard-scene cursor-pointer">
+            <div id="flashcard-card-inner" class="flashcard-inner w-full h-full relative">
+              
+              <!-- الوجه الأمامي (السؤال) -->
+              <div onclick="flipFlashcard()" class="flashcard-front w-full h-full rounded-2xl bg-gray-950 border-2 border-violet-900/40 p-6 md:p-8 flex flex-col justify-between shadow-2xl relative">
+                <!-- زر حفظ البطاقة في الفلاش كارد -->
+                <div class="absolute left-4 top-4" onclick="event.stopPropagation();">
+                  <button id="fc-bookmark-btn" onclick="toggleActiveFlashcardBookmark()" class="focus:outline-none transition-all p-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-400" title="حفظ البطاقة في مراجعتي">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="fc-bookmark-icon">
+                      <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                  </button>
+                </div>
+
+                <span class="text-[10px] text-amber-500 font-black tracking-widest uppercase">السؤال الكيميائي الكشفي</span>
+                <div class="flex items-center justify-center flex-grow text-center">
+                  <p id="fc-front-text" class="text-xs md:text-sm font-bold text-white leading-relaxed pr-8 pl-8"></p>
+                </div>
+                <div class="text-[10px] text-zinc-500 flex justify-between items-center border-t border-zinc-900 pt-3">
+                  <span class="truncate max-w-[60%]">الموضوع: <span id="fc-topic-name" class="text-violet-400 font-bold"></span></span>
+                  <span class="animate-pulse">اضغط لقلب البطاقة 🔄</span>
+                </div>
+              </div>
+
+              <!-- الوجه الخلفي (الإجابة) -->
+              <div onclick="flipFlashcard()" class="flashcard-back w-full h-full rounded-2xl bg-gray-900 border-2 border-emerald-500/40 p-6 md:p-8 flex flex-col justify-between shadow-2xl relative">
+                <span class="text-[10px] text-emerald-400 font-black tracking-widest uppercase">الإجابة العلمية المعتمدة</span>
+                <div class="flex items-center justify-center flex-grow text-center">
+                  <p id="fc-back-text" class="text-xs md:text-sm font-bold text-gray-200 leading-relaxed"></p>
+                </div>
+                <div class="text-[10px] text-zinc-500 flex justify-between items-center border-t border-zinc-900 pt-3">
+                  <span>رقم البطاقة: <span id="fc-index-num" class="text-amber-500"></span></span>
+                  <span>معاينة علمية دقيقة ✓</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- أزرار التحكم في التصفح -->
+          <div class="flex items-center gap-4 w-full max-w-xl justify-between p-4 bg-gray-950/40 rounded-xl border border-zinc-900">
+            <button onclick="prevFlashcard()" class="px-4 py-2 bg-zinc-900 hover:bg-zinc-800 text-xs font-bold rounded-lg transition-all border border-zinc-800 text-zinc-300">
+              ⏮️ البطاقة السابقة
+            </button>
+            <span id="fc-progress-txt" class="text-xs font-mono font-bold text-zinc-400">0 / 0</span>
+            <button onclick="nextFlashcard()" class="px-4 py-2 bg-zinc-900 hover:bg-zinc-800 text-xs font-bold rounded-lg transition-all border border-zinc-800 text-zinc-300">
+              البطاقة التالية ⏭️
+            </button>
+          </div>
+
+          <!-- شاشة الحالة الفارغة للفلاش كاردز -->
+          <div id="fc-empty-state" class="hidden text-center py-12 space-y-3">
+            <span class="text-3xl">📭</span>
+            <h4 class="text-sm font-bold text-zinc-400">لا توجد بطاقات مخصصة لهذا العنوان حالياً</h4>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- التبويبة الرابعة: مراجعتي الخاصة (My Special Review) -->
+    <div id="bookmarks-tab" class="tab-pane hidden animate-fadeIn">
+      <div class="space-y-6 max-w-5xl mx-auto">
+        <div class="bg-gray-950/40 p-4 rounded-xl border border-zinc-900 flex justify-between items-center">
+          <div>
+            <h2 class="text-base md:text-lg font-black text-amber-400 flex items-center gap-2">
+              <span>⭐</span> مراجعتي الخاصة (الإشارات المرجعية المحفوظة)
+            </h2>
+            <p class="text-xs text-zinc-400 mt-1 font-medium">تحتوي هذه اللوحة على جميع كروت الشرح، الكويزات، والبطاقات الفلاشية المحفوظة للمراجعة قبل الامتحان العملي والنظري.</p>
+          </div>
+          <button onclick="clearAllBookmarks()" class="px-3 py-1.5 rounded-lg border border-red-900 bg-red-950/20 hover:bg-red-950/50 text-red-400 text-xs font-bold transition-all">
+            🗑️ مسح الكل
+          </button>
+        </div>
+
+        <!-- شاشة الحالة الفارغة لتبويب المراجعة -->
+        <div id="bookmarks-empty-state" class="cyber-card p-12 rounded-2xl text-center space-y-4">
+          <span class="text-4xl block">⭐</span>
+          <h3 class="text-base font-bold text-white">لا توجد عناصر محفوظة حالياً</h3>
+          <p class="text-xs text-zinc-500 max-w-md mx-auto">اضغط على زر الحفظ (أيقونة النجمة/الوسم) أثناء تصفحك للشروحات والكويزات والفلاش كاردز لإضافتها إلى مراجعتك الشخصية.</p>
+        </div>
+
+        <!-- حاوية عرض العناصر المحفوظة المصنفة -->
+        <div id="bookmarks-container" class="space-y-8 hidden">
+          
+          <!-- القسم الأول: بطاقات الشرح المعرفية -->
+          <div id="bookmarked-cards-section" class="space-y-4 hidden">
+            <h3 class="text-xs font-black text-violet-400 border-r-2 border-violet-500 pr-2 tracking-wider">📚 كروت الشرح والمفاهيم المحفوظة</h3>
+            <div id="bookmarked-cards-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+          </div>
+
+          <!-- القسم الثاني: الأسئلة والكويزات -->
+          <div id="bookmarked-quizzes-section" class="space-y-4 hidden">
+            <h3 class="text-xs font-black text-amber-500 border-r-2 border-amber-500 pr-2 tracking-wider">🎯 أسئلة الكويز المحفوظة للمراجعة</h3>
+            <div id="bookmarked-quizzes-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+          </div>
+
+          <!-- القسم الثالث: فلاش كاردز -->
+          <div id="bookmarked-flashcards-section" class="space-y-4 hidden">
+            <h3 class="text-xs font-black text-cyan-400 border-r-2 border-cyan-400 pr-2 tracking-wider">🃏 بطاقات الذاكرة الفلاشية المحفوظة</h3>
+            <div id="bookmarked-flashcards-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="bg-gray-950/60 border-t border-violet-950/30 py-4 text-center mt-8">
+    <p class="text-[9px] md:text-[10px] text-zinc-500 tracking-wider font-semibold">لوحة تحكم معمارية معتمدة وفق المبادئ الحاكمة الفوقية وقدسية البيانات المزدوجة - جامعة حماة - كلية الصيدلة</p>
+  </footer>
+
+  <!-- محرك الجافاسكربت المعياري الشامل (The Master JavaScript Engine) -->
+  <script>
+    
+    /*************************************************************************
+     * 1. كائن البيانات الرئيسي (LECTURE_DATA):
+     *************************************************************************/
+    const LECTURE_DATA = {
+      title: "الفصل الأول: الكيمياء التحليلية",
+      subtitle: "مقرر الكيمياء التحليلية الصيدلانية 1 | د. تيسير العزام | جامعة حماة",
+      topics: [
+        {
+          id: "topic_intro_qualitative",
+          title: "1-1 الكيمياء التحليلية والتحليل النوعي الأساسي",
+          level: 1,
+          isCompleted: false,
+          cards: [
+            {
+              type: "standard",
+              title: "مدخل إلى الكيمياء التحليلية",
+              content: `الكيمياء التحليلية (Analytical Chemistry) علم يدرس نوعية المركبات المجهولة لتحديد هوية العينة (التحليل النوعي أو الكيفي) ويدرس من جهة أخرى كمية أو تركيز المواد المجهولة (التحليل الكمي). تلعب دوراً أساسياً في الصيدلة، الطب، التحاليل المخبرية السريرية، المراقبة الدوائية ومطابقة دساتير الأدوية.
+              <p class="text-xs text-[#94A3B8] font-light mt-1">💡 تفكير المبادئ الأولى: لتحديد ما بداخل زجاجة دواء مجهولة، نقوم أولاً بالكشف الكيفي لمعرفة هويتها (Qualitative) ثم نقيس بدقة تركيز المادة الفعالة فيها للتأكد من جرعتها الآمنة (Quantitative).</p>`
+            },
+            {
+              type: "list",
+              title: "التحليل النوعي والكشف بالخصائص الفيزيائية",
+              content: [
+                "<strong>التحليل النوعي (Qualitative Analysis):</strong> يسمح بالكشف عن مكونات العينة ومحتواها من العناصر والمركبات المختلفة وتحديد هوية المادة بالاعتماد على التغيرات الحسية (اللون والراسب).",
+                "<strong>الخصائص الفيزيائية:</strong> تفيد في الكشف وتحديد نقاوة وهوية المواد مثل الكثافة $d$، ودرجات الغليان والانصهار، والناقلية الكهربائية للمحاليل.",
+                "<strong>التعرف البصري باللون:</strong> نستفيد من الألوان الطبيعية للمركبات للتحري الأولي عنها، فمثلاً أملاح النحاس جميعها تتميز بلونها <strong>الأزرق البراق</strong> (مثل كبريتات النحاس)، وفيتامين $B_{12}$ يظهر بلون أحمر داكن، بينما فيتامين $B_2$ يظهر بلون برتقالي مخضر مميز."
+              ]
+            },
+            {
+              type: "standard",
+              title: "ميكانيكية وتفسير اختبار اللهب (Flame Test)",
+              content: `هو طريقة تحليلية نوعية تستخدم للكشف عن وجود أيونات معدنية معينة بناءً على لون اللهب الناتج عند تسخين المادة.
+              <br><br>
+              <strong>التفسير الفيزيائي للظاهرة (تقنية فاينمان):</strong>
+              عند تسخين المادة في لهب بنسن، تكتسب إلكترونات المدار الخارجي طاقة حرارية هائلة تجعلها غير مستقرة، فتقفز فوراً إلى سويات طاقية أعلى ($\Delta E$). وعندما تعود هذه الإلكترونات المثارة مجدداً إلى حالة الاستقرار والمدار الأدنى، فإنها تُطلق هذه الطاقة المكتسبة على شكل وميض ضوئي (طيف انبعاث) ذو طول موجي ولون مميز للغاية يعتبر بمثابة البصمة الطيفية الفريدة لكل معدن.
+              <p class="text-xs text-[#94A3B8] font-light mt-1">💡 تشبيه حركي: تشبيه الإلكترون بلاعب قفز يكتسب طاقة من القفاز ليرتفع عالياً، وبمجرد هبوطه يعود لطبيعة الأرض مصدراً وميضاً لونياً فريداً.</p>`
+            },
+            {
+              type: "comparison",
+              title: "مصفوفة ألوان طيف اللهب للشوارد المعدنية",
+              content: {
+                headers: ["الأيون المعدني", "رمز الشاردة", "اللون الطيفي المنبعث على اللهب"],
+                rows: [
+                  ["الصوديوم", "$Na^+$", "أصفر فاقع (ساطع جداً)"],
+                  ["البوتاسيوم", "$K^+$", "بنفسجي باهت (خزامي)"],
+                  ["النحاس", "$Cu^{2+}$", "أخضر مزرق باهت"],
+                  ["البورون", "$B^{3+}$", "أخضر مصفر ساطع"],
+                  ["الكالسيوم", "$Ca^{2+}$", "أصفر إلى برتقالي محمر"],
+                  ["الليثيوم", "$Li^+$", "أحمر قرمزي"],
+                  ["المغنيزيوم", "$Mg^{2+}$", "أبيض ساطع (وميض باهر)"]
+                ]
+              }
+            },
+            {
+              type: "standard",
+              title: "تفاعلات الترسيب للهالوجينات (Precipitation)",
+              content: `يتم التعرف على الشوارد من خلال تشكيلها لرواسب ذات خصائص مميزة (اللون، السلوك الانحلالي في الأوساط الحمضية أو الأساسية). 
+              <br>مثال: الكشف النوعي عن الهالوجينات باستخدام كاشف نترات الفضة $AgNO_3$:
+              <ul class="space-y-1 mt-2 text-xs">
+                <li>• <strong>شاردة الكلوريد ($Cl^-$):</strong> تعطي مع $AgNO_3$ راسباً أبيض اللون من كلوريد الفضة $AgCl$.</li>
+                <li>• <strong>شاردة البروميد ($Br^-$):</strong> تعطي راسباً أبيض مصفر من بروميد الفضة $AgBr$.</li>
+                <li>• <strong>شاردة اليوديد ($I^-$):</strong> تعطي راسباً أصفر واضحاً من يوديد الفضة $AgI$.</li>
+              </ul>`
+            },
+            {
+              type: "list",
+              title: "📌 تجميعات الروابط الذهنية السريعة (النوعي والنهب)",
+              content: [
+                "<strong>اللهب الذهبي:</strong> الصوديوم $Na$ دائماً أصفر فاقع، بينما البوتاسيوم $K$ بنفسجي باهت.",
+                "<strong>ثلاثية الهالوجينات مع الفضة:</strong> كلوريد $AgCl$ (أبيض) $\\rightarrow$ بروميد $AgBr$ (أبيض مصفر) $\\rightarrow$ يوديد $AgI$ (أصفر).",
+                "<strong>الألوان والخصائص الفيزيائية:</strong> ناقلية المحاليل وكثافة المادة النقية هي ثوابت فيزيائية حاسمة للكشف السريع."
+              ]
+            }
+          ],
+          quiz: [
+            {
+              q: "ما هو العلم الكيميائي الذي يدرس تحديد هوية العينة المجهولة؟",
+              options: ["التحليل الكمي", "التحليل النوعي (الكيفي)", "التحليل الصيدلاني الوزني", "التحليل الفيزيائي الجاف"],
+              correct: 1,
+              exp: "التحليل النوعي أو الكيفي يهدف لتحديد هوية ومكونات المادة المجهولة، بينما الكمي يحدد تركيزها ومقدارها."
+            },
+            {
+              q: "أي من الفيتامينات التالية يتميز بلونه الأحمر الداكن ككشف فيزيائي حسي؟",
+              options: ["فيتامين B2", "فيتامين C", "فيتامين B12", "فيتامين D"],
+              correct: 2,
+              exp: "فيتامين B12 يتميز بلون أحمر داكن مميز، بينما فيتامين B2 لونه برتقالي مخضر."
+            },
+            {
+              q: "ما هي ميكانيكية صدور الضوء الملون الفريد في اختبار اللهب للأيونات المعدنية؟",
+              options: ["تفكك المركبات بالحرارة العالية", "إثارة الإلكترونات للمدارات العليا وعودتها للاستقرار باعثة طاقة طيفية", "احتراق الشوائب العضوية على سلك البلاتين", "تغير درجة غليان المعدن عند اللهب المباشر"],
+              correct: 1,
+              exp: "عند عودة الإلكترونات المثارة من سويات الطاقة المرتفعة إلى حالة الاستقرار، فإنها تطلق الطاقة المكتسبة كضوء ملون فريد لكل معدن."
+            },
+            {
+              q: "ما هو لون اللهب المنبعث المميز لأيون الصوديوم (Na+)؟",
+              options: ["أحمر قرمزي", "بنفسجي باهت", "أصفر فاقع", "أخضر مصفر ساطع"],
+              correct: 2,
+              exp: "أيون الصوديوم يعطي لهباً بلون أصفر فاقع ساطع ومميز للغاية طيفياً."
+            },
+            {
+              q: "عند فحص أيون البوتاسيوم (K+) باختبار اللهب، ما هو اللون المتوقع معاينته؟",
+              options: ["بنفسجي باهت", "أحمر قرمزي", "أخضر مزرق باهت", "أبيض ساطع"],
+              correct: 0,
+              exp: "أيون البوتاسيوم (K+) يعطي طيفاً لونياً بنفسجياً باهتاً (خزامياً) عند تقريبه من اللهب."
+            },
+            {
+              q: "أي من المعادن التالية يعطي وميضاً أبيض باهراً وساطعاً عند تقريبه من اللهب؟",
+              options: ["النحاس", "الكالسيوم", "المغنيزيوم", "الليثيوم"],
+              correct: 2,
+              exp: "المغنيزيوم (Mg) يتميز بظهور وميض لهبي بلون أبيض ساطع وباهر."
+            },
+            {
+              q: "ما هو الكاشف المستخدم بشكل أساسي للكشف عن شاردة الكلوريد (Cl-) وتشكيل راسب أبيض؟",
+              options: ["كبريتيد الصوديوم", "نترات الفضة (AgNO3)", "كرومات البوتاسيوم", "حمض كلور الماء"],
+              correct: 1,
+              exp: "يتفاعل الكلوريد مع نترات الفضة ليعطي راسب كلوريد الفضة AgCl الأبيض الشاحب."
+            },
+            {
+              q: "عند معاملة شاردة اليوديد (I-) بنترات الفضة، ما هو لون الراسب المتشكل؟",
+              options: ["راسب أبيض", "راسب أبيض مصفر", "راسب أصفر واضح", "راسب أسود داكن"],
+              correct: 2,
+              exp: "تتفاعل شاردة اليوديد مع نترات الفضة لتعطي راسب يوديد الفضة (AgI) بلون أصفر واضح."
+            },
+            {
+              q: "ما هو لون الراسب المتشكل عند إضافة نترات الفضة لبروميد الفضة (AgBr)؟",
+              options: ["راسب أبيض مصفر", "راسب أبيض شاحب", "راسب أصفر فاقع", "راسب أحمر قرمزي"],
+              correct: 0,
+              exp: "بروميد الفضة AgBr يترسب بلون أبيض مصفر مميز."
+            },
+            {
+              q: "الخصائص الفيزيائية كدرجة الغليان والانصهار والكثافة تفيد بشكل رئيسي في تحديد ماذا؟",
+              options: ["نسبة الأثر للمكونات", "هوية ونقاوة المواد النقية", "سعة المحاليل الموقية", "ثابت انحلال المعقدات"],
+              correct: 1,
+              exp: "تعتبر الثوابت والخصائص الفيزيائية أدوات حاسمة لتحديد هوية ونقاوة المواد النقية."
+            }
+          ]
+        },
+        {
+          id: "topic_qualitative_applications",
+          title: "1-1-2 تطبيقات الكشف الكيفي (عقاقير، معادن سامة، ومواد عضوية)",
+          level: 2,
+          isCompleted: false,
+          cards: [
+            {
+              type: "list",
+              title: "أولاً: الكشوف الكيفية في علم العقاقير",
+              content: [
+                "<strong>الكشف عن الفلافونيدات (Flavonoids):</strong> توضع الخلاصة النباتية في أنبوب ويضاف لها محلول الأمونيا ومحلول حمض الكبريت المركز $\\rightarrow$ <strong>ظهور اللون الأصفر ثم اختفاؤه</strong> دليل إيجابي.",
+                "<strong>الكشف عن الغليكوزيدات (Glycosides):</strong> يضاف للخلاصة نباتية حمض الخل الثلجي ونقطة من كلوريد الحديد ثم حمض الكبريت المركز $\\rightarrow$ <strong>تكوّن حلقة ذات لون بني</strong> دليل إيجابي.",
+                "<strong>الكشف عن الستروئيدات (Steroids):</strong> يضاف خلاصة نباتية + خلات الصوديوم اللامائية + حمض الكبريت المركز $\\rightarrow$ <strong>ظهور اللون الأزرق أو الأخضر ثم اختفاؤه</strong> دليل إيجابي.",
+                "<strong>الكشف عن التربينات (Terpenes):</strong> يضاف خلاصة نباتية + الكلوروفورم + حمض الكبريت المركز $\\rightarrow$ <strong>تكون طبقة بنية محمرة</strong> دليل إيجابي."
+              ]
+            },
+            {
+              type: "standard",
+              title: "ثانياً: كشف المعادن السامة وتخريب المادة العضوية بالتحرير بالأكسدة",
+              content: `السموم المعدنية في العينات الحيوية أو الأغذية ترتبط غالباً مع البروتينات لتشكل معقدات ثابتة جداً تمنع كشفها بالكواشف العادية (مثال: معقدات الزرنيخ مع بروتينات الخلايا).
+              <br><br>
+              <strong>مفهوم التخريب بالأكسدة (المبادئ الأولى):</strong>
+              لكي نستطيع الكشف عن هذه المعادن، يجب تخريب المادة العضوية تماماً وتحرير المعدن الحر. ويتم ذلك بأكسدة الخلاصة العضوية باستخدام مزيج من <strong>حمض الكبريت المركز ($H_2SO_4$) وحمض الآزوت المركز ($HNO_3$)</strong> لكسر الروابط البروتينية وتحرير الأيونات المعدنية الحرة للكشف.`
+            },
+            {
+              type: "comparison",
+              title: "مصفوفة تفاعلات الكشف عن المعادن السامة الأربعة",
+              content: {
+                headers: ["المعدن السام", "الكاشف المضاف بالتفصيل", "تغيرات الكشف والراسب المتشكل"],
+                rows: [
+                  ["الزرنيخ ($As$)", "أ- حمض كلور الماء $HCl$ + كبريتيد الصوديوم $Na_2S$", "راسب أصفر من كبريتيد الزرنيخ $As_2S_3$ ذو رائحة مميزة (ثومية)"],
+                  ["الزرنيخ ($As$)", "ب- طريقة بوغو: كاشف بوغو (هيبوفوسفيت صوديوم + $HCl$) + قطرتي يود + حمام مائي ساخن لنصف ساعة", "ظهور عكر أو راسب أسمر داكن مميز"],
+                  ["الزئبق ($Hg$)", "أ- حمض كلور الماء $HCl$ + كبريتيد الصوديوم $Na_2S$", "راسب أسود كثيف من كبريتيد الزئبق $HgS$"],
+                  ["الزئبق ($Hg$)", "ب- محلول يوديد البوتاسيوم $KI$", "راسب أحمر من يوديد الزئبق $HgI_2$ ينحل بزيادة الكاشف لتشكل معقد زئبقات البوتاسيوم الذائب $[HgI_4]^{2-}$"],
+                  ["الرصاص ($Pb$)", "أ- حمض كلور الماء $HCl$ + كبريتيد الصوديوم $Na_2S$", "راسب أصفر من كبريتيد الرصاص $PbS$ (حسب المنهج الأكاديمي المكتوب بالمقرر)"],
+                  ["الرصاص ($Pb$)", "ب- يوديد البوتاسيوم $KI$", "راسب أصفر من $PbI_2$ ينحل بزيادة من $KI$"],
+                  ["الرصاص ($Pb$)", "ج- كرومات البوتاسيوم $K_2CrO_4$", "راسب أصفر من كرومات الرصاص $PbCrO_4$ لا ينحل بحمض الخل"],
+                  ["الباريوم ($Ba$)", "أ- حمض كلور الماء $HCl$ + كبريتيد الصوديوم $Na_2S$", "لا يتشكل أي راسب (اختبار نفي سلبي تفريقي للفرز)"],
+                  ["الباريوم ($Ba$)", "ب- حمض الكبريت $H_2SO_4$", "راسب أبيض مميز من كبريتات الباريوم $BaSO_4$"],
+                  ["الباريوم ($Ba$)", "ج- أوكزالات الصوديوم", "راسب أبيض من أوكزالات الباريوم"],
+                  ["الباريوم ($Ba$)", "د- كرومات البوتاسيوم $K_2CrO_4$", "راسب أصفر من كرومات الباريوم $BaCrO_4$"]
+                ]
+              }
+            },
+            {
+              type: "list",
+              title: "ثالثاً: الكشف عن بعض المواد العضوية السامة",
+              content: [
+                "<strong>حمض الصفصاف (Salicylic Acid):</strong> يتواجد في المستحضرات والأغذية. أ- يتفاعل مع فوق كلور الحديد $Fe(ClO_4)_3$ ليعطي <strong>لوناً أزرق بنفسجياً</strong> شديد الوضوح. ب- يتفاعل مع حمض البروم ويشكل <strong>عكراً أبيض</strong>.",
+                "<strong>الكودئين (Codeine):</strong> تكمن أهميته السمية لاستخدامه الصيدلاني الواسع وخطر الإدمان. أ- يضاف إليه فوق كلور الحديد فيعطي <strong>لوناً أزرق</strong>. ب- يضاف إليه كاشف فرويد (موليبدات الصوديوم مع حمض الكبريت) فيظهر <strong>لون بني مائل للاخضرار يتحول تدريجياً للون الأزرق</strong>."
+              ]
+            },
+            {
+              type: "list",
+              title: "📌 تجميعات الروابط الذهنية السريعة لكشوف السموم",
+              content: [
+                "<strong>حزام الأكسدة التخريبي:</strong> حمض الكبريت والآزوت المركزين هما مفتاح تحرير المعادن السامة المرتبطة بالبروتينات.",
+                "<strong>كشف الزئبق القرمزي:</strong> مع $KI$ يتشكل راسب أحمر ينحل تماماً بالزيادة مشكلاً معقداً ذائباً.",
+                "<strong>سلوك الباريوم الفريد:</strong> المعدن الوحيد من الأربعة الذي لا يتشكل معه أي راسب عند إضافة كبريتيد الصوديوم وحمض كلور الماء.",
+                "<strong>فوق كلور الحديد $Fe(ClO_4)_3$:</strong> مع الصفصاف يعطي أزرق بنفسجياً، بينما مع الكودئين يعطي أزرق فقط."
+              ]
+            }
+          ],
+          quiz: [
+            {
+              q: "أي كاشف يعطي مع الفلافونيدات لوناً أصفراً يختفي تدريجياً؟",
+              options: ["محلول فوق كلور الحديد", "الأمونيا وحمض الكبريت المركز", "حمض الخل الثلجي وكلوريد الحديد", "الكلوروفورم"],
+              correct: 1,
+              exp: "محلول الأمونيا مع حمض الكبريت المركز هو الكاشف النوعي لظهور واختفاء اللون الأصفر مع الفلافونيدات."
+            },
+            {
+              q: "ما هي نتيجة الكشف الإيجابي عن وجود الغليكوزيدات في الخلاصة النباتية؟",
+              options: ["تكون طبقة بنية محمرة", "ظهور حلقة ذات لون بني", "ظهور عكر أبيض ناصع", "تلون بنفسجي فوري"],
+              correct: 1,
+              exp: "تكون حلقة بنية اللون باستخدام حمض الخل الثلجي وكلوريد الحديد وحمض الكبريت المركز دليل قاطع على الغليكوزيدات."
+            },
+            {
+              q: "لماذا يجب تخريب المادة العضوية بالأكسدة قبل التحري عن المعادن السامة كالزرنيخ؟",
+              options: ["لأن المعادن تتطاير بالحرارة", "لأن المعادن تشكل مع البروتينات معقدات ثابتة تمنع كشفها", "لزيادة نقاوة كاشف بوغو", "لأن الكواشف تتفاعل مع السكريات"],
+              correct: 1,
+              exp: "تشكل المعادن معقدات ثابتة مع بروتينات العينة الحيوية، لذا يجب أكسدتها وتخريبها لتحرير شاردة المعدن الحرة للكشف."
+            },
+            {
+              q: "ما هو الخليط المستخدم لتخريب المواد العضوية بالأكسدة الشديدة؟",
+              options: ["حمض كلور الماء وحمض الخل", "حمض الكبريت وحمض الآزوت المركزين", "كبريتيد الصوديوم وهيبوفوسفيت الصوديوم", "الكلوروفورم وحمض البروم"],
+              correct: 1,
+              exp: "يستخدم مزيج حارق مؤكسد قوي من حمض الكبريت المركز وحمض الآزوت المركز لتفكيك روابط البروتينات بالمعادن."
+            },
+            {
+              q: "عند الكشف عن الزرنيخ بطريقة بوغو، ما هي الملاحظة المخبرية لتأكيد وجوده بعد الحمام المائي؟",
+              options: ["تكون حلقة بنية", "راسب أسود كثيف", "ظهور عكر أو راسب أسمر", "راسب أبيض بلوري"],
+              correct: 2,
+              exp: "يعطي كاشف بوغو مع الزرنيخ في حمام مائي ساخن لمدة نصف ساعة عكراً أو راسباً أسمر اللون."
+            },
+            {
+              q: "ما هو الراسب المتشكل عند إضافة كبريتيد الصوديوم Na2S في وسط حمضي لأيون الزئبق (Hg2+)؟",
+              options: ["راسب أصفر من HgS", "راسب أحمر ينحل بالزيادة", "راسب أسود من كبريت الزئبق HgS", "راسب أبيض بلوري"],
+              correct: 2,
+              exp: "يعطي الزئبق مع كبريتيد الصوديوم راسباً أسود داكناً من كبريتيد الزئبق (HgS)."
+            },
+            {
+              q: "يتفاعل الرصاص بوجود كرومات البوتاسيوم ليعطي راسباً أصفراً هو كرومات الرصاص، فما هو سلوكه تجاه حمض الخل؟",
+              options: ["ينحل بحمض الخل", "لا ينحل بحمض الخل", "يتحول لونه إلى الأسود", "يتفكك مع تصاعد غاز الكبريت"],
+              correct: 1,
+              exp: "كرومات الرصاص راسب أصفر متميز بثباتيته العالية حيث لا ينحل بحمض الخل."
+            },
+            {
+              q: "ما هي نتيجة إضافة كبريتيد الصوديوم وحمض كلور الماء لشاردة الباريوم (Ba2+)؟",
+              options: ["راسب أبيض كثيف", "راسب أسود داكن", "لا يتشكل أي راسب", "راسب أصفر ذو رائحة مميزة"],
+              correct: 2,
+              exp: "الباريوم لا يتفاعل بالترسيب مع كبريتيد الصوديوم في وسط حمضي، وهي ميزة تفريقية هامة تفرقه عن الزرنيخ والزئبق والرصاص."
+            },
+            {
+              q: "ماذا يعطي حمض الصفصاف مع كاشف فوق كلور الحديد Fe(ClO4)3 ككشف سمي؟",
+              options: ["لوناً بنياً مخضراً يميل تدريجياً للأزرق", "لوناً أزرق بنفسجياً", "عكراً أبيض كثيفاً", "راسباً أصفر لا ينحل بحمض الخل"],
+              correct: 1,
+              exp: "يعطي حمض الصفصاف مع فوق كلور الحديد لوناً أزرق بنفسجياً متميزاً للغاية."
+            },
+            {
+              q: "ما هو تغير اللون الذي يعطيه الكودئين عند معاملته بكاشف فرويد؟",
+              options: ["أصفر يختفي بالحمض", "أزرق بنفسجي فوري", "لون بني مائل للاخضرار يميل تدريجياً إلى الأزرق", "تكوّن حلقة بنية اللون فقط"],
+              correct: 2,
+              exp: "كاشف فرويد (موليبدات الصوديوم مع حمض الكبريت) يعطي مع الكودئين لوناً بنياً مخضراً يتحول تدريجياً إلى الأزرق المميز."
+            }
+          ]
+        },
+        {
+          id: "topic_quantitative_methods",
+          title: "1-2 الكيمياء التحليلية الكمية وطرائق التحليل",
+          level: 1,
+          isCompleted: false,
+          cards: [
+            {
+              type: "standard",
+              title: "التحليل الكمي (Quantitative Analysis)",
+              content: `يسمح التحليل الكمي بمعرفة وتقدير تراكيز مكونات العينة المجهولة بدقة وسرعة وبأقل التكاليف.
+              <br><br>
+              <strong>لماذا يسبق التحليل النوعي دائماً التحليل الكمي؟ (المبادئ الأولى):</strong>
+              يجب على المحلل إجراء الكشف النوعي أولاً لتحديد هوية كافة الأيونات والعناصر المرافقة للعينة، وذلك بغية تجنب حدوث أي تداخل كيميائي أثناء عملية التحليل الكمي اللاحق، مما يضمن له اختيار الطريقة التحليلية الأكثر دقة وحساسية ونوعية للتحليل الكمي.`
+            },
+            {
+              type: "list",
+              title: "طرائق التحليل الكيميائية وحساباتها الحجمية",
+              content: [
+                "<strong>طرائق التحاليل الكيميائية:</strong> تعتمد على تفاعلات كيميائية محدودة وتتبعها لمعرفة تركيز المادة المجهولة، وتنقسم لقسمين هامين:",
+                "<strong>أ- التحليل الكمي الحجمي (Volumetric):</strong> يعتمد على قياس الحجوم معلومة التركيز المستهلكة حتى نقطة نهاية المعايرة باستخدام المشعرات وتحديد عدد المكافئات.",
+                "<strong>1. معايرات حمض - أساس (التعديل):</strong> مثل معايرة حمض كلور الماء $HCl$ بهيدروكسيد الصوديوم $NaOH$. وتشتمل أيضاً على المعايرات اللامائية للمستحضرات الدوائية الضعيفة القلوية (مثل الأدرينالين والكودئين) باستخدام كاشف حمض فوق الكلور المنحل بحمض الخل.",
+                "<strong>2. معايرات الأكسدة والإرجاع:</strong> مثل معايرة حمض الأسكوربيك (فيتامين $C$) بمحلول برمنغنات البوتاسيوم المؤكسد القوي.",
+                "<strong>3. معايرات الترسيب:</strong> مثل معايرة الكلوريد بمحلول فضة قياسي لتشكيل معقدات أو رواسب صلبة كـ $AgCl$.",
+                "<strong>4. معايرات التعقيد:</strong> تعتمد على تشكيل معقدات مخلبية ثابتة بإضافة كاشف الـ $EDTA$ للشوارد المعدنية القلوية الترابية."
+              ]
+            },
+            {
+              type: "standard",
+              title: "ب- التحليل الكمي الوزني ومساوئ الطرق الكيميائية",
+              content: `يعتمد التحليل الوزني (Gravimetric Analysis) على التقدير الكمي للعينة عن طريق القياس المباشر للكتلة وزناً.
+              <br><br>
+              <strong>ميكانيكية الترسيب والوزن:</strong>
+              يرتبط العنصر المراد تقديره كيميائياً بكاشف مرسب ليعطي مركباً جديداً ذو صيغة تركيبية نقية ومستقرة ومحددة بدقة بالغة، ثم يتم عزله ووزنه بدقة متناهية.
+              <br>أمثلة:
+              <ul class="space-y-1 text-xs mt-2">
+                <li>• <strong>كبريتات الباريوم ($BaSO_4$):</strong> هي الشكل الوزني المعتمد لتقدير شاردة الكبريتات $SO_4^{2-}$.</li>
+                <li>• <strong>بيروفوسفات المغنيزيوم ($Mg_2P_2O_7$):</strong> هي الشكل الوزني المعتمد لتقدير شاردة المغنيزيوم $Mg^{2+}$.</li>
+              </ul>
+              <br>
+              <strong>مساوئ الطرائق الكيميائية الكلاسيكية (الحجمية والوزنية):</strong>
+              العيب الجوهري فيها أنها <strong>لا تصلح كيميائياً إلا لتحليل المواد ذات التراكيز المرتفعة</strong> من المكونات المدروسة، وتفشل تماماً في قياس تراكيز الأثر أو المواد منخفضة التركيز.`
+            },
+            {
+              type: "standard",
+              title: "الطرائق الفيزيائية الكيميائية (Physicochemical)",
+              content: `لا تعتمد هذه الطرق المتقدمة على التفاعلات الكيميائية الحجمية المباشرة، بل ترتكز كلياً على قياس <strong>إحدى الخواص الفيزيائية للمحلول والتي تتناسب طردياً مع التركيز</strong>.
+              <br><br>
+              <strong>مثال توضيحي لآلية العمل:</strong>
+              عند زيادة تركيز محلول من برمنغنات البوتاسيوم، تزداد شدة لونه بشكل طردي منتظم. ومن خلال قياس شدة اللون ومستوى امتصاص الضوء بجهاز مناسب، يمكن تقدير تركيز المحلول بدقة متناهية حتى في التراكيز المنخفضة جداً.
+              <br><br>
+              <strong>أهم تقنيات التحليل الفيزيائي الكيميائي:</strong>
+              <ul class="space-y-1 text-xs">
+                <li>• التحليل الطيفي (Spectroscopy)</li>
+                <li>• التحليل الكهربائي ومقياس الناقلية الكهربائية (Conductometry)</li>
+                <li>• التحليل الكروماتوغرافي المتقدم (Chromatography)</li>
+              </ul>`
+            },
+            {
+              type: "list",
+              title: "📌 تجميعات الروابط الذهنية لطرائق التحليل الكمي",
+              content: [
+                "<strong>الحجمي يعتمد على المحاليل العيارية والمشعر،</strong> والوزني يعتمد على كتلة الصيغة الموزونة بدقة.",
+                "<strong>معقدات الـ EDTA المخلبية:</strong> هي ملكة معايرات التعقيد للمعادن القلوية الترابية وثنائية التكافؤ.",
+                "<strong>أشكال كيميائية وزنية مبرهنة:</strong> كبريتات الباريوم $BaSO_4$ لأيون الكبريتات، وبيروفوسفات المغنيزيوم $Mg_2P_2O_7$ للمغنيزيوم.",
+                "<strong>عائق الطرق الكلاسيكية:</strong> عدم القدرة على كشف التراكيز الشديدة الانخفاض (الأثر)، وهو سبب الانتقال للأجهزة الطيفية والكهربائية."
+              ]
+            }
+          ],
+          quiz: [
+            {
+              q: "لماذا يفضل ويجب إجراء التحليل النوعي قبل البدء بالتحليل الكمي للعينة؟",
+              options: ["لتحديد درجة غليان الكواشف وحساب الكثافة", "لتجنب حدوث التداخلات الكيميائية أثناء عملية التحليل الكمي اللاحق", "لأن الكواشف الحجمية تفقد فعاليتها بالتبريد", "لتسريع معايرة حمض الكبريت والآزوت"],
+              correct: 1,
+              exp: "معرفة المكونات سلفاً تمنع حدوث تداخلات كيميائية وتساعد المحلل في اختيار الطريقة الفضلى والدقيقة كلياً للتحليل الكمي."
+            },
+            {
+              q: "ما هو نوع المعايرة المستخدم لتقدير المواد الدوائية ضعيفة الصفة القلوية كالأدرينالين والكودئين؟",
+              options: ["معايرة ترسيبية مائية بنترات الفضة", "معايرة لامائية بحمض فوق الكلور المنحل بحمض الخل", "معايرة أكسدة وإرجاع ببرمنغنات البوتاسيوم", "معايرة مخلبية بالـ EDTA"],
+              correct: 1,
+              exp: "المواد قلوية الصفة الضعيفة جداً تعاير بمعايرات لامائية في وسط حمضي قوي مثل حمض فوق الكلور المنحل بحمض الخل."
+            },
+            {
+              q: "ما هي الطريقة الكيميائية الكمية التي تعتمد كلياً على القياس المباشر للكتلة وزناً؟",
+              options: ["التحليل الحجمي", "التحليل الطيفي", "التحليل الكمي الوزني", "التحليل الكروماتوغرافي"],
+              correct: 2,
+              exp: "التحليل الوزني يعتمد مباشرة على فصل المركب المجهول كشكل راسب نقي ومستقر ووزن كتلته مباشرة."
+            },
+            {
+              q: "ما هو الشكل والتركيب الكيميائي المعتمد كصيغة وزنية دقيقة لتقدير أيون الكبريتات؟",
+              options: ["Mg2P2O7", "BaSO4 (كبريتات الباريوم)", "AgCl", "PbCrO4"],
+              correct: 1,
+              exp: "كبريتات الباريوم BaSO4 هي الشكل الوزني الثابت والمستقر المعتمد لتقدير شوارد الكبريتات وزناً."
+            },
+            {
+              q: "الصيغة الوزنية بيروفوسفات المغنيزيوم Mg2P2O7 تستخدم لتقدير أي عنصر كمياً؟",
+              options: ["الزرنيخ", "الباريوم", "المغنيزيوم", "الفوسفور"],
+              correct: 2,
+              exp: "تعتبر بيروفوسفات المغنيزيوم Mg2P2O7 هي الشكل الكيميائي والوزني المحدد بدقة لتقدير المغنيزيوم."
+            },
+            {
+              q: "أي من الخيارات التالية يمثل أحد أهم مساوئ وعيوب الطرائق الكيميائية الكلاسيكية الحجمية والوزنية؟",
+              options: ["صعوبة تحضير كاشف نترات الفضة", "لا تصلح إلا لتحليل المواد ذات التراكيز المرتفعة من العنصر المدروس", "تحتاج أجهزة طيفية باهظة ومقاييس ناقلية معقدة", "تتداخل بشدة مع لون أملاح النحاس الزرقاء"],
+              correct: 1,
+              exp: "تفشل الطرق الكلاسيكية الكيميائية في تقدير الأثر أو التراكيز المنخفضة جداً للمواد المجهولة لضعف حساسيتها."
+            },
+            {
+              q: "ما هو المبدأ الجوهري الذي ترتكز عليه طرائق التحاليل الفيزيائية الكيميائية المتقدمة؟",
+              options: ["تتبع تفاعل كيميائي حجمي لغاية نقطة التعادل بوجود المشعرات", "الاعتماد على قياس خاصية فيزيائية للمحلول تتناسب طردياً مع التركيز", "وزن كتلة الراسب البلوري بعد الحمام المائي", "تحضير معقدات الزرنيخ مع بروتينات الخلايا وتخريبها"],
+              correct: 1,
+              exp: "تعتمد على الخواص الفيزيائية (كالناقلية، والامتصاص الطيفي، والكروماتوغرافيا) التي ترتبط طردياً بتركيز المادة دون الحاجة لتفاعل حجمي مباشر."
+            },
+            {
+              q: "أي من التقنيات التالية تندرج كلياً تحت مظلة طرائق التحاليل الفيزيائية الكيميائية؟",
+              options: ["المعايرة الترسيبية بطريقة مور وفولهارد", "التحليل الطيفي، ومقياس الناقلية، والكروماتوغرافيا", "التحليل الوزني المباشر لكبريتات الباريوم", "المعايرات الحمضية الأساسية المائية واللامائية"],
+              correct: 1,
+              exp: "التحليل الطيفي ومقاييس الناقلية والكهرباء والكروماتوغرافيا هي من ركائز الطرق الفيزيائية الكيميائية التحليلية."
+            },
+            {
+              q: "إذا ازدادت شدة لون محلول ما طردياً مع زيادة تركيزه، فما هي الطريقة الفضلى لمقايسته في كيمياء الأثر؟",
+              options: ["المعايرة الحجمية بالترسيب", "مقياس شدة اللون طيفياً (فيزيائية كيميائية)", "تخريب العينة وتشكيل الصيغة الوزنية", "معاملته مع كبريتيد الصوديوم Na2S لترسيبه كلياً"],
+              correct: 1,
+              exp: "قياس شدة اللون طيفياً تعطي دقة متناهية وحساسية فائقة لتقدير التراكيز الشديدة الانخفاض للمحاليل الملونة."
+            },
+            {
+              q: "أي المعايرات التالية تعتمد على تشكيل معقد مخلبي ثابت بإضافة كاشف الـ EDTA للشوارد المعدنية؟",
+              options: ["معايرات الأكسدة والإرجاع", "معايرات التعقيد", "معايرات التعديل", "معايرات الترسيب"],
+              correct: 1,
+              exp: "تستخدم معايرات التعقيد كواشف معقدة مثل الـ EDTA لتشكيل روابط مخلبية ثابتة مع الشوارد المعدنية."
+            }
+          ]
+        },
+        {
+          id: "topic_classification_applications",
+          title: "1-4 تصنيف الطرائق التحليلية وتطبيقاتها الحياتية",
+          level: 1,
+          isCompleted: false,
+          cards: [
+            {
+              type: "comparison",
+              title: "أولاً: تصنيف الطرائق التحليلية تبعاً لوزن وحجم العينة",
+              content: {
+                headers: ["اسم طريقة التحليل", "وزن العينة المدروسة $W$ مقدراً بـ $mg$", "حجم العينة المدروسة $V$ مقدراً بـ $\\mu l$"],
+                rows: [
+                  ["التحليل الكبير (Macro)", "$W > 100$", "$V > 1000$"],
+                  ["التحليل نصف الدقيق (Semi-Micro)", "$W = 10 - 100$", "$V = 100 - 1000$"],
+                  ["التحليل الدقيق (Micro)", "$W = 1 - 10$", "$V = 10 - 100$"],
+                  ["التحليل فوق الدقيق (Ultra-Micro)", "$W < 1$", "$V < 10$"]
+                ]
+              }
+            },
+            {
+              type: "comparison",
+              title: "ثانياً: تسمية المكون أو العنصر وفق نسبته بالمركب",
+              content: {
+                headers: ["نسبة وجود المكون في المركب المدروس", "تسمية المكون الأكاديمية المعتمدة"],
+                rows: [
+                  ["أكبر من واحد بالمائة ($> 1\\%$)", "مكون رئيسي (Major)"],
+                  ["من واحد بالعشرة إلى واحد بالمائة ($0.1\\% - 1\\%$)", "مكون ثانوي (Minor)"],
+                  ["أقل من واحد بالعشرة بالمائة ($< 0.1\\%$)", "مكون أثر (Trace)"]
+                ]
+              }
+            },
+            {
+              type: "list",
+              title: "ثالثاً: تطبيقات الكيمياء التحليلية في الحياة والصيدلة",
+              content: [
+                "<strong>1. الأغذية:</strong> تحليل المكونات والملوثات وتحديد الصلاحية والنقاوة والإضافات الغذائية.",
+                "<strong>2. التحليل المخبري السريري:</strong> قياس تراكيز الأيونات والشوارد والهرمونات في الدم لتشخيص الأمراض بدقة وصياغة القرارات الطبية.",
+                "<strong>3. البيئة:</strong> رصد وتحليل الملوثات ونفايات المصانع في التربة والهواء والمياه للحفاظ على الصحة العامة.",
+                "<strong>4. الأدوية والمراقبة الدوائية:</strong> كشف وتحديد تراكيز المواد الفعالة في الأدوية ومطابقتها التامة لدساتير الأدوية العالمية لضمان سلامة المرضى وفحص جودة الإنتاج الصيدلاني.",
+                "<strong>5. علوم الأرض:</strong> دراسة وبحث بنية التربة وتحديد المعادن وكشف الثروات الباطنية المختلفة في كوكبنا."
+              ]
+            },
+            {
+              type: "list",
+              title: "📌 تجميعات الروابط الذهنية السريعة للتصنيفات والتطبيقات",
+              content: [
+                "<strong>عتبة الماكرو والميكرو:</strong> التحليل الكبير يتجاوز دائماً الـ $100\\,mg$، بينما فوق الدقيق ينخفض ليكون أقل من $1\\,mg$.",
+                "<strong>المكون والأثر:</strong> المكون الرئيسي يكتسح بـ $>1\\%$، والمكون الثانوي بين $0.1\\%-1\\%$، وما هو تحت الـ $0.1\\%$ هو مجرد أثر.",
+                "<strong>حماية المرضى والمطابقة:</strong> المراقبة الدوائية الصارمة تلتزم بالتحليل الحجمي والفيزيائي لضمان جودة الأدوية ومطابقتها لدساتير الأدوية (Pharmacopoeias)."
+              ]
+            }
+          ],
+          quiz: [
+            {
+              q: "إذا كان وزن العينة المدروسة يقع في المجال (10 - 100 mg)، فما هو تصنيف طريقة التحليل المتبعة؟",
+              options: ["التحليل الكبير", "التحليل نصف الدقيق", "التحليل الدقيق", "التحليل فوق الدقيق"],
+              correct: 1,
+              exp: "التحليل نصف الدقيق (Semi-Micro) يتعامل مع عينات يتراوح وزنها بين 10 إلى 100 مليغرام، وبحجم 100 إلى 1000 ميكرولتر."
+            },
+            {
+              q: "كم يجب أن يكون حجم العينة المدروسة بالـ (ميكرولتر) لتصنيف الطريقة بأنها تحليل فوق دقيق؟",
+              options: ["أكبر من 1000 ميكرولتر", "بين 100 إلى 1000 ميكرولتر", "أقل من 10 ميكرولتر", "بين 10 إلى 100 ميكرولتر"],
+              correct: 2,
+              exp: "التحليل فوق الدقيق (Ultra-Micro) يتعامل مع عينات بالغة الصغر بحجم أقل من 10 ميكرولتر ووزن أقل من 1 مليغرام."
+            },
+            {
+              q: "إذا كانت نسبة وجود أحد المكونات في المركب المدروس تقع في المجال (0.1% - 1%)، فما هو اسم وتسمية المكون؟",
+              options: ["مكون رئيسي", "مكون ثانوي", "مكون أثر", "مكون مهمل كلياً"],
+              correct: 1,
+              exp: "يسمى المكون مكوناً ثانوياً (Minor) إذا كانت نسبته تقع بين 0.1% إلى 1%."
+            },
+            {
+              q: "تسمى المكونات والعناصر الشحيحة جداً والتي تقل نسبتها في عينات الدراسة عن (0.1%) بـ:",
+              options: ["المكون الرئيسي", "المكون الثانوي", "مكون الأثر (Trace)", "المكون الكبير"],
+              correct: 2,
+              exp: "مكون الأثر (Trace) هو التسمية العلمية للمكونات التي تقل نسبتها المئوية بالمركب عن 0.1%."
+            },
+            {
+              q: "أي مجالات تطبيقات الكيمياء التحليلية يركز على مطابقة الأدوية لنسب وجودها في دساتير الأدوية العالمية؟",
+              options: ["تحليل الدم المخبري السريري", "المراقبة الدوائية وضبط الجودة الصيدلانية", "تحليل ملوثات الهواء ونفايات المصانع", "علوم الأرض والتربة الباطنية"],
+              correct: 1,
+              exp: "تطبيقات المراقبة الدوائية تعتمد كلياً على الكيمياء التحليلية للتحقق من نسب المكونات ومطابقتها لدساتير الأدوية الدولية."
+            },
+            {
+              q: "إذا كانت العينة المدروسة بحجم (15 ميكرولتر) ووزن (5 مليغرام)، فما هو اسم وتصنيف هذه الطريقة؟",
+              options: ["التحليل الدقيق (Micro)", "التحليل الكبير", "التحليل نصف الدقيق", "التحليل فوق الدقيق"],
+              correct: 0,
+              exp: "التحليل الدقيق (Micro) يشمل العينات ذات الوزن بين 1 إلى 10 مليغرام، والحجم بين 10 إلى 100 ميكرولتر."
+            },
+            {
+              q: "ما هو تصنيف المكون الكيميائي الذي يمثل نسبة وجوده بالمركب (2.5%)؟",
+              options: ["مكون أثر", "مكون ثانوي", "مكون رئيسي", "مكون عابر"],
+              correct: 2,
+              exp: "أي مكون تزيد نسبته المئوية في المركب عن 1% يعتبر مكوناً رئيسياً (Major)."
+            },
+            {
+              q: "تحليل الدم السريري لتعيين تركيز الأيونات والشوارد بالدم لتشخيص بعض الأمراض يندرج تحت:",
+              options: ["التحليل المخبري الطبي", "مراقبة البيئة والغذاء", "المطابقة الدوائية اللامائية", "التحليل الجيولوجي الباطني"],
+              correct: 0,
+              exp: "التحليل المخبري السريري هو الركيزة الطبية التي تعتمد على الكيمياء التحليلية لقياس الشوارد بالدم للمساعدة في تشخيص الأمراض."
+            },
+            {
+              q: "أي من الخيارات التالية لا يعد من التطبيقات المباشرة لعلم الكيمياء التحليلية الصيدلانية؟",
+              options: ["تحديد صلاحية ونقاوة الأغذية والملوثات", "المراقبة الدوائية للحبوب والكبسولات", "رصد الملوثات الكيميائية في التربة والمياه", "تصميم الهياكل المعدنية للمفاعلات النووية الفيزيائية"],
+              correct: 3,
+              exp: "تصميم الهياكل المعدنية للمفاعلات هو تخصص هندسي وفيزيائي بحت خارج نطاق كيمياء التحليل الطبي والصيدلاني والبيئي."
+            },
+            {
+              q: "التحليل الذي يتعامل مع عينات بوزن يتجاوز (100 mg) وحجم يفوق (1000 ميكرولتر) هو:",
+              options: ["التحليل فوق الدقيق", "التحليل الدقيق", "التحليل نصف الدقيق", "التحليل الكبير (Macro)"],
+              correct: 3,
+              exp: "التحليل الكبير (Macro Analysis) هو الذي يبدأ عند أوزان تفوق الـ 100 مليغرام وحجوم تفوق الـ 1000 ميكرولتر."
+            }
+          ]
+        }
+      ],
+      flashcards: [
+        {
+          id: "fc_1",
+          topicId: "topic_intro_qualitative",
+          front: "ما هو الفرق الرئيسي والجوهري بين التحليل النوعي والتحليل الكمي؟",
+          back: "التحليل النوعي يبحث في تحديد هوية ومكونات العينة المجهولة (نوع المواد)، بينما التحليل الكمي يحدد تركيز ومقادير هذه المكونات بدقة."
+        },
+        {
+          id: "fc_2",
+          topicId: "topic_intro_qualitative",
+          front: "ما هو المبدأ الفيزيائي الذي يفسر تغير ألوان لهب موقد بنسن للأيونات المعدنية؟",
+          back: "اكتساب الإلكترونات طاقة حرارية تقفز بها لمدارات أعلى غير مستقرة، وعند هبوطها للاستقرار تطلق الطاقة المكتسبة كطيف ضوئي بلون فريد كالبصمة الطيفية."
+        },
+        {
+          id: "fc_3",
+          topicId: "topic_intro_qualitative",
+          front: "ما هو لون طيف اللهب المصاحب لكل من: الصوديوم، البوتاسيوم، والنحاس؟",
+          back: "الصوديوم: أصفر فاقع، البوتاسيوم: بنفسجي باهت، النحاس: أخضر مزرق باهت."
+        },
+        {
+          id: "fc_4",
+          topicId: "topic_intro_qualitative",
+          front: "ما هي الألوان والصفات الفيزيائية لرواسب الهالوجينات الثلاثة مع نترات الفضة AgNO3؟",
+          back: "راسب كلوريد الفضة AgCl (أبيض اللون)، بروميد الفضة AgBr (أبيض مصفر)، يوديد الفضة AgI (أصفر اللون)."
+        },
+        {
+          id: "fc_5",
+          topicId: "topic_qualitative_applications",
+          front: "كيف يمكن الكشف كلياً عن الفلافونيدات والغليكوزيدات في الخلاصات النباتية؟",
+          back: "الفلافونيدات: إضافة الأمونيا وحمض الكبريت $\\rightarrow$ لون أصفر يختفي. الغليكوزيدات: إضافة حمض خل ثلجي وكلوريد الحديد وحمض الكبريت $\\rightarrow$ حلقة بنية."
+        },
+        {
+          id: "fc_6",
+          topicId: "topic_qualitative_applications",
+          front: "ما سبب ضرورة التخريب بالأكسدة للمواد العضوية للكشف عن السموم المعدنية؟",
+          back: "لأن المعادن (كالزرنيخ) ترتبط بقوة مع البروتينات مشكلة معقدات ثابتة، والأكسدة بحمض الكبريت والآزوت تخرّب البروتين وتحرر الأيونات المعدنية الحرة."
+        },
+        {
+          id: "fc_7",
+          topicId: "topic_qualitative_applications",
+          front: "ما هو الكشف السلبي (النافي للترسيب) للباريوم Ba2+؟",
+          back: "عند إضافة كبريتيد الصوديوم وحمض كلور الماء لا يتشكل أي راسب مع الباريوم، بينما يتشكل راسب مع الزرنيخ (أصفر) والزئبق (أسود) والرصاص (أصفر)."
+        },
+        {
+          id: "fc_8",
+          topicId: "topic_qualitative_applications",
+          front: "كيف تفرّق مخبرياً وسريرياً بين حمض الصفصاف والكودئين باستخدام فوق كلور الحديد؟",
+          back: "حمض الصفصاف يعطي تفاعلاً لونياً أزرق بنفسجياً مع فوق كلور الحديد، بينما الكودئين يعطي تفاعلاً لونياً أزرق نقي وصافٍ."
+        },
+        {
+          id: "fc_9",
+          topicId: "topic_quantitative_methods",
+          front: "ما هو العيب الجوهري والحد التشغيلي للطرائق الكيميائية الكلاسيكية؟",
+          back: "أنها ذات حساسية منخفضة نسبياً، بحيث لا تصلح مطلقاً لتقدير الأثر وتفشل في كشف التراكيز الشديدة الانخفاض للمواد المدروسة."
+        },
+        {
+          id: "fc_10",
+          topicId: "topic_quantitative_methods",
+          front: "ما هو المفهوم الذي تندرج تحته معايرات الـ EDTA في التحليل الحجمي الكيميائي؟",
+          back: "معايرات التعقيد (Complexometric Titrations) حيث تشكل الـ EDTA معقدات مخلبية قوية وثابتة مع الشوارد والأيونات المعدنية."
+        },
+        {
+          id: "fc_11",
+          topicId: "topic_classification_applications",
+          front: "ما هي الفروق في وزن العينات بين التحليل الكبير، نصف الدقيق، الدقيق، وفوق الدقيق؟",
+          back: "الكبير: أكبر من $100\\,mg$. نصف الدقيق: $10-100\\,mg$. الدقيق: $1-10\\,mg$. وفوق الدقيق: أقل من $1\\,mg$."
+        },
+        {
+          id: "fc_12",
+          topicId: "topic_classification_applications",
+          front: "كيف نصنف المكونات الكيميائية للعينة وفق نسبة وجودها بالمركب؟",
+          back: "مكون رئيسي (أكبر من $1\\%$). مكون ثانوي (من $0.1\\%$ إلى $1\\%$). مكون أثر (أقل من $0.1\\%$)."
+        }
+      ]
+    };
+
+    /*************************************************************************
+     * 2. محرك الصوت الاصطناعي الصيدلاني (Web Audio API Sound Generator):
+     *************************************************************************/
+    const AudioFX = {
+      ctx: null,
+      init() { if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)(); },
+      playCorrect() {
+        try {
+          this.init(); const ctx = this.ctx; const osc = ctx.createOscillator(); const gain = ctx.createGain();
+          osc.connect(gain); gain.connect(ctx.destination); osc.type = 'sine';
+          osc.frequency.setValueAtTime(523.25, ctx.currentTime); osc.frequency.setValueAtTime(659.25, ctx.currentTime + 0.15);
+          gain.gain.setValueAtTime(0.12, ctx.currentTime); gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
+          osc.start(); osc.stop(ctx.currentTime + 0.4);
+        } catch(e) {}
+      },
+      playIncorrect() {
+        try {
+          this.init(); const ctx = this.ctx; const osc = ctx.createOscillator(); const gain = ctx.createGain();
+          osc.connect(gain); gain.connect(ctx.destination); osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(130, ctx.currentTime); gain.gain.setValueAtTime(0.2, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.45);
+          osc.start(); osc.stop(ctx.currentTime + 0.45);
+        } catch(e) {}
+      }
+    };
+
+    /*************************************************************************
+     * 3. حالة حفظ البيانات وعلاقتها بـ LocalStorage و Telegram Haptic:
+     *************************************************************************/
+    const STORAGE_PREFIX = "ac_dashboard_hama_chem1_chapter1";
+    const PROGRESS_KEY = STORAGE_PREFIX + "_progress";
+    const BOOKMARKS_KEY = STORAGE_PREFIX + "_bookmarks";
+
+    let completedTopics = [];
+    let bookmarkedItems = [];
+
+    const tg = window.Telegram?.WebApp;
+
+    const HapticFX = {
+      triggerSuccess() {
+        if (tg?.HapticFeedback) {
+          try { tg.HapticFeedback.notificationOccurred('success'); } catch(e){}
+        }
+      },
+      triggerError() {
+        if (tg?.HapticFeedback) {
+          try { tg.HapticFeedback.notificationOccurred('error'); } catch(e){}
+        }
+      },
+      triggerSelection() {
+        if (tg?.HapticFeedback) {
+          try { tg.HapticFeedback.impactOccurred('light'); } catch(e){}
+        }
+      }
+    };
+
+    function loadSavedProgress() {
+      try {
+        const data = localStorage.getItem(PROGRESS_KEY);
+        if (data) {
+          completedTopics = JSON.parse(data);
+          LECTURE_DATA.topics.forEach(topic => {
+            if (completedTopics.includes(topic.id)) {
+              topic.isCompleted = true;
+            }
+          });
+        }
+      } catch (e) {
+        console.error("خطأ تقدم الدراسة:", e);
+      }
+    }
+
+    function saveTopicProgress(topicId) {
+      try {
+        if (!completedTopics.includes(topicId)) {
+          completedTopics.push(topicId);
+          localStorage.setItem(PROGRESS_KEY, JSON.stringify(completedTopics));
+        }
+      } catch (e) {
+        console.error("خطأ حفظ التقدم:", e);
+      }
+    }
+
+    function loadBookmarks() {
+      try {
+        const data = localStorage.getItem(BOOKMARKS_KEY);
+        if (data) {
+          bookmarkedItems = JSON.parse(data);
+        }
+        updateBookmarksBadge();
+      } catch (e) {
+        console.error("خطأ جلب الإشارات:", e);
+      }
+    }
+
+    function saveBookmarks() {
+      try {
+        localStorage.setItem(BOOKMARKS_KEY, JSON.stringify(bookmarkedItems));
+        updateBookmarksBadge();
+        renderBookmarksTab();
+      } catch (e) {
+        console.error("خطأ في حفظ الإشارات المرجعية:", e);
+      }
+    }
+
+    function updateBookmarksBadge() {
+      const badge = document.getElementById("bookmarks-badge");
+      if (!badge) return;
+      if (bookmarkedItems.length > 0) {
+        badge.innerText = bookmarkedItems.length;
+        badge.classList.remove("hidden");
+      } else {
+        badge.classList.add("hidden");
+      }
+    }
+
+    function isItemBookmarked(uniqueId) {
+      return bookmarkedItems.some(item => item.uniqueId === uniqueId);
+    }
+
+    function toggleBookmark(type, uniqueId, title, payload) {
+      HapticFX.triggerSelection();
+      
+      const index = bookmarkedItems.findIndex(item => item.uniqueId === uniqueId);
+      if (index > -1) {
+        bookmarkedItems.splice(index, 1);
+      } else {
+        bookmarkedItems.push({
+          type: type,
+          uniqueId: uniqueId,
+          title: title,
+          payload: payload
+        });
+      }
+      saveBookmarks();
+      updateBookmarkButtonsUI(uniqueId);
+    }
+
+    function updateBookmarkButtonsUI(uniqueId) {
+      const btn = document.getElementById(`btn-bookmark-${uniqueId}`);
+      if (btn) {
+        const bookmarked = isItemBookmarked(uniqueId);
+        btn.innerHTML = getBookmarkIconHTML(bookmarked);
+        if (bookmarked) {
+          btn.classList.add("text-amber-400", "border-amber-500/30", "bg-amber-500/10");
+        } else {
+          btn.classList.remove("text-amber-400", "border-amber-500/30", "bg-amber-500/10");
+        }
+      }
+    }
+
+    function getBookmarkIconHTML(isSaved) {
+      return `
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="${isSaved ? '#F59E0B' : 'none'}" stroke="currentColor" stroke-width="2">
+          <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+        </svg>
+      `;
+    }
+
+    /*************************************************************************
+     * 4. تحضير وإعداد التبويبات والتصفية:
+     *************************************************************************/
+    let activeTopicId = null;
+    let quizQueue = [];
+    let originalQuizLength = 0;
+    let activeFlashcardIdx = 0;
+    let filteredFlashcards = [];
+
+    document.addEventListener("DOMContentLoaded", () => {
+      loadSavedProgress();
+      loadBookmarks();
+
+      buildHierarchyTree();
+      buildFlashcardFilters();
+      filteredFlashcards = [...LECTURE_DATA.flashcards];
+      renderFlashcard();
+      renderBookmarksTab();
+
+      // تهيئة تيليجرام
+      if (tg) {
+        try {
+          tg.ready();
+          tg.expand();
+          tg.setHeaderColor('#0b0f19');
+          tg.setBackgroundColor('#0b0f19');
+          
+          const user = tg.initDataUnsafe?.user;
+          if (user) {
+            const subtitleEl = document.getElementById("app-lecture-subtitle");
+            if (subtitleEl) {
+              subtitleEl.innerHTML = `أهلاً بك الصيدلاني <strong class="text-amber-400">${user.first_name || user.username}</strong> | كلية الصيدلة - جامعة حماة`;
+            }
+          }
+        } catch (e) {}
+      }
+    });
+
+    function switchTab(tabId) {
+      HapticFX.triggerSelection();
+      document.querySelectorAll(".tab-pane").forEach(pane => { 
+        pane.classList.add("hidden"); 
+        pane.classList.remove("block"); 
+      });
+      document.getElementById(tabId).classList.add("block"); 
+      document.getElementById(tabId).classList.remove("hidden");
+      
+      const tabs = ["study-tab", "simulator-tab", "flashcard-tab", "bookmarks-tab"];
+      tabs.forEach(t => {
+        const btn = document.getElementById(`btn-${t}`);
+        if (btn) {
+          if(t === tabId) {
+            btn.className = "px-4 py-2 rounded-lg text-xs md:text-sm font-bold transition-all bg-violet-600 text-white shadow-lg shadow-violet-900/30";
+          } else {
+            btn.className = "px-4 py-2 rounded-lg text-xs md:text-sm font-bold transition-all bg-zinc-900 text-zinc-400 hover:text-white";
+          }
+        }
+      });
+
+      if (tabId === "bookmarks-tab") {
+        renderBookmarksTab();
+      }
+    }
+
+    /*************************************************************************
+     * 5. بناء شجرة العناوين والمستودع:
+     *************************************************************************/
+    function buildHierarchyTree() {
+      const container = document.getElementById("hierarchy-tree-container");
+      if (!container) return;
+      container.innerHTML = "";
+
+      LECTURE_DATA.topics.forEach(topic => {
+        const item = document.createElement("div");
+        item.id = `tree-item-${topic.id}`;
+        
+        const currentLevel = topic.level || 1;
+        let paddingRightStyle = "12px"; 
+        if (currentLevel === 2) {
+          paddingRightStyle = "24px"; 
+        } else if (currentLevel === 3) {
+          paddingRightStyle = "40px"; 
+        }
+
+        item.className = "flex justify-between items-center p-2.5 rounded-xl bg-zinc-900/20 border border-zinc-800/40 hover:border-violet-500/30 cursor-pointer transition-all";
+        item.style.paddingRight = paddingRightStyle;
+        item.onclick = () => selectTopic(topic.id);
+
+        const checkMark = topic.isCompleted ? `<span class="text-emerald-400 font-extrabold text-[10px]">✓ مكتمل</span>` : `<span class="text-zinc-700 text-xs">○</span>`;
+        const bulletColor = currentLevel === 1 ? 'bg-violet-500' : 'bg-amber-500';
+        const fontSizeClass = currentLevel === 1 ? 'text-xs md:text-sm font-extrabold text-white' : 'text-[11px] md:text-xs font-semibold text-gray-300';
+
+        item.innerHTML = `
+          <div class="flex items-center gap-2 max-w-[80%]">
+            <span class="w-1.5 h-1.5 rounded-full ${bulletColor}"></span>
+            <span class="${fontSizeClass} truncate">${topic.title}</span>
+          </div>
+          <div class="flex items-center gap-2 shrink-0">
+            ${checkMark}
+          </div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    function selectTopic(topicId) {
+      activeTopicId = topicId;
+      const topic = LECTURE_DATA.topics.find(t => t.id === topicId);
+      if(!topic) return;
+
+      const emptyState = document.getElementById("empty-content-state");
+      if (emptyState) emptyState.classList.add("hidden");
+      
+      const activeViewport = document.getElementById("active-content-viewport");
+      if (activeViewport) activeViewport.classList.remove("hidden");
+
+      LECTURE_DATA.topics.forEach(t => {
+        const el = document.getElementById(`tree-item-${t.id}`);
+        if (el) {
+          if(t.id === topicId) el.className = el.className.replace("border-zinc-800/40", "border-violet-600 bg-violet-950/10");
+          else el.className = el.className.replace("border-violet-600 bg-violet-950/10", "border-zinc-800/40");
+        }
+      });
+
+      const activeTitle = document.getElementById("active-topic-title");
+      if (activeTitle) activeTitle.innerText = topic.title;
+
+      updateTopicStatusBadge(topic);
+      renderAcademicCards(topic.cards, topic.id);
+      initTopicQuiz(topic.quiz);
+    }
+
+    function updateTopicStatusBadge(topic) {
+      const badge = document.getElementById("topic-status-badge");
+      if (!badge) return;
+      if(topic.isCompleted) {
+        badge.className = "px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20";
+        badge.innerText = "تم الإتقان والحل ✓";
+      } else {
+        badge.className = "px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20";
+        badge.innerText = "قيد الدراسة";
+      }
+    }
+
+    function renderAcademicCards(cards, topicId) {
+      const container = document.getElementById("academic-cards-chain"); 
+      if (!container) return;
+      container.innerHTML = "";
+      
+      cards.forEach((card, idx) => {
+        const uniqueCardId = `${topicId}_card_${idx}`;
+        const isSaved = isItemBookmarked(uniqueCardId);
+        const activeClass = isSaved ? "text-amber-400 border-amber-500/30 bg-amber-500/10" : "";
+
+        const cardEl = document.createElement("div"); 
+        cardEl.className = "cyber-card p-5 rounded-xl space-y-3 relative";
+        
+        const cardTitle = `
+          <div class="flex justify-between items-center border-b border-zinc-900 pb-2">
+            <h4 class="text-xs md:text-sm font-black text-amber-500 flex items-center gap-1.5">
+              <span class="text-zinc-600">⚡</span> ${card.title}
+            </h4>
+            <button id="btn-bookmark-${uniqueCardId}" onclick="toggleBookmark('card', '${uniqueCardId}', '${card.title}', {topicId: '${topicId}', cardIndex: ${idx}, cardData: ${JSON.stringify(card).replace(/"/g, '&quot;')}})" 
+                    class="focus:outline-none transition-all p-1 rounded-md bg-zinc-950 border border-zinc-800 text-zinc-500 hover:text-white ${activeClass}" title="حفظ في مراجعتي">
+              ${getBookmarkIconHTML(isSaved)}
+            </button>
+          </div>
+        `;
+
+        let cardBody = "";
+        switch (card.type) {
+          case "list":
+            cardBody = `<ul class="space-y-2.5 text-xs md:text-sm text-gray-300 pr-1 border-r border-violet-900/30">`;
+            card.content.forEach(item => { cardBody += `<li class="flex items-start gap-2"><span class="text-violet-500 mt-1">✦</span><span>${item}</span></li>`; });
+            cardBody += `</ul>`; break;
+          case "comparison":
+            cardBody = `<div class="overflow-x-auto rounded-lg border border-zinc-800"><table class="w-full text-right text-xs border-collapse"><thead><tr class="bg-zinc-950 text-zinc-300">${card.content.headers.map(h => `<th class="p-3 border-b border-zinc-800 font-black">${h}</th>`).join('')}</tr></thead><tbody>${card.content.rows.map(row => `<tr class="border-b border-zinc-800 hover:bg-zinc-900/20">${row.map(cell => `<td class="p-3 text-zinc-300 leading-relaxed">${cell}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`; break;
+          case "standard": default:
+            cardBody = `<div class="text-xs md:text-sm text-gray-300 leading-relaxed text-justify">${card.content}</div>`; break;
+        }
+        cardEl.innerHTML = cardTitle + cardBody; 
+        container.appendChild(cardEl);
+      });
+      if (window.MathJax && typeof window.MathJax.typeset === 'function') MathJax.typeset();
+    }
+
+    /*************************************************************************
+     * 6. محرك وأكواد تشغيل المختبر الافتراضي الذكي:
+     *************************************************************************/
+    function toggleSimSections() {
+      const type = document.getElementById("test-type-select").value;
+      const flameCtrl = document.getElementById("sim-flame-controls");
+      const wetCtrl = document.getElementById("sim-wet-controls");
+      const flameView = document.getElementById("sim-flame-viewport");
+      const wetView = document.getElementById("sim-wet-viewport");
+
+      if (type === "flame") {
+        flameCtrl.classList.remove("hidden");
+        flameView.classList.remove("hidden");
+        wetCtrl.classList.add("hidden");
+        wetView.classList.add("hidden");
+      } else {
+        flameCtrl.classList.add("hidden");
+        flameView.classList.add("hidden");
+        wetCtrl.classList.remove("hidden");
+        wetView.classList.remove("hidden");
+        updateReagents();
+      }
+    }
+
+    function runFlameTest() {
+      const metal = document.getElementById('metal-select').value;
+      const flame = document.getElementById('gas-flame');
+      const explanation = document.getElementById('flame-explanation');
+      
+      let flameColor, glowShadow, text;
+      
+      switch(metal) {
+        case 'sodium':
+          flameColor = 'radial-gradient(circle at bottom, #ff9900 20%, #ffcc00 60%, rgba(255,254,0,0) 80%)';
+          glowShadow = '0 -15px 40px #ff9900';
+          text = "<strong>أيون الصوديوم ($Na^+$):</strong> يتوهج اللهب بـ <strong>لون أصفر فاقع ساطع</strong>. التفسير: إثارة إلكترون التكافؤ الوحيد في المدار $3s$ وانتقاله إلى المدار $3p$ ثم عودته باعثاً طاقة طيفية مطابقة لطول موجة الضوء الأصفر.";
+          break;
+        case 'potassium':
+          flameColor = 'radial-gradient(circle at bottom, #b794f4 20%, #d6bcfa 60%, rgba(214,188,250,0) 80%)';
+          glowShadow = '0 -15px 40px #b794f4';
+          text = "<strong>أيون البوتاسيوم ($K^+$):</strong> يتوهج بـ <strong>لون بنفسجي باهت (خزامي)</strong>. تكتسب الإلكترونات طاقة حرارية لتنتقل لمدارات أعلى وتطلق ضوءاً بنفسجياً شاحباً عند عودتها للاستقرار.";
+          break;
+        case 'copper':
+          flameColor = 'radial-gradient(circle at bottom, #0d9488 20%, #2dd4bf 60%, rgba(45,212,191,0) 80%)';
+          glowShadow = '0 -15px 40px #0d9488';
+          text = "<strong>أيون النحاس ($Cu^{2+}$):</strong> يظهر بـ <strong>لون أخضر مزرق باهت</strong> وهو مميز للأملاح الانتقالية المائية واللامائية للنحاس الثنائي.";
+          break;
+        case 'boron':
+          flameColor = 'radial-gradient(circle at bottom, #16a34a 20%, #4ade80 60%, rgba(74,222,128,0) 80%)';
+          glowShadow = '0 -15px 40px #16a34a';
+          text = "<strong>أيون البورون ($B^{3+}$):</strong> يعطي <strong>لهباً أخضر مصفر ساطعاً وواضحاً للغاية</strong>.";
+          break;
+        case 'calcium':
+          flameColor = 'radial-gradient(circle at bottom, #ea580c 20%, #fb923c 60%, rgba(251,146,60,0) 80%)';
+          glowShadow = '0 -15px 40px #ea580c';
+          text = "<strong>أيون الكالسيوم ($Ca^{2+}$):</strong> يتلون بـ <strong>لون أصفر مائل إلى برتقالي محمر (طوبى)</strong>.";
+          break;
+        case 'lithium':
+          flameColor = 'radial-gradient(circle at bottom, #dc2626 20%, #f87171 60%, rgba(248,113,113,0) 80%)';
+          glowShadow = '0 -15px 40px #dc2626';
+          text = "<strong>أيون الليثيوم ($Li^+$):</strong> يعطي <strong>لوناً أحمر قرمزيّاً داكناً وساطعاً</strong>.";
+          break;
+        case 'magnesium':
+          flameColor = 'radial-gradient(circle at bottom, #f3f4f6 30%, #ffffff 70%, rgba(255,255,255,0) 90%)';
+          glowShadow = '0 -20px 50px #ffffff';
+          text = "<strong>أيون المغنيزيوم ($Mg^{2+}$):</strong> يتوهج بـ <strong>وميض أبيض باهر ساطع جداً</strong>.";
+          break;
+        default:
+          flameColor = 'radial-gradient(circle at bottom, #3b82f6 15%, rgba(59,130, blue,0) 70%)';
+          glowShadow = 'none';
+          text = "اختر أيوناً معدنياً لتقريب سلك البلاتين من اللهب الافتراضي لملاحظة الضوء المنبعث وتفسيره الطيفي الحركي.";
+      }
+      
+      flame.style.background = flameColor;
+      flame.style.boxShadow = glowShadow;
+      explanation.innerHTML = text;
+      AudioFX.playCorrect();
+      if (window.MathJax && typeof window.MathJax.typeset === 'function') MathJax.typeset();
+    }
+
+    function updateReagents() {
+      const sample = document.getElementById('sample-select').value;
+      const reagentSelect = document.getElementById('reagent-select');
+      reagentSelect.innerHTML = '';
+      
+      let options = [{value: "", text: "-- اختر الكاشف المتاح للأنبوب --"}];
+      
+      if (sample === 'halide-cl' || sample === 'halide-i') {
+        options.push({value: 'agno3', text: 'محلول نترات الفضة AgNO3'});
+      } else if (sample === 'plant-flav') {
+        options.push({value: 'ammonia-h2so4', text: 'محلول الأمونيا + حمض الكبريت المركز'});
+      } else if (sample === 'plant-glyc') {
+        options.push({value: 'glacial-fe-h2so4', text: 'حمض الخل الثلجي + كلوريد الحديد + حمض الكبريت'});
+      } else if (sample.startsWith('toxic-')) {
+        options.push({value: 'hcl-na2s', text: 'حمض كلور الماء HCl + كبريتيد الصوديوم Na2S'});
+        if (sample === 'toxic-as') {
+          options.push({value: 'bogo', text: 'كاشف بوغو + قطرتي يود (حمام مائي ساخن)'});
+        } else if (sample === 'toxic-hg' || sample === 'toxic-pb') {
+          options.push({value: 'ki', text: 'محلول يوديد البوتاسيوم KI'});
+        }
+        if (sample === 'toxic-pb' || sample === 'toxic-ba') {
+          options.push({value: 'k2cro4', text: 'محلول كرومات البوتاسيوم K2CrO4'});
+        }
+        if (sample === 'toxic-ba') {
+          options.push({value: 'h2so4', text: 'حمض الكبريت المخفف H2SO4'});
+          options.push({value: 'na-oxalate', text: 'أوكسالات الصوديوم'});
+        }
+      } else if (sample === 'drug-sal') {
+        options.push({value: 'fe-perchlorate', text: 'فوق كلور الحديد Fe(ClO4)3'});
+        options.push({value: 'bromine-water', text: 'حمض البروم'});
+      } else if (sample === 'drug-cod') {
+        options.push({value: 'fe-perchlorate', text: 'فوق كلور الحديد Fe(ClO4)3'});
+        options.push({value: 'froehde', text: 'كاشف فرويد (موليبدات الصوديوم + حمض كبريت)'});
+      }
+      
+      options.forEach(opt => {
+        let el = document.createElement('option');
+        el.value = opt.value;
+        el.textContent = opt.text;
+        reagentSelect.appendChild(el);
+      });
+    }
+
+    function triggerReaction() {
+      const sample = document.getElementById('sample-select').value;
+      const reagent = document.getElementById('reagent-select').value;
+      const liquid = document.getElementById('tube-liquid');
+      const ppt = document.getElementById('tube-precipitate');
+      const explanation = document.getElementById('reaction-explanation');
+      const dropper = document.getElementById('dropper-fluid');
+      
+      if (!sample || !reagent) {
+        alert('الرجاء اختيار المادة المجهولة والكاشف أولاً من القائمة!');
+        return;
+      }
+      
+      HapticFX.triggerSelection();
+      dropper.style.display = 'block';
+      setTimeout(() => {
+        dropper.style.display = 'none';
+        resolveReaction(sample, reagent, liquid, ppt, explanation);
+      }, 1200);
+    }
+
+    function resolveReaction(sample, reagent, liquid, ppt, explanation) {
+      let liqColor, pptColor, pptHeight, text;
+      
+      liquid.style.backgroundColor = 'rgba(255,255,255,0.15)';
+      ppt.style.height = '0%';
+      ppt.style.backgroundColor = 'transparent';
+      
+      if (sample === 'halide-cl' && reagent === 'agno3') {
+        liqColor = 'rgba(255,255,255,0.05)';
+        pptColor = '#f3f4f6'; // أبيض
+        pptHeight = '35%';
+        text = "<strong>التفاعل:</strong> $Cl^- + AgNO_3 \\rightarrow$ <strong>$AgCl$ (راسب أبيض)</strong> + $NO_3^-$.<br><strong>النتيجة:</strong> تشكل فوري لعكر كثيف يترسب في أسفل الأنبوب على شكل راسب أبيض مميز لكلوريد الفضة.";
+      }
+      else if (sample === 'halide-i' && reagent === 'agno3') {
+        liqColor = 'rgba(255,255,255,0.05)';
+        pptColor = '#fde047'; // أصفر
+        pptHeight = '35%';
+        text = "<strong>التفاعل:</strong> $I^- + AgNO_3 \\rightarrow$ <strong>$AgI$ (راسب أصفر)</strong> + $NO_3^-$.<br><strong>النتيجة:</strong> تشكل عكر بلون أصفر فاقع كثيف يترسب ببطء في قاع الأنبوب.";
+      }
+      else if (sample === 'plant-flav' && reagent === 'ammonia-h2so4') {
+        liqColor = 'rgba(251, 191, 36, 0.9)'; // أصفر ثم يختفي
+        pptColor = 'transparent';
+        pptHeight = '0%';
+        text = "<strong>التفاعل:</strong> فحص الفلافونيدات النوعي مع الوسط القلوي والحمض المؤكسد.<br><strong>النتيجة:</strong> يظهر فورياً <strong>لون أصفر شديد الوضوح ثم يختفي تدريجياً وبسرعة</strong>، وهو العلامة الصيدلانية لتأكيد الفلافونيدات.";
+      }
+      else if (sample === 'plant-glyc' && reagent === 'glacial-fe-h2so4') {
+        liqColor = 'rgba(224, 242, 254, 0.2)';
+        pptColor = '#451a03'; // بني
+        pptHeight = '15%';
+        text = "<strong>التفاعل:</strong> معاملة الغليكوزيدات بحمض الخل الثلجي وكلوريد الحديد وحمض الكبريت المركّز.<br><strong>النتيجة:</strong> يتكون تلوّن طبقي وتتشكل <strong>حلقة بنية واضحة للغاية وفارقة</strong> تثبت الكشف الإيجابي عن الغليكوزيدات النباتية.";
+      }
+      else if (sample === 'toxic-as' && reagent === 'hcl-na2s') {
+        liqColor = 'rgba(254, 240, 138, 0.4)';
+        pptColor = '#eab308'; // أصفر زرنيخ
+        pptHeight = '30%';
+        text = "<strong>التفاعل:</strong> $2As^{3+} + 3Na_2S + 6HCl \\rightarrow$ <strong>$As_2S_3$ (راسب أصفر)</strong> + $6NaCl + 6H^+$.<br><strong>النتيجة:</strong> راسب كبريتيد الزرنيخ الأصفر المشرق الذي يطلق <strong>رائحة ثومية قوية ومميزة</strong> تحذر من سم الزرنيخ الشديد.";
+      }
+      else if (sample === 'toxic-as' && reagent === 'bogo') {
+        liqColor = 'rgba(75, 85, 99, 0.3)';
+        pptColor = '#271b10'; // أسمر
+        pptHeight = '35%';
+        text = "<strong>التفاعل:</strong> طريقة بوغو بإرجاع الزرنيخ باستخدام هيبوفوسفيت الصوديوم بوجود حمض كلور الماء واليود.<br><strong>النتيجة:</strong> بعد التسخين في حمام مائي ساخن لنصف ساعة، يتكون <strong>راسب أو عكر أسمر داكن مميز للغاية</strong>.";
+      }
+      else if (sample === 'toxic-hg' && reagent === 'hcl-na2s') {
+        liqColor = 'rgba(255, 255, 255, 0.05)';
+        pptColor = '#111827'; // أسود زئبق
+        pptHeight = '40%';
+        text = "<strong>التفاعل:</strong> $Hg^{2+} + Na_2S \\rightarrow$ <strong>$HgS$ (راسب أسود كثيف)</strong> + $2Na^+$.<br><strong>النتيجة:</strong> تفاعل ترسيب حاسم وسريع يتشكل فيه راسب أسود فاحم وداكن من كبريتيد الزئبق المستقر.";
+      }
+      else if (sample === 'toxic-hg' && reagent === 'ki') {
+        liqColor = 'rgba(255, 255, 255, 0.05)';
+        pptColor = '#dc2626'; // أحمر يوديد الزئبق
+        pptHeight = '30%';
+        text = "<strong>التفاعل:</strong> $Hg^{2+} + 2KI \\rightarrow$ <strong>$HgI_2$ (راسب أحمر قرمزي)</strong> + $2K^+$.<br><strong>النتيجة:</strong> تشكل راسب أحمر مبهج ينحل بسرعة تامة عند إضافة زيادة من كاشف $KI$ بسبب تشكل معقد زئبقات البوتاسيوم الذائب $[HgI_4]^{2-}$.";
+      }
+      else if (sample === 'toxic-pb' && reagent === 'hcl-na2s') {
+        liqColor = 'rgba(255,255,255,0.05)';
+        pptColor = '#f59e0b'; // أصفر (حسب المحاضرة)
+        pptHeight = '35%';
+        text = "<strong>التفاعل:</strong> $Pb^{2+} + Na_2S \\rightarrow$ <strong>$PbS$ (راسب أصفر حسب المنهج الأكاديمي المعتمد في المحاضرة)</strong>.<br><strong>النتيجة:</strong> تشكّل الراسب الأصفر الموصوف مخبرياً لتأكيد وجود الرصاص السام.";
+      }
+      else if (sample === 'toxic-pb' && reagent === 'ki') {
+        liqColor = 'rgba(255,255,255,0.05)';
+        pptColor = '#facc15'; // أصفر يوديد الرصاص
+        pptHeight = '30%';
+        text = "<strong>التفاعل:</strong> $Pb^{2+} + 2KI \\rightarrow$ <strong>$PbI_2$ (راسب أصفر)</strong> + $2K^+$.<br><strong>النتيجة:</strong> تشكل يوديد الرصاص ذو اللون الأصفر الذهبي الشاحب والذي يذوب بالحرارة العالية أو بالزيادة الشديدة من الكاشف.";
+      }
+      else if (sample === 'toxic-pb' && reagent === 'k2cro4') {
+        liqColor = 'rgba(255,255,255,0.05)';
+        pptColor = '#eab308'; // أصفر كرومات
+        pptHeight = '32%';
+        text = "<strong>التفاعل:</strong> $Pb^{2+} + K_2CrO_4 \\rightarrow$ <strong>$PbCrO_4$ (راسب أصفر)</strong> + $2K^+$.<br><strong>النتيجة:</strong> كرومات الرصاص ذات اللون الأصفر الثابت والذي يتميز صيدلانياً ومخبرياً بأنه <strong>لا ينحل أبداً بحمض الخل</strong>.";
+      }
+      else if (sample === 'toxic-ba' && reagent === 'hcl-na2s') {
+        liqColor = 'rgba(255, 255, 255, 0.15)';
+        pptColor = 'transparent';
+        pptHeight = '0%';
+        text = "<strong>التفاعل:</strong> الباريوم مع كبريتيد الصوديوم في وسط حمضي.<br><strong>النتيجة:</strong> <strong>لا يتشكل أي راسب</strong> على الإطلاق، وهو اختبار سلبي فارق لنفي وجود المعادن السامة الثقيلة وتوجيه الكشف للباريوم.";
+      }
+      else if (sample === 'toxic-ba' && reagent === 'h2so4') {
+        liqColor = 'rgba(255, 255, 255, 0.05)';
+        pptColor = '#ffffff'; // أبيض كبريتات باريوم
+        pptHeight = '38%';
+        text = "<strong>التفاعل:</strong> $Ba^{2+} + H_2SO_4 \\rightarrow$ <strong>$BaSO_4$ (راسب أبيض كثيف)</strong> + $2H^+$.<br><strong>النتيجة:</strong> راسب كبريتات الباريوم الأبيض الناصع الذي يتميز بأنه شحيح الانحلال في الماء ولا يذوب في الأحماض المخففة.";
+      }
+      else if (sample === 'toxic-ba' && reagent === 'na-oxalate') {
+        liqColor = 'rgba(255,255,255,0.05)';
+        pptColor = '#e5e7eb'; // أبيض أوكسالات
+        pptHeight = '30%';
+        text = "<strong>التفاعل:</strong> $Ba^{2+} + Na_2C_2O_4 \\rightarrow$ <strong>$BaC_2O_4$ (راسب أبيض بلوري)</strong> + $2Na^+$.<br><strong>النتيجة:</strong> تشكل بلورات دقيقة بيضاء اللون من أوكسالات الباريوم الشحيحة.";
+      }
+      else if (sample === 'toxic-ba' && reagent === 'k2cro4') {
+        liqColor = 'rgba(255,255,255,0.05)';
+        pptColor = '#facc15'; // أصفر كرومات باريوم
+        pptHeight = '30%';
+        text = "<strong>التفاعل:</strong> $Ba^{2+} + K_2CrO_4 \\rightarrow$ <strong>$BaCrO_4$ (راسب أصفر)</strong> + $2K^+$.<br><strong>النتيجة:</strong> تشكل كرومات الباريوم ذات اللون الأصفر الهادئ.";
+      }
+      else if (sample === 'drug-sal' && reagent === 'fe-perchlorate') {
+        liqColor = 'rgba(109, 40, 217, 0.85)'; // أزرق بنفسجي
+        pptColor = 'transparent';
+        pptHeight = '0%';
+        text = "<strong>التفاعل:</strong> تفاعل حمض الصفصاف مع فوق كلور الحديد $Fe(ClO_4)_3$.<br><strong>النتيجة:</strong> يظهر فوراً <strong>تلوّن أزرق بنفسجي داكن وشفاف</strong> متميز للغاية، وهو الكشف التأكيدي للساليسيلات.";
+      }
+      else if (sample === 'drug-sal' && reagent === 'bromine-water') {
+        liqColor = 'rgba(255,255,255,0.15)';
+        pptColor = '#f3f4f6'; // عكر أبيض
+        pptHeight = '20%';
+        text = "<strong>التفاعل:</strong> معاملة حمض الصفصاف بماء البروم.<br><strong>النتيجة:</strong> يتكون <strong>عكر بلوري أبيض ناعم</strong> ينتشر في أنحاء الأنبوب تدريجياً.";
+      }
+      else if (sample === 'drug-cod' && reagent === 'fe-perchlorate') {
+        liqColor = 'rgba(37, 99, 235, 0.85)'; // أزرق صافي
+        pptColor = 'transparent';
+        pptHeight = '0%';
+        text = "<strong>التفاعل:</strong> تفاعل الكودئين مع فوق كلور الحديد $Fe(ClO_4)_3$.<br><strong>النتيجة:</strong> يتكون <strong>لون أزرق نقي وصافٍ</strong> يفرّق الكودئين مباشرة عن اللون البنفسجي لحمض الصفصاف.";
+      }
+      else if (sample === 'drug-cod' && reagent === 'froehde') {
+        liqColor = 'rgba(120, 53, 4, 0.9)'; // بني مخضر ثم أزرق
+        pptColor = 'transparent';
+        pptHeight = '0%';
+        text = "<strong>التفاعل:</strong> تفاعل الكودئين مع كاشف فرويد (موليبدات الصوديوم + حمض كبريت مركز).<br><strong>النتيجة:</strong> تفاعل لوني متدرج ورائع يبدأ بـ <strong>لون بني مائل للاخضرار ثم يتحول ببطء إلى اللون الأزرق الصافي الغامق</strong>.";
+      }
+      else {
+        liqColor = 'rgba(255, 255, 255, 0.2)';
+        pptColor = 'transparent';
+        pptHeight = '0%';
+        text = "لا توجد تفاعلات مخصصة أو رواسب معتمدة في المحاضرة لهذا المزيج الخاطئ. يرجى مراجعة بروتوكولات الكشف في المحاضرة.";
+      }
+      
+      liquid.style.backgroundColor = liqColor;
+      ppt.style.backgroundColor = pptColor;
+      ppt.style.height = pptHeight;
+      explanation.innerHTML = text;
+      AudioFX.playCorrect();
+      if (window.MathJax && typeof window.MathJax.typeset === 'function') MathJax.typeset();
+    }
+
+    /*************************************************************************
+     * 7. كويز التقييم والترسيخ التكراري (Self-Correcting Quiz Engine):
+     *************************************************************************/
+    function initTopicQuiz(questions) {
+      const quizCard = document.getElementById("topic-quiz-card");
+      if (!quizCard) return;
+      if(!questions || questions.length === 0) { quizCard.classList.add("hidden"); return; }
+      quizCard.classList.remove("hidden");
+      
+      const quizActiveArea = document.getElementById("quiz-active-area");
+      if (quizActiveArea) quizActiveArea.classList.remove("hidden");
+      
+      const quizSuccessPanel = document.getElementById("quiz-success-panel");
+      if (quizSuccessPanel) quizSuccessPanel.classList.add("hidden");
+      
+      quizQueue = []; 
+      questions.forEach((q, idx) => { quizQueue.push({ ...q, originalIdx: idx }); });
+      originalQuizLength = questions.length; 
+      updateQuizProgressBar(); 
+      renderQuizQuestion();
+    }
+
+    function updateQuizProgressBar() {
+      const completed = originalQuizLength - quizQueue.length;
+      const progressPercent = Math.max(0, Math.min(100, (completed / originalQuizLength) * 100));
+      const fillEl = document.getElementById("quiz-progress-fill");
+      if (fillEl) fillEl.style.width = `${progressPercent}%`;
+      const countEl = document.getElementById("quiz-queue-count");
+      if (countEl) countEl.innerText = `${completed} / ${originalQuizLength}`;
+    }
+
+    function renderQuizQuestion() {
+      if(quizQueue.length === 0) {
+        const activeArea = document.getElementById("quiz-active-area");
+        if (activeArea) activeArea.classList.add("hidden");
+        
+        const successPanel = document.getElementById("quiz-success-panel");
+        if (successPanel) successPanel.classList.remove("hidden");
+        
+        const topic = LECTURE_DATA.topics.find(t => t.id === activeTopicId);
+        if(topic) { 
+          topic.isCompleted = true; 
+          saveTopicProgress(topic.id);
+          updateTopicStatusBadge(topic); 
+          buildHierarchyTree(); 
+        }
+        
+        HapticFX.triggerSuccess();
+        return;
+      }
+      
+      const activeQ = quizQueue[0];
+      const qText = document.getElementById("quiz-question-text");
+      if (qText) qText.innerText = activeQ.q;
+      
+      updateQuizBookmarkUI();
+
+      const feedbackPanel = document.getElementById("quiz-feedback-panel");
+      if (feedbackPanel) feedbackPanel.classList.add("hidden");
+      
+      const optionsContainer = document.getElementById("quiz-options-grid"); 
+      if (!optionsContainer) return;
+      optionsContainer.innerHTML = "";
+      
+      activeQ.options.forEach((opt, idx) => {
+        const btn = document.createElement("button");
+        btn.className = "p-3.5 bg-zinc-950/80 text-right text-xs md:text-sm font-medium rounded-xl border border-zinc-800 hover:border-violet-500/50 hover:bg-violet-950/10 transition-all text-gray-200 flex justify-between items-center";
+        btn.innerHTML = `<span>${opt}</span> <span class="text-zinc-600 text-[10px]">▲</span>`;
+        btn.onclick = () => submitQuizAnswer(idx, activeQ.correct, activeQ.exp, btn);
+        optionsContainer.appendChild(btn);
+      });
+      if (window.MathJax && typeof window.MathJax.typeset === 'function') MathJax.typeset();
+    }
+
+    function updateQuizBookmarkUI() {
+      const btn = document.getElementById("quiz-bookmark-btn");
+      const icon = document.getElementById("quiz-bookmark-icon");
+      if (!btn || !icon) return;
+      
+      const isSaved = isItemBookmarked(uniqueTopicQuizIdKey());
+      if (isSaved) {
+        btn.className = "focus:outline-none transition-all p-1.5 rounded-lg bg-zinc-900 border border-zinc-800 text-amber-400 bg-amber-500/10";
+        icon.setAttribute("fill", "currentColor");
+      } else {
+        btn.className = "focus:outline-none transition-all p-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-500 hover:text-white";
+        icon.setAttribute("fill", "none");
+      }
+    }
+
+    function toggleActiveQuizBookmark() {
+      if (quizQueue.length === 0) return;
+      const activeQ = quizQueue[0];
+      const qId = uniqueTopicQuizIdKey();
+      
+      const itemData = {
+        q: activeQ.q,
+        options: activeQ.options,
+        correct: activeQ.correct,
+        exp: activeQ.exp,
+        topicTitle: LECTURE_DATA.topics.find(t => t.id === activeTopicId)?.title || ""
+      };
+      
+      toggleBookmark("quiz", qId, activeQ.q, itemData);
+      updateQuizBookmarkUI();
+    }
+
+    function uniqueTopicQuizIdKey() {
+      if (quizQueue.length === 0) return "";
+      return `bookmark_quiz_${activeTopicId}_${quizQueue[0].originalIdx}`;
+    }
+
+    function submitQuizAnswer(selectedIdx, correctIdx, explanation, clickedBtn) {
+      const feedback = document.getElementById("quiz-feedback-panel"); 
+      if (!feedback) return;
+      feedback.classList.remove("hidden");
+      
+      const buttons = document.getElementById("quiz-options-grid").querySelectorAll("button");
+      buttons.forEach(b => b.disabled = true);
+      
+      if (selectedIdx === correctIdx) {
+        AudioFX.playCorrect();
+        HapticFX.triggerSuccess();
+        clickedBtn.className = "p-3.5 bg-emerald-950/20 text-right text-xs md:text-sm font-medium rounded-xl border border-emerald-500 text-emerald-300 flex justify-between items-center w-full";
+        feedback.className = "p-4 rounded-xl text-xs md:text-sm bg-emerald-950/40 border border-emerald-500/30 text-emerald-400 leading-relaxed text-right";
+        feedback.innerHTML = `<strong>✓ إجابة صحيحة نموذجية!</strong><p class="mt-1">${explanation}</p><button onclick="advanceQuizQueue(true)" class="mt-3 px-4 py-1.5 bg-emerald-600 text-white font-bold rounded-lg text-[10px] md:text-xs">التقدم للسؤال التالي ⏭️</button>`;
+      } else {
+        AudioFX.playIncorrect();
+        HapticFX.triggerError();
+        clickedBtn.className = "p-3.5 bg-red-950/20 text-right text-xs md:text-sm font-medium rounded-xl border border-red-500 text-red-300 flex justify-between items-center w-full";
+        feedback.className = "p-4 rounded-xl text-xs md:text-sm bg-red-950/40 border border-red-500/30 text-red-400 leading-relaxed text-right";
+        feedback.innerHTML = `<strong>✕ إجابة خاطئة!</strong><p class="mt-1">تمت إعادة إلحاق هذا السؤال بنهاية القائمة تلقائياً لكي تجيب عليه تكرارياً بشكل صحيح وتثبته في ذهنك.</p><button onclick="advanceQuizQueue(false)" class="mt-3 px-4 py-1.5 bg-red-600 text-white font-bold rounded-lg text-[10px] md:text-xs">موافق</button>`;
+      }
+    }
+
+    function advanceQuizQueue(isCorrect) { 
+      if(isCorrect) {
+        quizQueue.shift(); 
+      } else { 
+        const failed = quizQueue.shift(); 
+        quizQueue.push(failed); 
+      } 
+      updateQuizProgressBar(); 
+      renderQuizQuestion(); 
+    }
+
+    /*************************************************************************
+     * 8. محرك الفلاش كاردز التفاعلي الذكي (Smart Flashcards Engine):
+     *************************************************************************/
+    function buildFlashcardFilters() {
+      const container = document.getElementById("flashcard-filter-tree"); 
+      if (!container) return;
+      container.innerHTML = "";
+      
+      const allBtn = document.createElement("button"); 
+      allBtn.className = "w-full text-right text-xs p-2 rounded-lg bg-violet-950/20 border border-violet-900/30 text-violet-400 font-bold mb-2";
+      allBtn.innerText = "📁 عرض كافة بطاقات المحاضرة الشاملة"; 
+      allBtn.onclick = () => filterFlashcards("all", allBtn); 
+      container.appendChild(allBtn);
+      
+      LECTURE_DATA.topics.forEach(topic => {
+        const btn = document.createElement("button"); 
+        btn.style.paddingRight = `${(topic.level || 1) * 10}px`;
+        btn.className = "w-full text-right text-[11px] p-2 rounded-lg bg-zinc-900/40 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 mb-1 block truncate";
+        btn.innerText = `📄 ${topic.title}`; 
+        btn.onclick = () => filterFlashcards(topic.id, btn); 
+        container.appendChild(btn);
+      });
+    }
+
+    function filterFlashcards(topicId, clickedBtn) {
+      const filterTree = document.getElementById("flashcard-filter-tree");
+      if (!filterTree) return;
+      const buttons = filterTree.querySelectorAll("button");
+      buttons.forEach(b => { b.className = b.className.replace("bg-violet-950/20 border border-violet-900/30 text-violet-400 font-bold", "bg-zinc-900/40 hover:bg-zinc-800 border border-zinc-800 text-zinc-300"); });
+      
+      clickedBtn.className = "w-full text-right text-xs p-2 rounded-lg bg-violet-950/20 border border-violet-900/30 text-violet-400 font-bold mb-2";
+      
+      if(topicId === "all") filteredFlashcards = [...LECTURE_DATA.flashcards];
+      else filteredFlashcards = LECTURE_DATA.flashcards.filter(fc => fc.topicId === topicId);
+      activeFlashcardIdx = 0; 
+      renderFlashcard();
+    }
+
+    function renderFlashcard() {
+      const inner = document.getElementById("flashcard-card-inner"); 
+      if (!inner) return;
+      inner.classList.remove("flashcard-flipped");
+      
+      const emptyState = document.getElementById("fc-empty-state");
+      const progressText = document.getElementById("fc-progress-txt");
+      
+      if(filteredFlashcards.length === 0) { 
+        if (emptyState) emptyState.classList.remove("hidden"); 
+        inner.parentElement.classList.add("hidden"); 
+        if (progressText) progressText.innerText = "0 / 0"; 
+        return; 
+      }
+      
+      if (emptyState) emptyState.classList.add("hidden"); 
+      inner.parentElement.classList.remove("hidden");
+      
+      const card = filteredFlashcards[activeFlashcardIdx]; 
+      const topic = LECTURE_DATA.topics.find(t => t.id === card.topicId);
+      
+      const frontText = document.getElementById("fc-front-text");
+      if (frontText) frontText.innerText = card.front;
+      const backText = document.getElementById("fc-back-text");
+      if (backText) backText.innerText = card.back;
+      const fcTopicName = document.getElementById("fc-topic-name");
+      if (fcTopicName) fcTopicName.innerText = topic ? topic.title : "عام";
+      const fcIndexNum = document.getElementById("fc-index-num");
+      if (fcIndexNum) fcIndexNum.innerText = `${activeFlashcardIdx + 1}`;
+      if (progressText) progressText.innerText = `${activeFlashcardIdx + 1} / ${filteredFlashcards.length}`;
+
+      const uniqueFcId = `bookmark_fc_${card.id}`;
+      const isSaved = isItemBookmarked(uniqueFcId);
+      const btn = document.getElementById("fc-bookmark-btn");
+      const icon = document.getElementById("fc-bookmark-icon");
+      if (btn && icon) {
+        if (isSaved) {
+          btn.className = "focus:outline-none transition-all p-1.5 rounded-lg bg-zinc-900 border border-zinc-800 text-amber-400 bg-amber-500/10 border-amber-500/20";
+          icon.setAttribute("fill", "currentColor");
+        } else {
+          btn.className = "focus:outline-none transition-all p-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-500 hover:text-white";
+          icon.setAttribute("fill", "none");
+        }
+      }
+
+      if (window.MathJax && typeof window.MathJax.typeset === 'function') MathJax.typeset();
+    }
+
+    function flipFlashcard() { 
+      const inner = document.getElementById("flashcard-card-inner");
+      if (inner) inner.classList.toggle("flashcard-flipped"); 
+    }
+    
+    function nextFlashcard() { 
+      if(filteredFlashcards.length === 0) return; 
+      activeFlashcardIdx = (activeFlashcardIdx + 1) % filteredFlashcards.length; 
+      renderFlashcard(); 
+    }
+    
+    function prevFlashcard() { 
+      if(filteredFlashcards.length === 0) return; 
+      activeFlashcardIdx = (activeFlashcardIdx - 1 + filteredFlashcards.length) % filteredFlashcards.length; 
+      renderFlashcard(); 
+    }
+
+    function toggleActiveFlashcardBookmark() {
+      if(filteredFlashcards.length === 0) return;
+      const card = filteredFlashcards[activeFlashcardIdx];
+      const uniqueFcId = `bookmark_fc_${card.id}`;
+      
+      const itemData = {
+        front: card.front,
+        back: card.back,
+        topicId: card.topicId,
+        topicTitle: LECTURE_DATA.topics.find(t => t.id === card.topicId)?.title || "عام"
+      };
+      
+      toggleBookmark("flashcard", uniqueFcId, card.front, itemData);
+      renderFlashcard();
+    }
+
+    /*************************************************************************
+     * 9. مراجعتا الشخصية (Bookmarks Tab Engine):
+     *************************************************************************/
+    function clearAllBookmarks() {
+      HapticFX.triggerError();
+      bookmarkedItems = [];
+      saveBookmarks();
+      renderFlashcard();
+      if (activeTopicId) {
+        selectTopic(activeTopicId); 
+      }
+    }
+
+    function renderBookmarksTab() {
+      const tabContainer = document.getElementById("bookmarks-container");
+      const emptyState = document.getElementById("bookmarks-empty-state");
+      
+      const cardsSection = document.getElementById("bookmarked-cards-section");
+      const quizzesSection = document.getElementById("bookmarked-quizzes-section");
+      const flashcardsSection = document.getElementById("bookmarked-flashcards-section");
+
+      const cardsGrid = document.getElementById("bookmarked-cards-grid");
+      const quizzesGrid = document.getElementById("bookmarked-quizzes-grid");
+      const flashcardsGrid = document.getElementById("bookmarked-flashcards-grid");
+
+      if (!tabContainer || !emptyState) return;
+
+      if (bookmarkedItems.length === 0) {
+        emptyState.classList.remove("hidden");
+        tabContainer.classList.add("hidden");
+        return;
+      }
+
+      emptyState.classList.add("hidden");
+      tabContainer.classList.remove("hidden");
+
+      cardsGrid.innerHTML = "";
+      quizzesGrid.innerHTML = "";
+      flashcardsGrid.innerHTML = "";
+
+      let hasCards = false;
+      let hasQuizzes = false;
+      let hasFlashcards = false;
+
+      bookmarkedItems.forEach(item => {
+        if (item.type === "card") {
+          hasCards = true;
+          const cardEl = document.createElement("div");
+          cardEl.className = "cyber-card p-4 rounded-xl space-y-3 relative";
+          
+          let cardBody = "";
+          const card = item.payload.cardData;
+          switch (card.type) {
+            case "list":
+              cardBody = `<ul class="space-y-1 text-xs text-gray-400 pr-1 border-r border-violet-900/30">`;
+              card.content.forEach(itemText => { cardBody += `<li>• ${itemText}</li>`; });
+              cardBody += `</ul>`; break;
+            case "comparison":
+              cardBody = `<div class="overflow-x-auto rounded border border-zinc-800"><table class="w-full text-right text-[10px] border-collapse"><thead><tr class="bg-zinc-950 text-zinc-400">${card.content.headers.map(h => `<th class="p-2 border-b border-zinc-800 font-bold">${h}</th>`).join('')}</tr></thead><tbody>${card.content.rows.map(row => `<tr class="border-b border-zinc-800">${row.map(cell => `<td class="p-2 text-zinc-400 leading-normal">${cell}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`; break;
+            case "standard": default:
+              cardBody = `<div class="text-xs text-gray-400 leading-relaxed text-justify">${card.content}</div>`; break;
+          }
+
+          cardEl.innerHTML = `
+            <div class="flex justify-between items-start border-b border-zinc-900 pb-2">
+              <div>
+                <span class="text-[9px] text-violet-400 font-bold">شرح: ${item.payload.topicTitle || "عام"}</span>
+                <h4 class="text-xs font-black text-amber-500 mt-0.5">${item.title}</h4>
+              </div>
+              <button onclick="toggleBookmark('card', '${item.uniqueId}', '', null)" class="text-red-400 hover:text-red-300 p-1 rounded-md bg-zinc-900 border border-zinc-800 focus:outline-none" title="إزالة الحفظ">
+                🗑️
+              </button>
+            </div>
+            ${cardBody}
+          `;
+          cardsGrid.appendChild(cardEl);
+        } 
+        
+        else if (item.type === "quiz") {
+          hasQuizzes = true;
+          const qEl = document.createElement("div");
+          qEl.className = "cyber-card p-4 rounded-xl space-y-3 relative";
+          
+          const quiz = item.payload;
+          qEl.innerHTML = `
+            <div class="flex justify-between items-start border-b border-zinc-900 pb-2">
+              <div>
+                <span class="text-[9px] text-amber-500 font-bold">سؤال من: ${quiz.topicTitle || "كويز"}</span>
+                <h4 class="text-xs font-bold text-gray-200 mt-1">${quiz.q}</h4>
+              </div>
+              <button onclick="toggleBookmark('quiz', '${item.uniqueId}', '', null)" class="text-red-400 hover:text-red-300 p-1 rounded-md bg-zinc-900 border border-zinc-800 focus:outline-none" title="إزالة الحفظ">
+                🗑️
+              </button>
+            </div>
+            <div class="space-y-1.5 text-xs">
+              <span class="text-[10px] text-zinc-500 block font-bold">الخيارات:</span>
+              <div class="grid grid-cols-2 gap-1.5">
+                ${quiz.options.map((opt, i) => {
+                  const correctStyle = i === quiz.correct ? "border-emerald-500/40 bg-emerald-950/20 text-emerald-300 font-bold" : "border-zinc-800 text-zinc-500";
+                  return `<div class="p-2 border rounded-lg text-[10px] ${correctStyle}">${opt}</div>`;
+                }).join('')}
+              </div>
+              <div class="mt-2 p-2 bg-emerald-950/10 border border-emerald-500/20 rounded text-[10px] text-emerald-400 text-right font-medium">
+                <strong>التفسير العلمي: </strong> ${quiz.exp}
+              </div>
+            </div>
+          `;
+          quizzesGrid.appendChild(qEl);
+        } 
+        
+        else if (item.type === "flashcard") {
+          hasFlashcards = true;
+          const fcEl = document.createElement("div");
+          fcEl.className = "cyber-card p-4 rounded-xl space-y-3 relative";
+          
+          const fc = item.payload;
+          fcEl.innerHTML = `
+            <div class="flex justify-between items-start border-b border-zinc-900 pb-2">
+              <div>
+                <span class="text-[9px] text-cyan-400 font-bold">فلاش كارد: ${fc.topicTitle || "مراجعة"}</span>
+                <h4 class="text-xs font-bold text-gray-200 mt-1">${fc.front}</h4>
+              </div>
+              <button onclick="toggleBookmark('flashcard', '${item.uniqueId}', '', null)" class="text-red-400 hover:text-red-300 p-1 rounded-md bg-zinc-900 border border-zinc-800 focus:outline-none" title="إزالة الحفظ">
+                🗑️
+              </button>
+            </div>
+            <div class="p-2.5 bg-zinc-900/40 border border-zinc-800 rounded-lg text-xs">
+              <span class="text-[9px] text-emerald-400 font-black uppercase tracking-wider block mb-1">الجواب المستقر:</span>
+              <p class="text-gray-300 leading-normal font-semibold">${fc.back}</p>
+            </div>
+          `;
+          flashcardsGrid.appendChild(fcEl);
+        }
+      });
+
+      if (hasCards) { cardsSection.classList.remove("hidden"); } else { cardsSection.classList.add("hidden"); }
+      if (hasQuizzes) { quizzesSection.classList.remove("hidden"); } else { quizzesSection.classList.add("hidden"); }
+      if (hasFlashcards) { flashcardsSection.classList.remove("hidden"); } else { flashcardsSection.classList.add("hidden"); }
+
+      if (window.MathJax && typeof window.MathJax.typeset === 'function') {
+        MathJax.typeset();
+      }
+    }
+  </script>
+</body>
+</html>
