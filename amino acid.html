@@ -1,627 +1,1318 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>اختبار الكيمياء الحيوية - الحموض الأمينية | جامعة حماة</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@800;900&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<!-- Telegram WebApp SDK -->
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
-<!-- KaTeX for Math & Chemical formulas -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
-<style>
-body {
-  font-family: 'IBM Plex Sans Arabic', sans-serif;
-  background-color: #0b0b0f !important;
-  color: #FFFFFF;
-  overflow-x: hidden;
-  min-height: 100vh;
-  user-select: none;
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>نظام التقييم التكراري والمؤقت | جامعة حماة</title>
+  
+  <!-- CDNs المعتمدة للتنسيق والهوية البصرية -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@800;900&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- سكريبت تيليجرام لتطبيقات الويب المصغرة (TMA SDK) -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
-h1, h2, h3, h4, h5, h6, .cairo-font {
-  font-family: 'Cairo', sans-serif;
-  font-weight: 900;
-}
+  <!-- مكتبة المعادلات الرياضية والكيميائية KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
 
-:root {
-  --dominant-violet: #8B5CF6;
-  --dominant-gold: #F59E0B;
-}
+  <style>
+    body {
+      font-family: 'IBM Plex Sans Arabic', sans-serif;
+      background-color: #0b0b0f !important;
+      color: #FFFFFF;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+    
+    h1, h2, h3, h4, h5, h6, .cairo-font {
+      font-family: 'Cairo', sans-serif;
+      font-weight: 900;
+    }
 
-.cyber-card-gold-violet {
-  background: rgba(15, 15, 22, 0.85);
-  border: 1px solid rgba(245, 158, 11, 0.25);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.45), 0 0 15px rgba(139, 92, 246, 0.1);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
+    :root {
+      --dominant-violet: #8B5CF6;
+      --dominant-gold: #F59E0B;
+      --gold-glow: rgba(245, 158, 11, 0.25);
+      --violet-glow: rgba(139, 92, 246, 0.25);
+    }
 
-.quiz-option-btn {
-  background: rgba(23, 23, 33, 0.7);
-  border: 1px solid rgba(139, 92, 246, 0.2);
-  transition: all 0.2s ease-in-out;
-}
-.quiz-option-btn:hover:not(:disabled) {
-  border-color: var(--dominant-gold);
-  background: rgba(245, 158, 11, 0.12);
-  box-shadow: 0 0 15px rgba(245, 158, 11, 0.15);
-  transform: translateY(-2px);
-}
+    /* التوازن بين الذهبي والبنفسجي في الإطارات والبطاقات الزجاجية */
+    .cyber-card-gold-violet {
+      background: rgba(15, 15, 22, 0.8);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.45), 0 0 15px rgba(139, 92, 246, 0.08);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .cyber-card-gold-violet:hover {
+      border-color: rgba(245, 158, 11, 0.45);
+      box-shadow: 0 0 25px rgba(139, 92, 246, 0.25), 0 0 10px rgba(245, 158, 11, 0.2);
+    }
 
-.progress-gold-violet {
-  background: linear-gradient(90deg, #8B5CF6 0%, #D97706 50%, #F59E0B 100%);
-  box-shadow: 0 0 12px rgba(245, 158, 11, 0.4);
-}
+    /* خيارات الإجابة */
+    .quiz-option-btn {
+      background: rgba(23, 23, 33, 0.7);
+      border: 1px solid rgba(139, 92, 246, 0.15);
+      transition: all 0.2s ease-in-out;
+    }
+    .quiz-option-btn:hover:not(:disabled) {
+      border-color: var(--dominant-gold);
+      background: rgba(245, 158, 11, 0.1);
+      box-shadow: 0 0 15px rgba(245, 158, 11, 0.15);
+      transform: translateY(-2px);
+    }
 
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
-input[type="number"] { -moz-appearance: textfield; }
+    /* شريط التقدّم النيون متدرج بين الذهبي والبنفسجي */
+    .progress-gold-violet {
+      background: linear-gradient(90deg, #8B5CF6 0%, #D97706 50%, #F59E0B 100%);
+      box-shadow: 0 0 12px rgba(245, 158, 11, 0.4);
+    }
 
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: #0b0b0f; }
-::-webkit-scrollbar-thumb { background: rgba(245, 158, 11, 0.3); border-radius: 3px; }
-</style>
+    /* تحسين حقول الإدخال */
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    input[type="number"] {
+      -moz-appearance: textfield;
+    }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #0b0b0f; }
+    ::-webkit-scrollbar-thumb { background: rgba(245, 158, 11, 0.3); border-radius: 3px; }
+
+    /* أنيميشن التبويب الجانبي */
+    .drawer-open {
+      transform: translateX(0) !important;
+    }
+  </style>
 </head>
 <body class="flex flex-col justify-between relative selection:bg-amber-500 selection:text-black">
 
-<header class="border-b border-amber-500/20 bg-zinc-950/90 p-4 sticky top-0 z-30 backdrop-blur-md">
-  <div class="max-w-4xl mx-auto flex justify-between items-center">
-    <div class="flex items-center gap-3">
-      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-violet-600 via-amber-500 to-amber-400 flex items-center justify-center shadow-lg text-lg border border-amber-400/30">
-        🧪
-      </div>
-      <div>
-        <h1 id="quiz-deck-title" class="text-base md:text-lg font-black bg-gradient-to-r from-amber-200 via-violet-300 to-amber-400 bg-clip-text text-transparent">
-          جاري التحميل...
-        </h1>
-        <p id="user-welcome-msg" class="text-[11px] text-zinc-400">منصة الاختبارات الحركية المحددة بوقت</p>
-      </div>
-    </div>
-
-    <!-- المؤقت والستريك -->
-    <div class="flex items-center gap-3">
-      <div id="header-timer-box" class="hidden items-center gap-1.5 bg-zinc-900/90 border border-amber-500/40 px-3 py-1.5 rounded-xl">
-        <span class="text-amber-400 text-xs animate-pulse">⏳</span>
-        <span id="timer-display" class="text-xs font-black text-amber-300 font-mono tracking-wider">00:00</span>
-      </div>
-
-      <div class="flex items-center gap-2 bg-zinc-900/90 border border-violet-500/40 px-3 py-1.5 rounded-xl">
-        <span class="text-amber-400 text-xs">🔥</span>
-        <div class="text-right">
-          <span class="text-[9px] text-zinc-500 block leading-none">التتابع</span>
-          <span id="streak-count" class="text-xs font-black text-violet-300 font-mono">0</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</header>
-
-<main class="max-w-3xl mx-auto w-full flex-grow p-4 md:p-6 z-10 flex flex-col justify-center">
-
-  <!-- 1. شاشة ضبط الوقت -->
-  <div id="timer-setup-card" class="cyber-card-gold-violet p-6 md:p-8 rounded-2xl text-center space-y-6">
-    <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-violet-600/20 to-amber-500/20 border border-amber-400/40 flex items-center justify-center text-amber-400 text-3xl mx-auto shadow-inner">
-      ⏱️
-    </div>
-
-    <div>
-      <h2 class="text-lg md:text-xl font-black text-white">إعداد مؤقت الجلسة التكرارية</h2>
-      <p class="text-xs text-zinc-400 mt-1">حدد الوقت المخصص لإتمام مراجعة كافة الأسئلة (بالدقائق والثواني)</p>
-    </div>
-
-    <div class="flex justify-center items-center gap-4 py-2">
-      <!-- الدقائق -->
-      <div class="flex flex-col items-center">
-        <label class="text-[10px] text-amber-400 font-bold mb-1">الدقائق</label>
-        <div class="flex items-center bg-zinc-950 rounded-xl border border-amber-500/40 p-1">
-          <button onclick="adjustTimeInput('minutes', 1)" class="w-8 h-8 rounded-lg bg-zinc-900 hover:bg-amber-500/20 text-amber-400 font-bold text-sm">+</button>
-          <input type="number" id="input-minutes" min="0" max="59" value="10" class="w-12 bg-transparent text-center font-mono font-bold text-base text-amber-300 focus:outline-none">
-          <button onclick="adjustTimeInput('minutes', -1)" class="w-8 h-8 rounded-lg bg-zinc-900 hover:bg-amber-500/20 text-amber-400 font-bold text-sm">-</button>
-        </div>
-      </div>
-
-      <span class="text-2xl font-black text-violet-400 mt-4">:</span>
-
-      <!-- الثواني -->
-      <div class="flex flex-col items-center">
-        <label class="text-[10px] text-violet-400 font-bold mb-1">الثواني</label>
-        <div class="flex items-center bg-zinc-950 rounded-xl border border-violet-500/40 p-1">
-          <button onclick="adjustTimeInput('seconds', 5)" class="w-8 h-8 rounded-lg bg-zinc-900 hover:bg-violet-500/20 text-violet-400 font-bold text-sm">+</button>
-          <input type="number" id="input-seconds" min="0" max="59" value="00" class="w-12 bg-transparent text-center font-mono font-bold text-base text-violet-300 focus:outline-none">
-          <button onclick="adjustTimeInput('seconds', -5)" class="w-8 h-8 rounded-lg bg-zinc-900 hover:bg-violet-500/20 text-violet-400 font-bold text-sm">-</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="flex justify-center gap-2 flex-wrap text-xs">
-      <button onclick="setPresetTime(5, 0)" class="px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800 hover:border-amber-400 text-zinc-300">⚡ 5 دقائق</button>
-      <button onclick="setPresetTime(10, 0)" class="px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800 hover:border-amber-400 text-zinc-300">🎯 10 دقائق</button>
-      <button onclick="setPresetTime(15, 0)" class="px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800 hover:border-amber-400 text-zinc-300">🧠 15 دقيقة</button>
-      <button onclick="setPresetTime(0, 0)" class="px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800 hover:border-violet-400 text-zinc-300">♾️ بدون وقت</button>
-    </div>
-
-    <button id="start-btn-fallback" onclick="startSessionWithTimer()" class="w-full py-3.5 bg-gradient-to-r from-violet-600 via-amber-500 to-amber-400 text-black font-black rounded-xl text-xs md:text-sm shadow-lg shadow-amber-500/20">
-      🚀 ابدأ التحدي الآن
-    </button>
-  </div>
-
-  <!-- 2. ساحة الكويز النشطة -->
-  <div id="quiz-quiz-container" class="hidden space-y-6">
-    <div class="space-y-2">
-      <div class="flex justify-between items-center text-xs text-zinc-400 font-medium">
-        <span class="flex items-center gap-1.5 text-amber-400 font-bold">
-          <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
-          <span>الأسئلة المتبقية</span>
-        </span>
-        <span class="font-mono text-violet-300 font-bold" id="quiz-queue-count">0 / 0</span>
-      </div>
-
-      <div class="w-full bg-zinc-950 h-2 rounded-full border border-zinc-800 overflow-hidden p-0.5">
-        <div id="quiz-progress-fill" class="progress-gold-violet h-full w-0 rounded-full transition-all duration-300"></div>
-      </div>
-    </div>
-
-    <div class="cyber-card-gold-violet p-6 md:p-8 rounded-2xl border-2 border-violet-900/40 relative overflow-hidden">
-      <div id="quiz-active-area" class="space-y-6">
-        <div class="p-5 bg-zinc-950/70 rounded-xl border border-amber-500/20">
-          <span class="text-[10px] text-amber-400 font-bold block mb-1">السؤال الحالي:</span>
-          <p id="quiz-question-text" class="text-sm md:text-base font-bold text-gray-100 leading-relaxed"></p>
-        </div>
-
-        <div id="quiz-options-grid" class="grid grid-cols-1 gap-3"></div>
-        <div id="quiz-feedback-panel" class="hidden p-5 rounded-xl text-xs md:text-sm"></div>
-      </div>
-
-      <!-- لوحة النجاح -->
-      <div id="quiz-success-panel" class="hidden flex flex-col items-center justify-center py-8 text-center space-y-4">
-        <div class="w-16 h-16 rounded-2xl bg-amber-500/10 border border-amber-400/40 flex items-center justify-center text-amber-400 text-3xl shadow-lg animate-bounce">
-          🏆
+  <!-- ==================== الهيدر الرئيسي ==================== -->
+  <header class="border-b border-amber-500/20 bg-zinc-950/80 p-4 sticky top-0 z-30 backdrop-blur-md">
+    <div class="max-w-4xl mx-auto flex justify-between items-center">
+      <div class="flex items-center gap-3">
+        <!-- أيقونة برابط تدرج ذهبي - بنفسجي -->
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-violet-600 via-amber-500 to-amber-400 flex items-center justify-center shadow-lg shadow-amber-500/10 text-lg border border-amber-400/30">
+          🧪
         </div>
         <div>
-          <h3 class="text-lg font-black text-white">تم إتمام الاختبار بنجاح!</h3>
-          <p class="text-xs text-zinc-400 mt-1">نجحت في حل جميع الأسئلة وتثبيت مفاهيمها.</p>
-        </div>
-
-        <div class="grid grid-cols-3 gap-3 w-full max-w-sm pt-2">
-          <div class="p-3 bg-zinc-950 rounded-xl border border-zinc-800">
-            <span class="text-[9px] text-zinc-500 block">المحاولات</span>
-            <span id="stat-total-attempts" class="text-xs font-bold text-amber-400 font-mono">0</span>
-          </div>
-          <div class="p-3 bg-zinc-950 rounded-xl border border-zinc-800">
-            <span class="text-[9px] text-zinc-500 block">نسبة الدقة</span>
-            <span id="stat-accuracy" class="text-xs font-bold text-emerald-400 font-mono">100%</span>
-          </div>
-          <div class="p-3 bg-zinc-950 rounded-xl border border-zinc-800">
-            <span class="text-[9px] text-zinc-500 block">الوقت</span>
-            <span id="stat-time-spent" class="text-xs font-bold text-violet-300 font-mono">00:00</span>
-          </div>
-        </div>
-
-        <div class="flex gap-2 w-full max-w-sm pt-2">
-          <button onclick="shareResultsToTelegram()" class="flex-1 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-black rounded-xl text-xs shadow-lg">
-            📢 مشاركة النتيجة
-          </button>
-          <button onclick="showSetupScreen()" class="flex-1 py-2.5 bg-gradient-to-r from-violet-600 to-amber-500 text-white font-black rounded-xl text-xs shadow-lg">
-            🔄 جلسة جديدة
-          </button>
+          <h1 id="quiz-deck-title" class="text-base md:text-lg font-black bg-gradient-to-r from-amber-200 via-violet-300 to-amber-400 bg-clip-text text-transparent">
+            جاري التحميل...
+          </h1>
+          <p id="user-welcome-msg" class="text-[11px] text-zinc-400">منصة الاختبارات الحركية المحددة بوقت</p>
         </div>
       </div>
 
-      <!-- لوحة انتهاء الوقت -->
-      <div id="quiz-timeout-panel" class="hidden flex flex-col items-center justify-center py-8 text-center space-y-4">
-        <div class="w-16 h-16 rounded-2xl bg-rose-500/10 border border-rose-500/40 flex items-center justify-center text-rose-400 text-3xl shadow-lg animate-pulse">
-          ⏰
-        </div>
-        <div>
-          <h3 class="text-lg font-black text-rose-400">انتهى الوقت المخصص!</h3>
-          <p class="text-xs text-zinc-400 mt-1">حاول زيادة الوقت المحدد أو تحسين سرعة إجابتك.</p>
-        </div>
-
-        <button onclick="showSetupScreen()" class="mt-4 px-6 py-2.5 bg-gradient-to-r from-amber-500 to-rose-600 text-black font-black rounded-xl text-xs">
-          🔄 إعادة التحدي
+      <!-- أدوات التحكم والعدادات -->
+      <div class="flex items-center gap-2 md:gap-3">
+        <!-- زر فتح الملخص العلمي -->
+        <button onclick="toggleSummaryDrawer()" class="flex items-center gap-1.5 bg-gradient-to-r from-amber-500/20 to-violet-600/20 hover:from-amber-500/30 hover:to-violet-600/30 border border-amber-500/40 px-3 py-1.5 rounded-xl text-amber-300 text-xs font-bold transition-all shadow-lg hover:shadow-amber-500/10">
+          <span>📖</span>
+          <span class="hidden sm:inline">الملخص الشامل</span>
         </button>
+
+        <!-- العداد الزمني -->
+        <div id="header-timer-box" class="hidden items-center gap-1.5 bg-zinc-900/90 border border-amber-500/40 px-3 py-1.5 rounded-xl shadow-lg shadow-amber-500/5">
+          <span class="text-amber-400 text-xs animate-pulse">⏳</span>
+          <span id="timer-display" class="text-xs font-black text-amber-300 font-mono tracking-wider">00:00</span>
+        </div>
+
+        <!-- عداد الـ Streak -->
+        <div class="flex items-center gap-2 bg-zinc-900/90 border border-violet-500/40 px-3 py-1.5 rounded-xl shadow-lg shadow-violet-500/5">
+          <span class="text-amber-400 text-xs">🔥</span>
+          <div class="text-right">
+            <span class="text-[9px] text-zinc-500 block leading-none">التتابع</span>
+            <span id="streak-count" class="text-xs font-black text-violet-300 font-mono">0</span>
+          </div>
+        </div>
       </div>
+    </div>
+  </header>
+
+  <!-- ==================== التبويب الجانبي (الملخص العلمي) ==================== -->
+  <!-- خلفية معتمة -->
+  <div id="summary-backdrop" onclick="toggleSummaryDrawer()" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-40 hidden transition-opacity"></div>
+
+  <!-- الدرج الجانبي -->
+  <aside id="summary-drawer" class="fixed top-0 right-0 h-full w-full max-w-2xl bg-zinc-950 border-l border-amber-500/30 z-50 transition-transform duration-300 ease-in-out transform translate-x-full overflow-y-auto p-6 space-y-6 shadow-2xl">
+    
+    <!-- رأس الدرج -->
+    <div class="flex justify-between items-center border-b border-zinc-800 pb-4 sticky top-0 bg-zinc-950/95 z-10 backdrop-blur-md pt-2">
+      <div class="flex items-center gap-2">
+        <span class="text-xl">📚</span>
+        <h2 class="text-base md:text-lg font-black text-amber-300">ملخص الكيمياء الحيوية: الحموض الأمينية</h2>
+      </div>
+      <button onclick="toggleSummaryDrawer()" class="w-8 h-8 rounded-lg bg-zinc-900 border border-zinc-800 hover:border-amber-400 text-zinc-400 hover:text-white flex items-center justify-center transition-all font-bold">
+        ✕
+      </button>
+    </div>
+
+    <!-- محتوى الملخص الشامل -->
+    <div class="space-y-8 text-xs md:text-sm text-zinc-300 leading-relaxed">
+
+      <!-- قسم 1: مقدمة وبنية -->
+      <section class="space-y-3">
+        <h3 class="text-sm md:text-base font-black text-amber-400 border-r-4 border-amber-400 pr-2">أولاً: مقدمة تأسيسية وبنية الحموض الأمينية</h3>
+        <ul class="list-disc list-inside space-y-1.5 text-zinc-300 bg-zinc-900/60 p-4 rounded-xl border border-zinc-800">
+          <li><strong class="text-violet-300">طبيعة البروتينات:</strong> مركبات متعددة الحموض الأمينية (بوليميرات)، وتعطي عند حلمهتها حموضاً أمينية من جديد.</li>
+          <li><strong class="text-violet-300">البنية الكيميائية:</strong> كربون (ألفا $\alpha$) تحل عليه بنفس الوقت زمرة كربوكسيل ($COOH$), وزمرة أمين ($NH_2$), وسلسلة جانبية ($R$).</li>
+          <li><strong class="text-violet-300">الوفرة:</strong> يوجد أكثر من 300 حمض في الطبيعة، و20 فقط منها معيارية تدعم بروتينات البشر.</li>
+        </ul>
+
+        <h4 class="font-bold text-violet-300 pt-2">التصنيف التغذوي (Nutritional Classification):</h4>
+        <div class="overflow-x-auto">
+          <table class="w-full text-right border-collapse bg-zinc-900/80 rounded-xl overflow-hidden border border-zinc-800 text-[11px] md:text-xs">
+            <thead>
+              <tr class="bg-violet-950/60 text-amber-300 border-b border-zinc-800">
+                <th class="p-2.5">التصنيف</th>
+                <th class="p-2.5">المفهوم</th>
+                <th class="p-2.5">أمثلة اختبارية</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-zinc-800/60">
+              <tr>
+                <td class="p-2.5 font-bold text-amber-400">أساسية (تغذوية)</td>
+                <td class="p-2.5">لا يصنعها الجسم، وتؤخذ من الغذاء حصراً.</td>
+                <td class="p-2.5 text-violet-300">Leu, Val, Met, Phe</td>
+              </tr>
+              <tr>
+                <td class="p-2.5 font-bold text-emerald-400">غير أساسية</td>
+                <td class="p-2.5">يصنعها الجسم داخلياً.</td>
+                <td class="p-2.5 text-violet-300">Tyr (يصنع بهدركسلة Phe)</td>
+              </tr>
+              <tr>
+                <td class="p-2.5 font-bold text-violet-400">نصف تغذوية</td>
+                <td class="p-2.5">يحتاجها الجسم في سن النمو فقط.</td>
+                <td class="p-2.5 text-violet-300">Arg, His</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- قسم 2: التصنيف حسب السلسلة الجانبية -->
+      <section class="space-y-3">
+        <h3 class="text-sm md:text-base font-black text-amber-400 border-r-4 border-amber-400 pr-2">ثانياً: تصنيف الحموض الأمينية حسب السلسلة الجانبية ($R$)</h3>
+        <div class="space-y-3">
+          
+          <div class="p-3.5 bg-zinc-900/70 rounded-xl border border-zinc-800 space-y-1">
+            <h4 class="font-bold text-amber-300 text-xs md:text-sm">1. اللاقطبية (الكارهة للماء):</h4>
+            <p class="text-[11px] text-zinc-400">أليفاتية مفتوحة/متفرعة، لا تشارك بالروابط الهيدروجينية.</p>
+            <p class="text-zinc-200"><strong>- اللوسين (Leu):</strong> 6 كربونات. | <strong>- الإيزولوسين (Ile):</strong> 6 كربونات متفرع مفتوح بلا حلقة. | <strong>- الفالين (Val):</strong> 5 كربونات.</p>
+            <p class="text-zinc-200"><strong>- الغليسين (Gly):</strong> أبسط حمض ($R=H$)، يشكل 33% من الكولاجين. | <strong>- البرولين (Pro):</strong> يحوي حلقة إيمينو، ويتحول لهيدروكسي برولين بوجود فيتامين C.</p>
+          </div>
+
+          <div class="p-3.5 bg-zinc-900/70 rounded-xl border border-zinc-800 space-y-1">
+            <h4 class="font-bold text-amber-300 text-xs md:text-sm">2. العطرية (Aromatic):</h4>
+            <p class="text-[11px] text-zinc-400">تمتص الأشعة فوق البنفسجية لامتلاكها حلقة عطرية.</p>
+            <p class="text-zinc-200"><strong>- الفينيل ألانين (Phe):</strong> لاقطبي غير مشحون (حلقة بنزن). | <strong>- التيروزين (Tyr):</strong> قطبي غير مشحون (زمرة هيدروكسيل)، طليعة الأدرينالين والدرقية.</p>
+            <p class="text-zinc-200"><strong>- التربتوفان (Trp):</strong> يحوي حلقة أندولية، يمتلك أقصى امتصاص للضوء ($280nm$)، طليعة فيتامين B3 والسيروتونين.</p>
+          </div>
+
+          <div class="p-3.5 bg-zinc-900/70 rounded-xl border border-zinc-800 space-y-1">
+            <h4 class="font-bold text-amber-300 text-xs md:text-sm">3. القطبية (غير المشحونة):</h4>
+            <p class="text-zinc-200"><strong>- السيرين (Ser) والثريونين (Thr):</strong> يحويان زمرة هيدروكسيل. الثريونين بمركزين غير متناظرين ($\alpha, \beta$).</p>
+            <p class="text-zinc-200"><strong>- السيستئين (Cys):</strong> حمض كبريتي ($SH$). | <strong>- الأسباراجين (Asn) والغلوتامين (Gln):</strong> قطبية بسبب الزمرة الأميدية.</p>
+          </div>
+
+          <div class="p-3.5 bg-zinc-900/70 rounded-xl border border-zinc-800 space-y-1">
+            <h4 class="font-bold text-amber-300 text-xs md:text-sm">4. القلوية (مشحونة إيجابياً):</h4>
+            <p class="text-zinc-200"><strong>- الليزين (Lys):</strong> 4 زمر ميتيلين ($CH_2$)، موجب بالوسط الفيزيولوجي ($pH=7.4$).</p>
+            <p class="text-zinc-200"><strong>- الأرجنين (Arg):</strong> يحوي زمرة غوانيدية و4 ذرات آزوت إجمالاً. | <strong>- الهستيدين (His):</strong> يحوي حلقة الإيميدازول.</p>
+          </div>
+
+          <div class="p-3.5 bg-zinc-900/70 rounded-xl border border-zinc-800 space-y-1">
+            <h4 class="font-bold text-amber-300 text-xs md:text-sm">5. الحمضية (مشحونة سلبياً):</h4>
+            <p class="text-zinc-200"><strong>- الأسبارتيك (Asp):</strong> كربوكسيل إضافي على كربون بيتا ($\beta$). | <strong>- الغلوتاميك (Glu):</strong> كربوكسيل إضافي على كربون غاما ($\gamma$).</p>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- قسم 3: الحموض غير البروتينية -->
+      <section class="space-y-3">
+        <h3 class="text-sm md:text-base font-black text-amber-400 border-r-4 border-amber-400 pr-2">ثالثاً: الحموض الأمينية غير البروتينية</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
+          <div class="p-3 bg-zinc-900/60 rounded-lg border border-zinc-800"><strong class="text-amber-300">الأورنيثين والسترولين:</strong> وسائط في حلقة البولة.</div>
+          <div class="p-3 bg-zinc-900/60 rounded-lg border border-zinc-800"><strong class="text-amber-300">بيتا-ألانين:</strong> في حمض البانتوتين (فيتامين B).</div>
+          <div class="p-3 bg-zinc-900/60 rounded-lg border border-zinc-800"><strong class="text-amber-300">GABA:</strong> ناقل عصبي مثبط يتشكل بنزع كربوكسيل الغلوتامات.</div>
+          <div class="p-3 bg-zinc-900/60 rounded-lg border border-zinc-800"><strong class="text-amber-300">التورين:</strong> ينظم اقتران الحموض الصفراوية.</div>
+        </div>
+      </section>
+
+      <!-- قسم 4: الخواص والـ pH -->
+      <section class="space-y-3">
+        <h3 class="text-sm md:text-base font-black text-amber-400 border-r-4 border-amber-400 pr-2">رابعاً: الخواص الفيزيائية والتشردية وسلوك الـ pH</h3>
+        <ul class="list-disc list-inside space-y-1 bg-zinc-900/60 p-3.5 rounded-xl border border-zinc-800">
+          <li><strong>الفعالية الضوئية:</strong> الكربون $\alpha$ غير متناظر في جميع الحموض <em>عدا الغليسين</em> (غير فعال ضوئياً).</li>
+          <li><strong>الشكل الفراغي:</strong> بروتينات الكائنات تبنى حصراً من الحموض $L$.</li>
+          <li><strong>نقطة التعادل الكهربائي (pI):</strong> تكون الانحلالية فيها أصغرية والشحنة الصافية معدومة.</li>
+        </ul>
+
+        <h4 class="font-bold text-violet-300 pt-1">سلوك الشحنة الصافية حسب وسط الـ pH:</h4>
+        <div class="overflow-x-auto">
+          <table class="w-full text-right border-collapse bg-zinc-900/80 rounded-xl overflow-hidden border border-zinc-800 text-[11px]">
+            <thead>
+              <tr class="bg-amber-950/40 text-amber-300 border-b border-zinc-800">
+                <th class="p-2">الحمض الأميني</th>
+                <th class="p-2">وسط الـ pH</th>
+                <th class="p-2">الشحنة الصافية</th>
+                <th class="p-2">التفسير</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-zinc-800/60">
+              <tr>
+                <td class="p-2 font-bold text-zinc-200">الأسبارتيك (Asp)</td>
+                <td class="p-2 text-rose-400">شديد الحموضة ($pH=2$)</td>
+                <td class="p-2 font-mono text-emerald-400 font-bold">+1</td>
+                <td class="p-2 text-zinc-400">الكربوكسيل معتدل (0), والأمين موجب (+1).</td>
+              </tr>
+              <tr>
+                <td class="p-2 font-bold text-zinc-200">الأسبارتيك (Asp)</td>
+                <td class="p-2 text-violet-400">شديد القلوية ($pH=11/12$)</td>
+                <td class="p-2 font-mono text-rose-400 font-bold">-2</td>
+                <td class="p-2 text-zinc-400">الأمين معتدل (0), والأنيونان الكربوكسيليان (-2).</td>
+              </tr>
+              <tr>
+                <td class="p-2 font-bold text-zinc-200">الليزين (Lys)</td>
+                <td class="p-2 text-rose-400">شديد الحموضة ($pH=1$)</td>
+                <td class="p-2 font-mono text-emerald-400 font-bold">+2</td>
+                <td class="p-2 text-zinc-400">الكربوكسيل معتدل (0), والزمرتان الأمينيتان (+2).</td>
+              </tr>
+              <tr>
+                <td class="p-2 font-bold text-zinc-200">الهستيدين (His)</td>
+                <td class="p-2 text-amber-400">معتدل تقريباً ($pH=6$)</td>
+                <td class="p-2 text-amber-300 font-bold">-1 وسالبة و+2 جزئياً</td>
+                <td class="p-2 text-zinc-400">الإيميدازول نصف متشردة لكسب الشحنة.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- قسم 5: التفاعلات الكيميائية -->
+      <section class="space-y-3 pb-4">
+        <h3 class="text-sm md:text-base font-black text-amber-400 border-r-4 border-amber-400 pr-2">خامساً: أهم التفاعلات الكيميائية</h3>
+        <div class="space-y-2">
+          <div class="p-3 bg-zinc-900/60 rounded-xl border border-zinc-800">
+            <strong class="text-amber-300 block mb-1">1. إزالة السمية والميتيلة:</strong>
+            ربط حمض البنزوئيك مع الغليسين يحدث حصراً في <strong>الكبد</strong> لتشكيل حمض الهيبوريك. الميثيونين يعتبر الواهب الأهم للميتيل بفضل (SAM).
+          </div>
+          <div class="p-3 bg-zinc-900/60 rounded-xl border border-zinc-800">
+            <strong class="text-amber-300 block mb-1">2. تفاعل الننهدرين:</strong>
+            يعطي لوناً <strong>بنفسجياً</strong> مع كافة الحموض الأمينية، بينما يعطي مع البرولين والهيدروكسي برولين لوناً <strong>أصفراً</strong>.
+          </div>
+          <div class="p-3 bg-zinc-900/60 rounded-xl border border-zinc-800">
+            <strong class="text-amber-300 block mb-1">3. الفسفرة والأمدة:</strong>
+            الفسفرة تحدث على زمر الهيدروكسيل (Ser, Thr, Tyr). بينما الأمدة تنتج الأسباراجين بربط النشادر بحمض الأسبارتيك.
+          </div>
+        </div>
+      </section>
 
     </div>
-  </div>
-</main>
+  </aside>
 
-<footer class="bg-zinc-950/80 border-t border-zinc-900 py-3 text-center">
-  <p class="text-[10px] text-zinc-600">نظام التقييم التكراري المطور | جامعة حماة V9.5 TMA Edition</p>
-</footer>
+  <!-- ==================== المحتوى المركزي ==================== -->
+  <main class="max-w-3xl mx-auto w-full flex-grow p-4 md:p-6 z-10 flex flex-col justify-center">
 
-<script>
-const QUIZ_DATA = {
-  title: "الكيمياء الحيوية - الحموض الأمينية",
-  questions: [
-    { id: "q1", q: "كل مما يلي صحيح عن الحمض الأميني الغليسين (Glycine) ما عدا:", options: ["لا يتمتع بالفعالية الضوئية", "يحتوي على ذرة كربون ألفا غير متناظرة", "يتفاعل مع حمض البنزويك لتشكيل حمض الهيبوريك", "يعتبر من الحموض الأمينية المعيارية"], correct: 1, exp: "الغليسين هو الحمض الأميني الوحيد الذي لا يحوي ذرة كربون ألفا غير متناظرة، لأن السلسلة الجانبية فيه عبارة عن ذرة هيدروجين." },
-    { id: "q2", q: "كل مما يلي صحيح عن الحموض الأمينية العطرية ما عدا:", options: ["التيروزين قطبي لاحتوائه على زمرة هيدروكسيل", "التربتوفان ضعيف القطبية لاحتوائه على زمرة الإندول", "الفينيل ألانين قطبي لاحتوائه على حلقة عطرية", "تمتص الضوء بشدة في المنطقة فوق البنفسجية"], correct: 2, exp: "الفينيل ألانين (Phenylalanine) حمض أميني غير قطبي وغير مشحون بسبب حلقة البنزين العطرية الكارهة للماء." },
-    { id: "q3", q: "تتصف نقطة التعادل الكهربائي (Isoelectric Point) للحمض الأميني بكل مما يلي ما عدا:", options: ["الشحنة الصافية للجزيئة تكون معدومة", "تكون انحلالية الحمض الأميني في أقصى درجاتها (عظمى)", "الحمض الأميني لا يهاجر إذا ما وضع في حقل كهربائي", "يتواجد الحمض الأميني بشكل شاردة ثنائية القطب (Zwitterion)"], correct: 1, exp: "عند نقطة التعادل الكهربائي (pI) تكون انحلالية الحمض الأميني في أصغر درجاتها (الحد الأدنى) مما يسهل ترسبه." },
-    { id: "q4", q: "جميع الحموض الأمينية التالية تعتبر أساسية ما عدا:", options: ["الفالين (Val)", "الإيزولوسين (Ile)", "الليزين (Lys)", "البرولين (Pro)"], correct: 3, exp: "البرولين (Proline) هو حمض أميني غير أساسي يمكن لجسم الإنسان تصنيعه ذاتياً." },
-    { id: "q5", q: "يتصف تفاعل الننهدرين مع الحموض الأمينية بكل مما يلي ما عدا:", options: ["يستخدم كشفياً لمعايرة هذه المركبات", "يعطي معقداً أصفراً مع البرولين", "يعطي لوناً بنفسجياً مع جميع الحموض الأمينية دون استثناء", "ينتج التفاعل عن وجود الزمرتين الأمينية والكربوكسيلية معاً"], correct: 2, exp: "تفاعل الننهدرين يعطي معقداً أصفراً مع البرولين والهيدروكسي برولين لاحتوائهما على زمرة إيمينية ثانوية." },
-    { id: "q6", q: "عدد الحموض الأمينية المعيارية التي تدخل في تركيب البروتينات عند البشر هو:", options: ["10", "20", "50", "300"], correct: 1, exp: "يدخل 20 حمضاً أمينياً معيارياً مشفراً جينياً في بناء البروتينات." },
-    { id: "q7", q: "لقياس التركيز البروتيني عبر مقياس الطيف الضوئي، يتم الاعتماد على امتصاص الضوء عند طول موجة:", options: ["220 nm", "240 nm", "280 nm", "300 nm"], correct: 2, exp: "تمتص الحموض الأمينية العطرية الضوء بشدة عند طول موجة 280 نانومتر." },
-    { id: "q8", q: "يمتص السيستئين الضوء بضعف في المنطقة فوق البنفسجية عند طول موجة:", options: ["220 nm", "240 nm", "280 nm", "300 nm"], correct: 1, exp: "يمتص السيستئين الضوء عند طول موجة 240 نانومتر بسبب وجود الزمرة الثيولية (-SH)." },
-    { id: "q9", q: "تبلغ قيمة الـ $pK$ للمجموعة الغوانيدية الخاصة بالحمض الأميني الأرجينين:", options: ["6.00", "10.07", "12.5", "14.0"], correct: 2, exp: "المجموعة الغوانيدية في الأرجينين تمتلك قيمة $pK_a = 12.5$." },
-    { id: "q10", q: "تبلغ قيمة الـ $pK$ للهيدروكسيل الفينولي الخاص بالتيروزين:", options: ["6.00", "10.07", "12.5", "2.34"], correct: 1, exp: "مجموعة الهيدروكسيل الفينولية في التيروزين تمتلك قيمة $pK_a = 10.07$." },
-    { id: "q11", q: "المركب الذي يلعب دوراً «واهباً لزمرة الميثيل» في تفاعلات الكبد هو:", options: ["الغلوتامات", "الدوبامين", "S-أدينوزيل الميثيونين الفعال (SAM)", "حمض الهيبوريك"], correct: 2, exp: "يعتبر (SAM) المانح الرئيسي لزمر الميثيل في التفاعلات الحيوية." },
-    { id: "q12", q: "يقوم الجسم بالتخلص من سمية حمض البنزويك عبر ربطه مع:", options: ["الألانين", "الغليسين", "الغلوتامين", "الفالين"], correct: 1, exp: "يرتبط الغليسين مع حمض البنزويك لتشكيل حمض الهيبوريك الآمن الذي يطرح في البول." },
-    { id: "q13", q: "الناقل العصبي الناتج عن نزع كربوكسيل حمض الغلوتامات هو:", options: ["GABA", "السيروتونين", "الهيستامين", "الدوبامين"], correct: 0, exp: "ينتج الحمض الأميني المهدئ GABA عن نزع زمرة الكربوكسيل من حمض الغلوتامات." },
-    { id: "q14", q: "تفاعل نزع الكربوكسيل للحمض الأميني «التربتوفان» يؤدي إلى تشكيل:", options: ["الدوبامين", "السيروتونين", "الهيستامين", "حمض البانتوتين"], correct: 1, exp: "التربتوفان هو السلف الحيوي لاصطناع الناقل العصبي السيروتونين (هرمون السعادة)." },
-    { id: "q15", q: "يتطلب إنزيم (Glutamate dehydrogenase) مرافقاً إنزيمياً هو:", options: ["فيتامين B6", "ATP", "NAD+", "FAD+"], correct: 2, exp: "يستخدم إنزيم Glutamate dehydrogenase المرافق الإنزيمي $NAD^+$ أو $NADP^+$." },
-    { id: "q16", q: "في تفاعلات نقل الأمين (Transamination)، يتطلب الإنزيم مرافقاً إنزيمياً هو:", options: ["فيتامين B12", "NADP+", "فيتامين B6 (PLP)", "أيونات النحاس"], correct: 2, exp: "البيريدوكسال فوسفات (PLP - فيتامين B6) هو المرافق الإنزيمي الضروري لإنزيمات نقل الأمين." },
-    { id: "q17", q: "الحموض الأمينية من الشكل (D) هي التي تتواجد في تركيب بروتينات الكائنات الحية.", options: ["صح", "خطأ"], correct: 1, exp: "خطأ، الشكل (L) هو الوحيد الذي يدخل في تركيب بروتينات الكائنات الحية." },
-    { id: "q18", q: "يعتمد الانتماء إلى السلسلة D أو L على جهة دوران الضوء المستقطب.", options: ["صح", "خطأ"], correct: 1, exp: "خطأ، الانتماء لـ D/L يحدد التناظر الفراغي مقارنة بغليسر ألدهيد وليس جهة دوران الضوء." },
-    { id: "q19", q: "يحتوي الحمض الأميني الثريونين (Threonine) على ذرتي كربون غير متناظرتين.", options: ["صح", "خطأ"], correct: 0, exp: "صح، الثريونين والإيزولوسين يمتلك كل منهما ذرتي كربون غير متناظرتين." },
-    { id: "q20", q: "الرابطة الببتيدية تتشكل بحذف جزيء ماء وتكون قادرة على التشرد.", options: ["صح", "خطأ"], correct: 1, exp: "خطأ، الرابطة الببتيدية غير متأينة (لا تتشرد) ولذلك لا تساهم في شحنة البروتين." },
-    { id: "q21", q: "الزمرة الثيولية في السيستئين تشكل جسوراً ثنائية الكبريت تثبت البنية الثالثية للبروتين.", options: ["صح", "خطأ"], correct: 0, exp: "صح، تشكل الجسور ثنائية الكبريت (Disulfide Bridges) روابط تساهمية تثبت الطي في البروتين." },
-    { id: "q22", q: "يصنف الحمض الأميني الهيستيدين (Histidine) بنيوياً ضمن الحموض الأمينية القلوية.", options: ["صح", "خطأ"], correct: 0, exp: "صح، الهيستيدين حمض أميني قاعدي/قلوي بسبب احتوائه على حلقة الإيميدازول." },
-    { id: "q23", q: "الحمض الأميني الذي يمتلك سلسلة جانبية ترتبط بالأمين معاً (حمض إيميني) هو:", options: ["الفينيل ألانين", "التيروزين", "البرولين", "التربتوفان"], correct: 2, exp: "البرولين يتميز بنيوياً بتشكيلي حلقة ترتبط بالزمرة الأمينية مقيدة الدوران." },
-    { id: "q24", q: "قطبية الحمضين الأمينيين الأسباراجين والغلوتامين تعود لاحتوائهما على زمرة:", options: ["هيدروكسيلية", "ثيولية", "أميدية", "غوانيدية"], correct: 2, exp: "يحتويان على زمرة أميدية ($-CONH_2$) حرة تجعلهما قطبيين غير مشحونين." },
-    { id: "q25", q: "حمض أميني لا يصنف من النوع ألفا ويدخل في تركيب حمض البانتوتين (Vit B5):", options: ["الأورنيثين", "التورين", "بيتا-ألانين (β-Alanine)", "GABA"], correct: 2, exp: "بيتا-ألانين هو حمض أميني من النوع بيتا يدخل في تركيب المرافق A وحمض البانتوتين." },
-    { id: "q26", q: "من الحموض الأمينية التي تمتلك زمرة هيدروكسيلية قابلة للفسفرة:", options: ["التيروزين والسيرين والثريونين", "السيستئين والميثيونين", "الأسبارتات والغلوتامات", "الأرجينين والليزين"], correct: 0, exp: "السيرين والثريونين والتيروزين تحتوي على زمرة هيدروكسيل (-OH) حرة تتيح فسفرتها." },
-    { id: "q27", q: "الحموض الأمينية الوسطية في الاصطناع الحيوي للبولة ولا تدخل في البروتين هي:", options: ["الأسبارتات والغلوتامات", "الأورنيثين والسيترولين", "السيرين والثريونين", "الفالين واللوسين"], correct: 1, exp: "الأورنيثين والسيترولين مركبان وسيطان حاسمان في دورة اليوريا." },
-    { id: "q28", q: "الزمرة الجانبية المميزة للحمض الأميني الأرجينين هي:", options: ["زمرة الإيميدازول", "الزمرة الغوانيدية", "زمرة الثيول", "زمرة الإندول"], correct: 1, exp: "يمتلك الأرجينين زمرة غوانيدية (Guanidino group) ذات الشحنة الموجبة." },
-    { id: "q29", q: "عند تفاعل الحموض الأمينية مع خلات النحاس تعطي لوناً أزرق عبر روابط:", options: ["أيونية", "هيدروجينية", "تساندية (معقدات تناسقية)", "فاندرفالس"], correct: 2, exp: "تتشكل معقدات تناسقية ملونة مع أيون النحاس عبر روابط تساندية." },
-    { id: "q30", q: "في حال كان البروتين يمتلك زيادة من المجموعات الكربوكسيلية، فإن نقطة $pI$ تكون:", options: ["منخفضة (حامضية)", "مرتفعة (قاعدية)", "معتدلة تماماً (7.0)", "لا يمكن تحديدها"], correct: 0, exp: "وفرة الزمر الكربوكسيلية الحمضية تجعل البروتين حامضياً ($pI < 7$)." },
-    { id: "q31", q: "يشكل الغليسين نسبة نسيجية عالية تصل إلى 33% في تركيب:", options: ["الإيلاستين", "الميوغلوبين", "الكولاجين", "الهيموغلوبين"], correct: 2, exp: "يتكون الكولاجين من تكرار تسلسلي يحتل فيه الغليسين المركز الثالث دائماً." },
-    { id: "q32", q: "الحمض الأميني الذي يتميز بوجود زمرة الإيميدازول في سلسلته الجانبية هو:", options: ["الأسبارتات", "الأسباراجين", "الليزين", "الهيستيدين"], correct: 3, exp: "حلقة الإيميدازول الخماسية هي المجموعة الوظيفية للهيستيدين." },
-    { id: "q33", q: "نجد المجموعة الإندولية العطرية المدمجة في تركيب الحمض الأميني:", options: ["التربتوفان (Trp)", "الأرجينين (Arg)", "الأسبارتات (Asp)", "الميثيونين (Met)"], correct: 0, exp: "التربتوفان يحتوي على حلقة الإندول المكونة من حلقة بنزين مدمجة مع حلقة بيرول." },
-    { id: "q34", q: "تتطلب عملية هيدروكسلة البرولين في اصطناع الكولاجين توفر الفيتامين:", options: ["فيتامين A", "فيتامين C (حمض الأسكوربيك)", "فيتامين D", "فيتامين B12"], correct: 1, exp: "يحافظ فيتامين C على الحديد بحالة إرجاع $Fe^{2+}$ نَشِطة داخل إنزيم Prolyl hydroxylase." }
-  ]
-};
+    <!-- ================= 1. شاشة ضبط الوقت (قبل البدء) ================= -->
+    <div id="timer-setup-card" class="cyber-card-gold-violet p-6 md:p-8 rounded-2xl border-2 border-amber-500/30 text-center space-y-6">
+      <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-violet-600/20 to-amber-500/20 border border-amber-400/40 flex items-center justify-center text-amber-400 text-3xl mx-auto shadow-inner">
+        ⏱️
+      </div>
 
-/*************************************************************************
-* 1. إعدادات Telegram WebApp SDK والتفاعل
-*************************************************************************/
-const tg = window.Telegram?.WebApp;
+      <div>
+        <h2 class="text-lg md:text-xl font-black text-white">إعداد مؤقت الجلسة التكرارية</h2>
+        <p class="text-xs text-zinc-400 mt-1">حدد الوقت المخصص لإتمام مراجعة كافة الأسئلة (بالدقائق والثواني)</p>
+      </div>
 
-// صوت الأزرار والأحداث
-const AudioFX = {
-  ctx: null,
-  init() { 
-    if (!this.ctx) {
-      this.ctx = new (window.AudioContext || window.webkitAudioContext)(); 
-    }
-    if (this.ctx.state === 'suspended') {
-      this.ctx.resume();
-    }
-  },
-  playCorrect() {
-    try {
-      this.init();
-      const osc = this.ctx.createOscillator();
-      const gain = this.ctx.createGain();
-      osc.connect(gain); gain.connect(this.ctx.destination);
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(523.25, this.ctx.currentTime);
-      osc.frequency.setValueAtTime(659.25, this.ctx.currentTime + 0.1);
-      gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.35);
-      osc.start(); osc.stop(this.ctx.currentTime + 0.35);
-    } catch(e){}
-  },
-  playIncorrect() {
-    try {
-      this.init();
-      const osc = this.ctx.createOscillator();
-      const gain = this.ctx.createGain();
-      osc.connect(gain); gain.connect(this.ctx.destination);
-      osc.type = 'sawtooth';
-      osc.frequency.setValueAtTime(110, this.ctx.currentTime);
-      gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.4);
-      osc.start(); osc.stop(this.ctx.currentTime + 0.4);
-    } catch(e){}
-  }
-};
+      <!-- أدوات التحكم بالدقائق والثواني -->
+      <div class="flex justify-center items-center gap-4 py-2">
+        <!-- الدقائق -->
+        <div class="flex flex-col items-center">
+          <label class="text-[10px] text-amber-400 font-bold mb-1">الدقائق</label>
+          <div class="flex items-center bg-zinc-950 rounded-xl border border-amber-500/40 p-1">
+            <button onclick="adjustTimeInput('minutes', 1)" class="w-8 h-8 rounded-lg bg-zinc-900 hover:bg-amber-500/20 text-amber-400 font-bold text-sm transition-all">+</button>
+            <input type="number" id="input-minutes" min="0" max="180" value="15" class="w-12 bg-transparent text-center font-mono font-bold text-base text-amber-300 focus:outline-none">
+            <button onclick="adjustTimeInput('minutes', -1)" class="w-8 h-8 rounded-lg bg-zinc-900 hover:bg-amber-500/20 text-amber-400 font-bold text-sm transition-all">-</button>
+          </div>
+        </div>
 
-const HapticFX = {
-  triggerSuccess() { tg?.HapticFeedback?.notificationOccurred('success'); },
-  triggerError() { tg?.HapticFeedback?.notificationOccurred('error'); },
-  triggerSelection() { tg?.HapticFeedback?.impactOccurred('light'); }
-};
+        <span class="text-2xl font-black text-violet-400 mt-4">:</span>
 
-/*************************************************************************
-* 2. متغيرات حالة الكويز
-*************************************************************************/
-let quizQueue = [];
-let originalQuizLength = 0;
-let streakCount = 0;
-let totalAttempts = 0;
-let correctAttempts = 0;
-let timerInterval = null;
-let totalTimeAllocated = 0;
-let timeRemaining = 0;
-let isTimerEnabled = false;
+        <!-- الثواني -->
+        <div class="flex flex-col items-center">
+          <label class="text-[10px] text-violet-400 font-bold mb-1">الثواني</label>
+          <div class="flex items-center bg-zinc-950 rounded-xl border border-violet-500/40 p-1">
+            <button onclick="adjustTimeInput('seconds', 5)" class="w-8 h-8 rounded-lg bg-zinc-900 hover:bg-violet-500/20 text-violet-400 font-bold text-sm transition-all">+</button>
+            <input type="number" id="input-seconds" min="0" max="59" value="00" class="w-12 bg-transparent text-center font-mono font-bold text-base text-violet-300 focus:outline-none">
+            <button onclick="adjustTimeInput('seconds', -5)" class="w-8 h-8 rounded-lg bg-zinc-900 hover:bg-violet-500/20 text-violet-400 font-bold text-sm transition-all">-</button>
+          </div>
+        </div>
+      </div>
 
-// تهيئة التطبيق عند الفتح
-document.addEventListener("DOMContentLoaded", () => {
-  // تفعيل خيارات الصوت عند أول كليك لمس
-  document.body.addEventListener('click', () => AudioFX.init(), { once: true });
+      <!-- الخيارات السريعة الجاهزة -->
+      <div class="flex justify-center gap-2 flex-wrap text-xs">
+        <button onclick="setPresetTime(5, 0)" class="px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800 hover:border-amber-400 text-zinc-300 transition-all">⚡ 5 دقائق</button>
+        <button onclick="setPresetTime(15, 0)" class="px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800 hover:border-amber-400 text-zinc-300 transition-all">🎯 15 دقيقة</button>
+        <button onclick="setPresetTime(30, 0)" class="px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800 hover:border-amber-400 text-zinc-300 transition-all">🧠 30 دقيقة</button>
+        <button onclick="setPresetTime(0, 0)" class="px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800 hover:border-violet-400 text-zinc-300 transition-all">♾️ بدون وقت</button>
+      </div>
 
-  document.getElementById("quiz-deck-title").innerText = QUIZ_DATA.title;
+      <button onclick="startSessionWithTimer()" class="w-full py-3.5 bg-gradient-to-r from-violet-600 via-amber-500 to-amber-400 text-black font-black rounded-xl text-xs md:text-sm hover:opacity-95 transition-all shadow-lg shadow-amber-500/20">
+        🚀 ابدأ التحدي الآن
+      </button>
+    </div>
 
-  if (tg) {
-    tg.ready();
-    tg.expand();
-    tg.enableClosingConfirmation();
-    
-    // تخصيص ألوان الهيدر والظهر لتناسب تيليجرام
-    tg.setHeaderColor('#0b0b0f');
-    tg.setBackgroundColor('#0b0b0f');
+    <!-- ================= 2. ساحة الكويز النشطة ================= -->
+    <div id="quiz-quiz-container" class="hidden space-y-6">
+      
+      <!-- شريط التقدم التفاعلي -->
+      <div class="space-y-2">
+        <div class="flex justify-between items-center text-xs text-zinc-400 font-medium">
+          <span class="flex items-center gap-1.5 text-amber-400 font-bold">
+            <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+            <span>الأسئلة المتبقية</span>
+          </span>
+          <span class="font-mono text-violet-300 font-bold" id="quiz-queue-count">0 / 0</span>
+        </div>
 
-    const user = tg.initDataUnsafe?.user;
-    if (user) {
-      document.getElementById("user-welcome-msg").innerText = `مرحباً ${user.first_name || 'طالبنا العزيز'} • حدد الوقت وابدأ التحدي`;
-    }
+        <div class="w-full bg-zinc-950 h-2 rounded-full border border-zinc-800 overflow-hidden p-0.5">
+          <div id="quiz-progress-fill" class="progress-gold-violet h-full w-0 rounded-full transition-all duration-300"></div>
+        </div>
+      </div>
 
-    // تجهيز زر التراجع الأصلي الخاص بتيليجرام
-    tg.BackButton.onClick(() => {
-      tg.showConfirm("هل ترغب في الخروج من التحدي الحالي؟", (confirmed) => {
-        if (confirmed) showSetupScreen();
-      });
+      <!-- بطاقة السؤال النشط -->
+      <div class="cyber-card-gold-violet p-6 md:p-8 rounded-2xl border-2 border-violet-900/40 relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-2xl pointer-events-none"></div>
+        <div class="absolute bottom-0 left-0 w-32 h-32 bg-violet-600/5 rounded-full blur-2xl pointer-events-none"></div>
+
+        <div id="quiz-active-area" class="space-y-6">
+          <!-- نص السؤال -->
+          <div class="p-5 bg-zinc-950/70 rounded-xl border border-amber-500/20 shadow-inner">
+            <span class="text-[10px] text-amber-400 font-bold block mb-1">السؤال الحالي:</span>
+            <p id="quiz-question-text" class="text-sm md:text-base font-bold text-gray-100 leading-relaxed"></p>
+          </div>
+
+          <!-- شبكة الخيارات -->
+          <div id="quiz-options-grid" class="grid grid-cols-1 gap-3"></div>
+
+          <!-- لوحة التفسير العلمي -->
+          <div id="quiz-feedback-panel" class="hidden p-5 rounded-xl text-xs md:text-sm transition-all duration-300"></div>
+        </div>
+
+        <!-- لوحة النجاح واكتمال الكويز -->
+        <div id="quiz-success-panel" class="hidden flex flex-col items-center justify-center py-8 text-center space-y-4">
+          <div class="w-16 h-16 rounded-2xl bg-amber-500/10 border border-amber-400/40 flex items-center justify-center text-amber-400 text-3xl shadow-lg shadow-amber-500/20 animate-bounce">
+            🏆
+          </div>
+          <div>
+            <h3 class="text-lg font-black text-white">تم إتمام الاختبار بنجاح متفوق!</h3>
+            <p class="text-xs text-zinc-400 mt-1">نجحت في حل جميع الأسئلة وتثبيت مفاهيمها في الوقت المحدد.</p>
+          </div>
+
+          <div class="grid grid-cols-3 gap-3 w-full max-w-sm pt-2">
+            <div class="p-3 bg-zinc-950 rounded-xl border border-zinc-800 text-center">
+              <span class="text-[9px] text-zinc-500 block">المحاولات</span>
+              <span id="stat-total-attempts" class="text-xs font-bold text-amber-400 font-mono">0</span>
+            </div>
+            <div class="p-3 bg-zinc-950 rounded-xl border border-zinc-800 text-center">
+              <span class="text-[9px] text-zinc-500 block">نسبة الدقة</span>
+              <span id="stat-accuracy" class="text-xs font-bold text-emerald-400 font-mono">100%</span>
+            </div>
+            <div class="p-3 bg-zinc-950 rounded-xl border border-zinc-800 text-center">
+              <span class="text-[9px] text-zinc-500 block">الوقت المستغرق</span>
+              <span id="stat-time-spent" class="text-xs font-bold text-violet-300 font-mono">00:00</span>
+            </div>
+          </div>
+
+          <button onclick="showSetupScreen()" class="mt-4 px-6 py-2.5 bg-gradient-to-r from-violet-600 to-amber-500 text-white font-black rounded-xl text-xs hover:opacity-90 transition-all shadow-lg shadow-violet-900/30">
+            🔄 إعداد جلسة جديدة
+          </button>
+        </div>
+
+        <!-- لوحة انتهاء الوقت (Timeout Panel) -->
+        <div id="quiz-timeout-panel" class="hidden flex flex-col items-center justify-center py-8 text-center space-y-4">
+          <div class="w-16 h-16 rounded-2xl bg-rose-500/10 border border-rose-500/40 flex items-center justify-center text-rose-400 text-3xl shadow-lg shadow-rose-950/50 animate-pulse">
+            ⏰
+          </div>
+          <div>
+            <h3 class="text-lg font-black text-rose-400">انتهى الوقت المخصص!</h3>
+            <p class="text-xs text-zinc-400 mt-1">حاول زيادة الوقت المحدد أو تحسين سرعة إجابتك في المرة القادمة.</p>
+          </div>
+
+          <button onclick="showSetupScreen()" class="mt-4 px-6 py-2.5 bg-gradient-to-r from-amber-500 to-rose-600 text-black font-black rounded-xl text-xs hover:opacity-90 transition-all shadow-lg shadow-amber-500/20">
+            🔄 إعادة التحدي وتعديل الوقت
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ==================== الفوتر ==================== -->
+  <footer class="bg-zinc-950/80 border-t border-zinc-900 py-3 text-center">
+    <p class="text-[10px] text-zinc-600">نظام التقييم التكراري المطور | جامعة حماة V9.0</p>
+  </footer>
+
+  <!-- ==================== البيانات والإدارات البرمجية ==================== -->
+  <script>
+    const QUIZ_DATA = {
+      title: "اختبار الكيمياء الحيوية | الحموض الأمينية وخصائصها",
+      questions: [
+        {
+          id: "q1",
+          q: "تعطي البروتينات عند الحلمهة بواسطة الانزيمات او الوسائط الكيميائية:",
+          options: ["سكريات معقدة", "حموض دهنية", "حموض أمينية من جديد", "ببتيدات فقط"],
+          correct: 2,
+          exp: "البروتينات ما هي إلا مركبات متعددة الحموض الأمينية (بوليميرات)، لذا فإن تفككها وحلمهتها يعطي حموضاً أمينية من جديد."
+        },
+        {
+          id: "q2",
+          q: "تحل ذرة الكربون ألفا في الحموض الأمينية بنفس الوقت مع:",
+          options: ["زمرة كربوكسيل وزمرة هيدروكسيل", "زمرة أمين وزمرة فوسفات", "زمرة كربوكسيل وزمرة أمين", "زمرة سلفهدريل وزمرة كربوكسيل"],
+          correct: 2,
+          exp: "الحموض الأمينية هي مركبات عضوية تتميز باحتوائها على كربون (ألفا) تحل عليه بنفس الوقت زمرة كربوكسيل (ذات طبيعة حمضية) وزمرة أمين (ذات طبيعة قلوية) وسلسلة جانبية."
+        },
+        {
+          id: "q3",
+          q: "الحموض الأمينية الـ 20 التي تدخل في تركيب البروتينات تدعى:",
+          options: ["الحموض الأمينية غير البروتينية", "الحموض الأمينية المعيارية", "الحموض الأمينية النصف تغذوية", "الحموض الأمينية الكيتونية"],
+          correct: 1,
+          exp: "يوجد أكثر من 300 حمض أميني في الطبيعة، ولكن 20 منها فقط تدخل في تركيب بروتينات البشر وتسمى بالحموض الأمينية المعيارية."
+        },
+        {
+          id: "q4",
+          q: "الحموض الأمينية التي لا يستطيع الجسم انتاجها تدعى:",
+          options: ["الحموض الأمينية اللاقطبية", "الحموض الأمينية التغذوية (الأساسية)", "الحموض الأمينية غير الأساسية", "الحموض الأمينية العطرية"],
+          correct: 1,
+          exp: "هي 10 حموض أمينية لا يستطيع جسم الإنسان اصطناعها، بل يجب الحصول عليها من الغذاء وتسمى الحموض الأمينية التغذوية أو الأساسية."
+        },
+        {
+          id: "q5",
+          q: "الحموض الأمينية النصف تغذوية هي:",
+          options: ["الأرجنين والهستدين", "اللوسين والفالين", "الغليسين والبرولين", "الميثيونين والتربتوفان"],
+          correct: 0,
+          exp: "يحتاجها الجسم خلال فترة معينة (أثناء سن النمو فقط)، وبعدها تصبح الكميات الواردة مع الطعام كافية لعدم حدوث حالات مرضية."
+        },
+        {
+          id: "q6",
+          q: "من الحموض الأمينية الأساسية:",
+          options: ["اللوسين (Leu)", "التيروزين (Tyr)", "السيرين (Ser)", "الغلوتامين (Gln)"],
+          correct: 0,
+          exp: "اللوسين (Leu) يصنف من الحموض الأمينية الأساسية (التغذوية) التي لا يصنعها الجسم ويجب الحصول عليها من الغذاء."
+        },
+        {
+          id: "q7",
+          q: "الحموض الامينية اللاقطبية تكون سلسلتها الجانبية:",
+          options: ["أليفاتية ولا تشارك في الروابط الهيدروجينية", "عطرية قطبية", "مشحونة بشحنة موجبة", "تحوي زمرة أميدية"],
+          correct: 0,
+          exp: "الحموض الأمينية غير القطبية (الكارهة للماء) تكون سلسلتها الجانبية أليفاتية، ولا تشارك في الروابط الهيدروجينية والأيونية."
+        },
+        {
+          id: "q8",
+          q: "الإيزولوسين، كل ما يلي صحيح ما عدا:",
+          options: ["حمض أميني خطي", "نفس بنية اللوسين مع اختلاف في ترتيب الذرات", "يوجد فيه 6 كربونات", "محب للماء"],
+          correct: 3,
+          exp: "الإيزولوسين ينتمي إلى مجموعة الحموض الأمينية اللاقطبية (الكارهة للماء)، لذا فإن عبارة 'محب للماء' هي العبارة الخاطئة."
+        },
+        {
+          id: "q9",
+          q: "الحمض الاميني الذي تكون سلسلته الجانبية عطرية وغير مشحون هو:",
+          options: ["الفنيل ألانين", "الغلوتامين", "الأرجنين", "السيرين"],
+          correct: 0,
+          exp: "الفنيل ألانين (Phe) ينتمي إلى الحموض الأمينية العطرية، وتكون سلسلته الجانبية غير قطبية وغير مشحونة."
+        },
+        {
+          id: "q10",
+          q: "حمض اميني ضعيف القطبية يحوي زمرة أندولية:",
+          options: ["الهستدين", "الفنيل ألانين", "التربتوفان", "التيروزين"],
+          correct: 2,
+          exp: "التربتوفان يصنف كحمض عطري، وهو ضعيف القطبية بسبب احتوائه على الحلقة الأندولية."
+        },
+        {
+          id: "q11",
+          q: "حموض امينية قطبية تحوي زمرة أميدية:",
+          options: ["السيرين والترونين", "الاسباراجين والغلوتامين", "السيستئين والميثيونين", "الليزين والأرجنين"],
+          correct: 1,
+          exp: "تنتمي هذه الحموض إلى الصف القطبي، وتأتي قطبية كل من الأسباراجين والغلوتامين من الزمرة الأميدية."
+        },
+        {
+          id: "q12",
+          q: "حمض اميني قلوي يحوي زمرة غوانيدية:",
+          options: ["الهستدين", "الأرجنين", "الليزين", "التيروزين"],
+          correct: 1,
+          exp: "الأرجنين حمض أميني قلوي يحمل شحنة موجبة متوضعة على الزمرة الغوانيدية المميزة له مما يجعله شديد القطبية."
+        },
+        {
+          id: "q13",
+          q: "حمض اميني قلوي يحوي حلقة الايميدازول العطرية:",
+          options: ["الهستدين", "التربتوفان", "البرولين", "الفنيل ألانين"],
+          correct: 0,
+          exp: "الهستدين حمض أميني قلوي يحمل حلقة الإيميدازول العطرية التي تمنحه خصائصه."
+        },
+        {
+          id: "q14",
+          q: "الحمض الأميني الهستيدين:",
+          options: ["يدخل في تركيب بروتين الكولاجين و الهيستامين", "يسهم في تشكيل بروتين الكولاجين", "غير قادر على تشكيل روابط هيدروجينية", "كل ما سبق خطأ"],
+          correct: 3,
+          exp: "الهستيدين حمض أميني قلوي، وينتج عنه الهيستامين بنزع الكربوكسيل، والخيارات المطروحة غير دقيقة أو خاطئة بالكامل."
+        },
+        {
+          id: "q15",
+          q: "حمضان امينيان يظهران في عملية الاصطناع الحيوي للبولة (ولا يدخلان في تركيب البروتينات):",
+          options: ["الأورنيثين والسترولين", "الغليسين والبرولين", "السيرين والتيروزين", "الأسبارتيك والغلوتاميك"],
+          correct: 0,
+          exp: "هما حمضان أمينيان يظهران كمرحلة وسيطة في الاصطناع الحيوي للبولة ولا يدخلان في تركيب البروتين."
+        },
+        {
+          id: "q16",
+          q: "يوجد في تركيب حمض البانتوتين (Vit B):",
+          options: ["غاما امين وحمض الزبدة", "بيتا الانين", "كالدين", "غلوتاتيون"],
+          correct: 1,
+          exp: "بيتا-ألانين هو حمض أميني ليس من النوع ألفا، ويعد جزءاً من حمض البانتوتين."
+        },
+        {
+          id: "q17",
+          q: "حمض غاما امينو الزبدة (GABA) يتشكل في النسيج الدماغي ويقوم بـ:",
+          options: ["نقل السيالة العصبية", "اصطناع هرمونات الغدة الدرقية", "إزالة السمية في الكبد", "تركيب الكولاجين"],
+          correct: 0,
+          exp: "يتشكل (GABA) من حمض الغلوتامات بعملية نزع كربوكسيل في النسيج الدماغي ويقوم بنقل السيالة العصبية."
+        },
+        {
+          id: "q18",
+          q: "يوجد في الصفراء ويقترن مع الحموض الصفراوية:",
+          options: ["بيتا الانين", "التورين", "السيروتونين", "الهيستامين"],
+          correct: 1,
+          exp: "التورين حمض أميني لا ينتمي للنوع ألفا، يوجد في الصفراء ويقترن مع الحموض الصفراوية."
+        },
+        {
+          id: "q19",
+          q: "ذرة الكربون الفا (في جميع الحموض الأمينية عدا الغليسين) تكون:",
+          options: ["متناظرة", "غير متناظرة (مرتبطة بأربع متبادلات مختلفة)", "مرتبطة بثلاث متبادلات فقط", "لا ترتبط بزمرة كربوكسيل"],
+          correct: 1,
+          exp: "لأنها تكون مرتبطة بأربع متبادلات مختلفة، مما يمنحها الفعالية الضوئية وتشكل مماكبات فراغية، ما عدا الغليسين."
+        },
+        {
+          id: "q20",
+          q: "أي من الحموض الأمينية التالية يمتص الأشعة فوق البنفسجية بشدة (عند 280nm):",
+          options: ["Gln", "Glu", "Gly", "Trp"],
+          correct: 3,
+          exp: "الحموض الأمينية العطرية، وبشكل خاص التربتوفان (Trp)، تمتص الضوء بشدة في المنطقة فوق البنفسجية عند طول موجة 280 نانومتر."
+        },
+        {
+          id: "q21",
+          q: "عند وضع حمض الاسبارتيك في وسط شديد القلوية pH = 11 تكون شحنته:",
+          options: ["0", "1", "-1", "-2"],
+          correct: 3,
+          exp: "حمض الأسبارتيك حمض أميني حمضي (يحتوي زمرتي كربوكسيل). عند درجة حموضة قلوية عالية (pH=11)، تتشرد زمرتا الكربوكسيل لتعطي شحنة (-2)، وتفقد زمرة الأمين بروتونها لتصبح (0)، فتكون الشحنة الصافية (-2)."
+        },
+        {
+          id: "q22",
+          q: "يمكن لذرات الهيدروجين في المجموعة الامينية ان تستبدل بجذور المتيل في تفاعل:",
+          options: ["الأسترة", "الفسفرة", "المتيلة (تشكيل البيتائينات)", "نزع الكربوكسيل"],
+          correct: 2,
+          exp: "يمكن للمجموعة الأمينية أن تتفاعل لتشكيل مشتقات أحادية، ثنائية، أو ثلاثية المتيل (البيتائينات) عبر تفاعل المتيلة."
+        },
+        {
+          id: "q23",
+          q: "يتم ربط المركب الاوروماتي مثل حمض البنزوئيك الى الزمرة الامينية للحمض الاميني الغليسين في:",
+          options: ["الكلية", "الكبد", "النسيج الدماغي", "العضلات"],
+          correct: 1,
+          exp: "هذا التفاعل أساسي لإزالة السمية وطرحها خارج الجسم، حيث يتم ربط حمض البنزويك بالغليسين في الكبد لتشكيل 'حمض الهيبوريك' منزوع السمية."
+        },
+        {
+          id: "q24",
+          q: "تفاعل نزع الكربوكسيل يتم بوجود أنزيم:",
+          options: ["دي كربوكسيلاز (Decarboxylase)", "ترانس أميناز (Transaminase)", "ديهيدروجيناز (Dehydrogenase)", "بولي ميراز (Polymerase)"],
+          correct: 0,
+          exp: "يحدث تفاعل نزع الكربوكسيل في الخلايا الحية بواسطة إنزيم ديكربوكسيلاز، ويرافق الإنزيم الفوسفات بيريدوكسال."
+        },
+        {
+          id: "q25",
+          q: "السيروتونين ناتج عن:",
+          options: ["نزع الزمرة الكربوكسيلية للتربتوفان", "نزع الزمرة الكربوكسيلية للهستدين", "المتيلة للغليسين", "الفسفرة للسيرين"],
+          correct: 0,
+          exp: "ينتج السيروتونين عن طريق تفاعل نزع الكربوكسيل للحمض الأميني التربتوفان."
+        },
+        {
+          id: "q26",
+          q: "ينتج الهيستامين عن:",
+          options: ["نزع زمرة الكربوكسيل للهستدين", "نزع زمرة الكربوكسيل للتربتوفان", "إضافة زمرة هيدروكسيل للفينيل ألانين", "نزع أمين تأكسدي للغلوتامات"],
+          correct: 0,
+          exp: "عبر إنزيم ديكربوكسيلاز، يتم نزع كربوكسيل الهستدين لتكوين الأمين الفعال وهو الهيستامين."
+        },
+        {
+          id: "q27",
+          q: "يكون تفاعل الننهدرين بنفسجي اللون مع:",
+          options: ["الحموض الامينية (ما عدا البرولين)", "السكريات", "الدسم", "النكليوتيدات"],
+          correct: 0,
+          exp: "الننهدرين كاشف يعطي مركباً بنفسجياً مع الحموض الأمينية، ما عدا 'البرولين' والهيدروكسي برولين اللذين يشكلان معقداً أصفر."
+        },
+        {
+          id: "q28",
+          q: "حمض أميني يدخل بتركيب 33% من بنية الكولاجين:",
+          options: ["هيستيدين", "فينيل الانين", "غليسين", "ارجينين"],
+          correct: 2,
+          exp: "الغليسين هو الحمض الأميني الأصغر حجماً، وتواجده بكثرة (حوالي 33%) ضروري لبنية الكولاجين."
+        },
+        {
+          id: "q29",
+          q: "يتميز اللوسين عن الفالين بـ:",
+          options: ["ذرة كربون واحدة", "ذرتي كربون", "وجود زمرة هيدروكسيل", "كل ما سبق خطأ"],
+          correct: 0,
+          exp: "كلاهما من الحموض الأمينية الأليفاتية اللاقطبية، لكن اللوسين يحتوي على 6 ذرات كربون، بينما الفالين يحتوي على 5 ذرات كربون."
+        },
+        {
+          id: "q30",
+          q: "حمض اميني كبريتي:",
+          options: ["الليزين", "الميثيونين", "السلفهدريل", "الغليسين"],
+          correct: 1,
+          exp: "الميثيونين يُصنف ضمن الحموض الأمينية التي تحتوي على ذرة كبريت في سلسلتها الجانبية."
+        },
+        {
+          id: "q31",
+          q: "حمض اميني قطبي و مشحون سلبا:",
+          options: ["اليزين", "ارجينين", "غلوتامين", "اسبارتيك"],
+          correct: 3,
+          exp: "حمض الأسبارتيك من الحموض الأمينية الحمضية، يمتلك زمرة كربوكسيل إضافية في سلسلته الجانبية تتشرد وتمنحه شحنة سالبة قطبية."
+        },
+        {
+          id: "q32",
+          q: "الحمض الاميني الذي يكون موجبا في الوسط المعتدل:",
+          options: ["غلوتاميك", "اسبارتيك", "غليسين", "ليزين"],
+          correct: 3,
+          exp: "الليزين هو حمض أميني قلوي شديد القطبية، يحتوي على زمرة أمين إضافية تحمل شحنة موجبة في الوسط المعتدل."
+        },
+        {
+          id: "q33",
+          q: "التيروزين، كل الخيارات التالية صحيحة:",
+          options: ["تشتق منه هرمونات الغدة الدرقية", "أميني قطبي", "يشتق من الفينيل ألانين بإضافة مجموعة هيدروكسيل", "كلو صحيح"],
+          correct: 3,
+          exp: "التيروزين حمض أميني قطبي بسبب احتوائه على زمرة الهيدروكسيل، ويُصطنع من الفينيل ألانين، وهو الطليعة الأساسية لتصنيع هرمونات الغدة الدرقية."
+        },
+        {
+          id: "q34",
+          q: "التربتوفان , كل ما يلي صحيح ما عدا:",
+          options: ["مادة أولية لاصطناع فيتامين B3", "يصنف من الحموض الاامينية المحبة للماء", "أكبر الحموض", "يحوي حلقة أندولية"],
+          correct: 1,
+          exp: "التربتوفان حمض أميني عطري يُصنف كحمض 'ضعيف القطبية'، وبالتالي عبارة أنه محب للماء بشدة هي العبارة الخاطئة للاستثناء."
+        },
+        {
+          id: "q35",
+          q: "الحمض الأميني الغليسين:",
+          options: ["يصنف مع الحموض الاامينية الكارهة للماء", "أصغر و ابسط حمض اميني بحيث الجذر R هو CH3", "فعال ضوئيا", "كل ما سبق خطأ"],
+          correct: 3,
+          exp: "كل الخيارات المطروحة خاطئة لأنه أبسط حمض أميني (جذره H وليس CH3)، وهو الحمض الأميني الوحيد غير الفعال ضوئياً لعدم امتلاكه ذرة كربون ألفا غير متناظرة."
+        },
+        {
+          id: "q36",
+          q: "الحمض الأميني الذي يمتص بشدة في 280nm:",
+          options: ["Gln", "Glu", "Gly", "Trp"],
+          correct: 3,
+          exp: "الحموض الأمينية العطرية، وبشكل خاص التربتوفان (Trp)، تمتص الضوء بشدة في المنطقة فوق البنفسجية عند طول موجة 280 نانومتر."
+        },
+        {
+          id: "q37",
+          q: "يمتص التربتوفان الأشعة فوق البنفسجية عند الأطوال الموجية 280nm ويعزى له معظم امتصاص البروتين:",
+          options: ["صح", "خطأ", "يمتص عند 150nm فقط", "لا يمتص الأشعة فوق البنفسجية"],
+          correct: 0,
+          exp: "بسبب بنيته العطرية يمتلك التربتوفان أعلى قدرة على امتصاص الأشعة فوق البنفسجية، مما يُستخدم لقياس تركيز البروتينات."
+        },
+        {
+          id: "q38",
+          q: "اذا كانت المجموعة الأمينية على يمين الحمض الاميني يرمز له بالرمز D:",
+          options: ["صح", "خطأ", "يرمز له بالرمز L", "يرمز له بالرمز R"],
+          correct: 0,
+          exp: "اصطلاحاً يُرمز للحمض الأميني بـ D إذا توضعت الزمرة الأمينية على يمين ذرة الكربون ألفا."
+        },
+        {
+          id: "q39",
+          q: "جميع البروتينات تبنى من حموض امينية من النوع L:",
+          options: ["صح", "خطأ", "تبنى من النوع D فقط", "تبنى من مزيج متساوٍ من L و D"],
+          correct: 0,
+          exp: "الحموض الأمينية من الشكل الفراغي L هي الوحيدة التي تدخل في تركيب بروتينات الكائنات الحية وتُهضم في العضوية."
+        },
+        {
+          id: "q40",
+          q: "تعرف نقطة التعادل الكهربائي PI بأنها قيمة الـ PH التي تكون شحنة الأمين تساوي الصفر , و عندها يكون انحلال الحمض الأميني أعلى ما يمكن:",
+          options: ["صح", "خطأ (الانحلالية تكون أصغرية)", "خطأ (الانحلالية لا تتأثر بـ PH)", "خطأ (تكون الشحنة موجبة دائماً)"],
+          correct: 1,
+          exp: "في نقطة التعادل الكهربائي تكون الشحنة الصافية معدومة، ولكن الانحلالية في هذه النقطة تكون 'أصغرية' وليست أعلى ما يمكن."
+        },
+        {
+          id: "q41",
+          q: "حموض أمينية يمكن فسفرتها:",
+          options: ["سيرين", "سيستيئين", "تيروزين", "الخياران A و C صحيحان"],
+          correct: 3,
+          exp: "تتم تفاعلات الفسفرة على زمرة الهيدروكسيل الموجودة في السلاسل الجانبية لحموض معينة مثل السيرين والتيروزين."
+        },
+        {
+          id: "q42",
+          q: "تشتق النواقل العصبية الكاتيكولامينات بدءا من الحمض الأميني البرولين:",
+          options: ["صح", "خطأ (تشتق من التيروزين)", "خطأ (تشتق من الغليسين)", "خطأ (تشتق من التربتوفان)"],
+          correct: 1,
+          exp: "الكاتيكولامينات نواقل عصبية هامة تشتق فعلياً من الحمض الأميني 'التيروزين'، وليس البرولين."
+        },
+        {
+          id: "q43",
+          q: "الحمض الأميني الذي يعطي الناقل العصبي السيروتونين هو:",
+          options: ["السيرين", "التربتوفان", "التيروزين", "الغليسين"],
+          correct: 1,
+          exp: "التربتوفان هو الحمض الأميني العطري الذي يُشتق منه الناقل العصبي السيروتونين عن طريق تفاعلات الهدركسلة ونزع الكربوكسيل."
+        },
+        {
+          id: "q44",
+          q: "حمض أميني يُشتق من الألانين نظرياً بحذف ذرة هيدروجين (H) وإضافة زمرة سلفهدريل (SH):",
+          options: ["السيرين", "الميثيونين", "السيستئين", "الثريونين"],
+          correct: 2,
+          exp: "السيستئين هو حمض أميني كبريتي، سلسلته الجانبية هي (CH2-SH)، وبالتالي يشبه في بنيته حمض الألانين (CH3) مع استبدال ذرة هيدروجين بزمرة السلفهدريل (SH)."
+        },
+        {
+          id: "q45",
+          q: "كل الحموض الأمينية التالية تمتلك بنية حلقية في سلسلتها الجانبية ما عدا:",
+          options: ["التيروزين", "التربتوفان", "البرولين", "الإيزولوسين"],
+          correct: 3,
+          exp: "الإيزولوسين هو حمض أميني أليفاتي ذو سلسلة جانبية متفرعة (مفتوحة) ولا يحوي أي حلقة، بينما التيروزين والتربتوفان يحويان حلقات عطرية، والبرولين يحوي حلقة إيمينو غير متجانسة."
+        },
+        {
+          id: "q46",
+          q: "بالنسبة للحمض الأميني البرولين، كل العبارات التالية صحيحة ما عدا:",
+          options: [
+            "يمتلك حلقة غير متجانسة",
+            "له أهمية كبيرة جداً في تشكيل بنية بروتين الكولاجين",
+            "لا يستطيع تكوين الحلزون ألفا بسبب بنيته الهندسية",
+            "تحوله لهيدروكسي برولين شرط أساسي لنضوج فيتامين C"
+          ],
+          correct: 3,
+          exp: "العبارة الخاطئة هي D؛ العكس هو الصحيح، حيث يُعتبر فيتامين C (حمض الأسكوربيك) عاملاً مرافقاً وشرطاً أساسياً لإتمام تفاعل تحول البرولين إلى هيدروكسي برولين لتشكيل الكولاجين الناضج، وليس العكس."
+        },
+        {
+          id: "q47",
+          q: "الكربوكسيل الإضافي في الحمض الأميني 'الأسبارتيك' متوضع على:",
+          options: ["ذرة الكربون ألفا (α)", "ذرة الكربون بيتا (β)", "ذرة الكربون غاما (γ)", "ذرة الكربون دلتا (δ)"],
+          correct: 1,
+          exp: "حمض الأسبارتيك هو حمض أميني حمضي يمتلك زمرة كربوكسيل ثانية (إضافية) في سلسلته الجانبية، وتتصل هذه الزمرة بذرة الكربون بيتا."
+        },
+        {
+          id: "q48",
+          q: "الكربوكسيل الإضافي في الحمض الأميني 'الغلوتاميك' متوضع على:",
+          options: ["ذرة الكربون ألفا (α)", "ذرة الكربون بيتا (β)", "ذرة الكربون غاما (γ)", "ذرة الكربون دلتا (δ)"],
+          correct: 2,
+          exp: "حمض الغلوتاميك أطول من حمض الأسبارتيك بذرة كربون واحدة (ميتيلين إضافية)، لذا فإن زمرته الكربوكسيلية الجانبية تتوضع على ذرة الكربون غاما."
+        },
+        {
+          id: "q49",
+          q: "الحمض الأميني الليزين (الليسين) يحوي في سلسلته الجانبية على:",
+          options: ["4 زمر ميتيلين (CH2)", "3 زمر ميتيلين (CH2)", "5 زمر ميتيلين (CH2)", "زمرتي ميتيلين (CH2)"],
+          correct: 0,
+          exp: "الليزين هو حمض أميني قلوي، يمتلك سلسلة جانبية أليفاتية طويلة مكونة من 4 زمر ميتيلين (CH2) تنتهي بزمرة أمينية (NH2) تمنحه الشحنة الموجبة."
+        },
+        {
+          id: "q50",
+          q: "الحمض الأميني الأرجينين يحوي في بنيته الكلية على:",
+          options: ["5 ذرات آزوت", "3 ذرات آزوت", "ذرتين آزوت", "4 ذرات آزوت"],
+          correct: 3,
+          exp: "يحوي الأرجينين 4 ذرات آزوت إجمالاً: ذرة آزوت واحدة في الزمرة الأمينية المرتبطة بالكربون ألفا، و 3 ذرات آزوت ضمن زمرة الغوانيدين (Guanidino) في سلسلته الجانبية."
+        },
+        {
+          id: "q51",
+          q: "يُعد التيروزين من:",
+          options: [
+            "الحموض الأمينية القطبية غير المشحونة",
+            "الحموض الأمينية غير القطبية المشحونة إيجابياً",
+            "الحموض الأمينية القطبية المشحونة سلبياً",
+            "الحموض الأمينية غير القطبية غير المشحونة"
+          ],
+          correct: 0,
+          exp: "ينتمي التيروزين إلى الحموض العطرية، ولكنه يُصنف كحمض 'قطبي غير مشحون' في درجة الـ pH الفسيولوجية بفضل احتوائه على زمرة الهيدروكسيل (OH) المحبة للماء."
+        },
+        {
+          id: "q52",
+          q: "تتميز الحموض الأمينية غير البروتينية (مثل بيتا-ألانين) بأن:",
+          options: [
+            "ذرة الكربون فيها محاطة بكربوكسيل وأمين معاً دائماً",
+            "ذرة الكربون فيها غير محاطة بكربوكسيل وأمين أبداً",
+            "ليس من الضرورة أن تكون الزمرة الأمينية والزمرة الكربوكسيلية مرتبطتين على ذرة الكربون (ألفا) نفسها",
+            "جميعها يشكل بروتينات هيكلية داعمة"
+          ],
+          correct: 2,
+          exp: "في الحموض الأمينية غير البروتينية (مثل بيتا-ألانين أو غاما-أمينو الزبدة)، لا ترتبط الزمرة الأمينية بذرة الكربون ألفا، بل بذرات كربون أبعد (بيتا أو غاما)، لذا لا تدخل في تركيب البروتينات المعتادة."
+        },
+        {
+          id: "q53",
+          q: "حمض الفينيل ألانين، أي العبارات التالية صحيحة بشأنه:",
+          options: [
+            "يصنف كحمض أميني شديد القطبية",
+            "يتم اصطناع هرمونات الغدة الدرقية منه بشكل مباشر دون وسائط",
+            "يمتص الأشعة فوق البنفسجية لامتلاكه حلقة عطرية",
+            "يحتوي على زمرة هيدروكسيل في سلسلته الجانبية"
+          ],
+          correct: 2,
+          exp: "الفينيل ألانين حمض عطري يمتص الأشعة فوق البنفسجية، وهو لا يحوي زمرة هيدروكسيل (التي تميز التيروزين)، كما أنه غير قطبي."
+        },
+        {
+          id: "q54",
+          q: "يصنع الأستيل كولين بمساعدة الحمض الأميني:",
+          options: ["الليزين", "الميثيونين", "الغليسين", "الفالين"],
+          correct: 1,
+          exp: "الميثيونين (عن طريق مركب S-adenosyl methionine) يلعب دور 'الواهب الفعال لزمرة الميتيل' في تفاعلات المتيلة (Transmethylation)، وهو دور أساسي في اصطناع الكولين والأستيل كولين."
+        },
+        {
+          id: "q55",
+          q: "ينتج الأسبارجين عن طريق:",
+          options: [
+            "تفاعل الأسبارتيك مع غاز ثاني أكسيد الكربون",
+            "تفاعل الأسبارتيك مع النشادر (أو مجموعة أمينية)",
+            "تفاعل الأسبارتيك مع الزمرة الهيدروكسيلية",
+            "تفاعل الأسبارتيك مع زمرة الميتيل (CH3)"
+          ],
+          correct: 1,
+          exp: "الأسبارجين هو الأميد المشتق من حمض الأسبارتيك، ويُصطنع عن طريق تفاعل (أمدة) زمرة الكربوكسيل الجانبية لحمض الأسبارتيك مع مجموعة أمينية (النشادر)."
+        },
+        {
+          id: "q56",
+          q: "الحمض الأميني الذي يحمل شحنة موجبة في الشروط الفيزيولوجية ($pH=7.4$) هو:",
+          options: ["الليزين (Lys)", "الفالين (Val)", "السيرين (Ser)", "الغلوتاميك (Glu)"],
+          correct: 0,
+          exp: "الليزين هو حمض أميني قاعدي يمتلك زمرة أمينية إضافية في سلسلته الجانبية تتشرد وتكسبه شحنة موجبة في درجة الحموضة الفيزيولوجية."
+        },
+        {
+          id: "q57",
+          q: "يشتق الناقل العصبي 'الأدرينالين' في الجسم بدءاً من الحمض الأميني:",
+          options: ["الفينيل ألانين (أو التيروزين)", "الغليسين", "التربتوفان", "الهيستيدين"],
+          correct: 0,
+          exp: "الأدرينالين هو من الكاتيكولامينات التي تشتق حيوياً من الحمض الأميني التيروزين، والذي يُصطنع بدوره من الحمض الأميني الأساسي الفينيل ألانين."
+        },
+        {
+          id: "q58",
+          q: "الحمض الأميني الذي يحتوي على 'حلقة الإيميدازول' في سلسلتها الجانبية هو:",
+          options: ["الهيستيدين (His)", "البرولين (Pro)", "التيروزين (Tyr)", "التربتوفان (Trp)"],
+          correct: 0,
+          exp: "الهيستيدين حمض أميني قلوي يتميز باحتواء سلسلته الجانبية على حلقة الإيميدازول العطرية."
+        },
+        {
+          id: "q59",
+          q: "أي من الحموض الأمينية التالية يُصنف كحمض أميني 'غير تغذوي' (أي غير أساسي ويستطيع الجسم اصطناعه):",
+          options: ["التيروزين (Tyr)", "اللوسين (Leu)", "الفالين (Val)", "الميثيونين (Met)"],
+          correct: 0,
+          exp: "التيروزين حمض أميني غير أساسي لأن الجسم يستطيع اصطناعه بهدركسلة الفينيل ألانين، بينما اللوسين والفالين والميثيونين هي حموض أساسية (تغذوية)."
+        },
+        {
+          id: "q60",
+          q: "يتشكل الناقل العصبي المثبط (GABA) في الدماغ انطلاقاً من الحمض الأميني:",
+          options: ["الغلوتامات (Glu)", "الأسبارتات (Asp)", "الغليسين (Gly)", "السيرين (Ser)"],
+          correct: 0,
+          exp: "ينتج حمض غاما أمينو الزبدة (GABA) عن طريق تفاعل نزع الكربوكسيل للحمض الأميني الغلوتامات (Glu) في النسيج الدماغي."
+        },
+        {
+          id: "q61",
+          q: "العبارة الخاطئة حول الحموض الأمينية التالية هي:",
+          options: [
+            "الحموض الأمينية المعيارية التي تدخل في تركيب البروتينات هي 20 حمضاً أمينياً.",
+            "جميع الحموض الأمينية تمتلك ذرة كربون ألفا غير متناظرة.",
+            "الحموض الأمينية المعيارية في الإنسان هي من الشكل الفراغي (L).",
+            "بعض الحموض الأمينية لها دور كنواقل عصبية."
+          ],
+          correct: 1,
+          exp: "العبارة الخاطئة هي B، لأن الحمض الأميني 'الغليسين' يمتلك ذرة هيدروجين كجذر جانبي، مما يجعل ذرة كربون ألفا فيه متناظرة (غير فعالة ضوئياً)."
+        },
+        {
+          id: "q62",
+          q: "الحمض الأميني الذي يكون 'غير فعال ضوئياً' (الأقل قطبية كونه الأصغر) مما يلي:",
+          options: ["الفالين (Val)", "الغليسين (Gly)", "الألانين (Ala)", "السيرين (Ser)"],
+          correct: 1,
+          exp: "الغليسين هو الحمض الأميني الوحيد الذي لا يحتوي على ذرة كربون غير متناظرة، لذلك ليس له متماكبات فراغية وهو غير فعال ضوئياً."
+        },
+        {
+          id: "q63",
+          q: "الحمض الأميني التالي تكون سلسلتها الجانبية غير قطبية وعطرية:",
+          options: ["التربتوفان (Trp)", "الفينيل ألانين (Phe)", "التيروزين (Tyr)", "الهيستيدين (His)"],
+          correct: 1,
+          exp: "الفينيل ألانين يمتلك حلقة بنزن عطرية في سلسلته الجانبية، وهو يصنف ضمن الحموض الأمينية اللاقطبية (الكارهة للماء)."
+        },
+        {
+          id: "q64",
+          q: "حمض أميني يحتوي على ذرتي كربون غير متناظرتين (Chiral centers) في بنيته:",
+          options: ["الثريونين (Thr)", "الغليسين (Gly)", "الألانين (Ala)", "السيرين (Ser)"],
+          correct: 0,
+          exp: "الثريونين (بالإضافة إلى الإيزولوسين) يمتلك ذرة كربون ألفا غير متناظرة، وذرة كربون بيتا غير متناظرة أيضاً في سلسلته الجانبية."
+        },
+        {
+          id: "q65",
+          q: "مجموع الشحن الموجبة للحمض الأميني في الوسط المعتدل ($pH=7$) يتواجد على:",
+          options: ["الزمرة الأمينية", "الزمرة الكربوكسيلية", "زمرة الهيدروكسيل (OH)", "زمرة السلفهيدريل (SH)"],
+          correct: 0,
+          exp: "في الوسط المعتدل، تتشرد الزمرة الأمينية ($NH_2$) بكسب بروتون لتصبح ($NH_3^+$) وتحمل الشحنة الموجبة، بينما الزمرة الكربوكسيلية تحمل الشحنة السالبة."
+        },
+        {
+          id: "q66",
+          q: "الشحنة الكلية لحمض الأسبارتيك (ASP) عند وضعِه في وسط شديد الحموضة ($pH=2$) هي:",
+          options: ["-1", "-2", "+1", "+2"],
+          correct: 2,
+          exp: "حمض الأسبارتيك يحوي زمرتي كربوكسيل وزمرة أمين. في الوسط شديد الحموضة ($pH=2$)، تكون زمرتا الكربوكسيل غير متشردتين (شحنة 0)، بينما تتشرد الزمرة الأمينية بكسب بروتون (شحنة +1)، فتكون المحصلة (+1)."
+        },
+        {
+          id: "q67",
+          q: "الشحنة الكلية لحمض الأسبارتيك (ASP) عند وضعه في وسط شديد القلوية ($pH=12$) هي:",
+          options: ["-1", "-2", "+1", "+2"],
+          correct: 1,
+          exp: "في الوسط شديد القلوية ($pH=12$)، تفقد الزمرة الأمينية بروتونها وتصبح معتدلة (0)، بينما تتشرد زمرتا الكربوكسيل (الأصلية والجانبية) بفقدان بروتوناتهما لتعطي كل منهما شحنة سالبة، فتكون المحصلة (-2)."
+        },
+        {
+          id: "q68",
+          q: "الشحنة الكلية للحمض الأميني الليزين (LYS) عند وضعه في وسط شديد الحموضة ($pH=1$) هي:",
+          options: ["+1", "+2", "-1", "-2"],
+          correct: 1,
+          exp: "الليزين حمض قلوي يحوي زمرتي أمين وزمرة كربوكسيل. في الوسط الشديد الحموضة ($pH=1$)، يكون الكربوكسيل معتدلاً (0)، بينما تتشرد زمرتا الأمين بكسب بروتونات، لتعطي كل منهما شحنة موجبة، فتكون المحصلة (+2)."
+        },
+        {
+          id: "q69",
+          q: "الحمض الأميني الهيستيدين (His) عند درجة حموضة ($pH=6$) يحمل:",
+          options: [
+            "شحنة سالبة فقط",
+            "شحنة موجبة فقط",
+            "شحنة سالبة وموجبة (معتدل تماماً)",
+            "شحنة سالبة وشحنتين موجبتين (جزئياً)"
+          ],
+          correct: 3,
+          exp: "عند ($pH=6$)، تكون زمرة الكربوكسيل متشردة (شحنة سالبة -1)، وزمرة الأمين ألفا متشردة (شحنة موجبة +1). ولأن حلقة الإيميدازول الجانبية للهيستيدين تمتلك $pKa$ يقارب 6.0، فإنها تكون نصف متشردة (تحمل شحنة موجبة +1 إضافية)، مما يجعله يحمل شحنة سالبة وشحنتين موجبتين."
+        }
+      ]
+    };
+  </script>
+
+  <!-- ==================== المحرك البرمجي المطور ==================== -->
+  <script>
+    /*************************************************************************
+     * 1. الصوت والتفاعل اللمسي (Audio & Haptics):
+     *************************************************************************/
+    const AudioFX = {
+      ctx: null,
+      init() { if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)(); },
+      playCorrect() {
+        try {
+          this.init(); const ctx = this.ctx; const osc = ctx.createOscillator(); const gain = ctx.createGain();
+          osc.connect(gain); gain.connect(ctx.destination); osc.type = 'sine';
+          osc.frequency.setValueAtTime(523.25, ctx.currentTime); osc.frequency.setValueAtTime(659.25, ctx.currentTime + 0.1);
+          gain.gain.setValueAtTime(0.15, ctx.currentTime); gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
+          osc.start(); osc.stop(ctx.currentTime + 0.35);
+        } catch(e) {}
+      },
+      playIncorrect() {
+        try {
+          this.init(); const ctx = this.ctx; const osc = ctx.createOscillator(); const gain = ctx.createGain();
+          osc.connect(gain); gain.connect(ctx.destination); osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(110, ctx.currentTime); gain.gain.setValueAtTime(0.2, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
+          osc.start(); osc.stop(ctx.currentTime + 0.4);
+        } catch(e) {}
+      }
+    };
+
+    const tg = window.Telegram?.WebApp;
+    const HapticFX = {
+      triggerSuccess() { if (tg?.HapticFeedback) try { tg.HapticFeedback.notificationOccurred('success'); } catch(e){} },
+      triggerError() { if (tg?.HapticFeedback) try { tg.HapticFeedback.notificationOccurred('error'); } catch(e){} },
+      triggerSelection() { if (tg?.HapticFeedback) try { tg.HapticFeedback.impactOccurred('light'); } catch(e){} }
+    };
+
+    /*************************************************************************
+     * 2. متغيرات حالة الكويز والمؤقت الزمني:
+     *************************************************************************/
+    let quizQueue = [];
+    let originalQuizLength = 0;
+    let streakCount = 0;
+    let totalAttempts = 0;
+    let correctAttempts = 0;
+
+    // حالة المؤقت
+    let timerInterval = null;
+    let totalTimeAllocated = 0; // بالثواني
+    let timeRemaining = 0;     // بالثواني
+    let isTimerEnabled = false;
+
+    document.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("quiz-deck-title").innerText = QUIZ_DATA.title;
+
+      if (tg) {
+        try {
+          tg.ready(); tg.expand();
+          tg.setHeaderColor('#0b0b0f'); tg.setBackgroundColor('#0b0b0f');
+          const user = tg.initDataUnsafe?.user;
+          if (user) {
+            document.getElementById("user-welcome-msg").innerText = `مرحباً ${user.first_name || 'طالبنا العزيز'} • اختر الوقت وابدأ`;
+          }
+        } catch (e) {}
+      }
     });
-  }
-});
 
-/*************************************************************************
-* 3. إدارات ضبط الوقت والمؤقت
-*************************************************************************/
-function adjustTimeInput(type, change) {
-  const input = document.getElementById(type === 'minutes' ? 'input-minutes' : 'input-seconds');
-  if (!input) return;
-  let val = parseInt(input.value || 0) + change;
-  if (val < 0) val = 0;
-  if (val > 59) val = 59;
-  input.value = val < 10 ? `0${val}` : val;
-  HapticFX.triggerSelection();
-}
+    /*************************************************************************
+     * 3. إدارات فتح وإغلاق تبويب الملخص العلمى:
+     *************************************************************************/
+    function toggleSummaryDrawer() {
+      const drawer = document.getElementById("summary-drawer");
+      const backdrop = document.getElementById("summary-backdrop");
+      if (!drawer || !backdrop) return;
 
-function setPresetTime(mins, secs) {
-  document.getElementById('input-minutes').value = mins < 10 ? `0${mins}` : mins;
-  document.getElementById('input-seconds').value = secs < 10 ? `0${secs}` : secs;
-  HapticFX.triggerSelection();
-}
+      const isOpen = drawer.classList.contains("drawer-open");
+      if (isOpen) {
+        drawer.classList.remove("drawer-open");
+        backdrop.classList.add("hidden");
+      } else {
+        drawer.classList.add("drawer-open");
+        backdrop.classList.remove("hidden");
+        renderMath(drawer);
+      }
+      HapticFX.triggerSelection();
+    }
 
-function startSessionWithTimer() {
-  const mins = parseInt(document.getElementById('input-minutes').value || 0);
-  const secs = parseInt(document.getElementById('input-seconds').value || 0);
+    /*************************************************************************
+     * 4. إدارات ضبط الوقت والمؤقت:
+     *************************************************************************/
+    function adjustTimeInput(type, change) {
+      const input = document.getElementById(type === 'minutes' ? 'input-minutes' : 'input-seconds');
+      if (!input) return;
+      let val = parseInt(input.value || 0) + change;
+      if (val < 0) val = 0;
+      if (type === 'minutes' && val > 180) val = 180;
+      if (type === 'seconds' && val > 59) val = 59;
+      input.value = val < 10 ? `0${val}` : val;
+      HapticFX.triggerSelection();
+    }
 
-  totalTimeAllocated = (mins * 60) + secs;
-  timeRemaining = totalTimeAllocated;
-  isTimerEnabled = totalTimeAllocated > 0;
+    function setPresetTime(mins, secs) {
+      document.getElementById('input-minutes').value = mins < 10 ? `0${mins}` : mins;
+      document.getElementById('input-seconds').value = secs < 10 ? `0${secs}` : secs;
+      HapticFX.triggerSelection();
+    }
 
-  document.getElementById("timer-setup-card").classList.add("hidden");
-  document.getElementById("quiz-quiz-container").classList.remove("hidden");
+    function startSessionWithTimer() {
+      const mins = parseInt(document.getElementById('input-minutes').value || 0);
+      const secs = parseInt(document.getElementById('input-seconds').value || 0);
 
-  // إظهار زر العودة في تيليجرام
-  if (tg) tg.BackButton.show();
+      totalTimeAllocated = (mins * 60) + secs;
+      timeRemaining = totalTimeAllocated;
+      isTimerEnabled = totalTimeAllocated > 0;
 
-  const headerTimerBox = document.getElementById("header-timer-box");
-  if (isTimerEnabled) {
-    headerTimerBox.classList.remove("hidden");
-    headerTimerBox.classList.add("flex");
-    startTimerCountdown();
-  } else {
-    headerTimerBox.classList.add("hidden");
-  }
+      // إخفاء كارت الإعداد وإظهار الكويز
+      document.getElementById("timer-setup-card").classList.add("hidden");
+      document.getElementById("quiz-quiz-container").classList.remove("hidden");
 
-  resetQuizSession();
-}
+      // إظهار أو إخفاء عداد الوقت في الهيدر
+      const headerTimerBox = document.getElementById("header-timer-box");
+      if (isTimerEnabled) {
+        headerTimerBox.classList.remove("hidden");
+        headerTimerBox.classList.add("flex");
+        startTimerCountdown();
+      } else {
+        headerTimerBox.classList.add("hidden");
+      }
 
-function startTimerCountdown() {
-  clearInterval(timerInterval);
-  updateTimerUI();
+      resetQuizSession();
+    }
 
-  timerInterval = setInterval(() => {
-    timeRemaining--;
-    updateTimerUI();
-
-    if (timeRemaining <= 0) {
+    function startTimerCountdown() {
       clearInterval(timerInterval);
-      handleTimeout();
-    }
-  }, 1000);
-}
+      updateTimerUI();
 
-function updateTimerUI() {
-  const display = document.getElementById("timer-display");
-  if (!display) return;
+      timerInterval = setInterval(() => {
+        timeRemaining--;
+        updateTimerUI();
 
-  const m = Math.floor(timeRemaining / 60);
-  const s = timeRemaining % 60;
-  display.innerText = `${m < 10 ? '0' + m : m}:${s < 10 ? '0' + s : s}`;
-
-  if (timeRemaining <= 15 && isTimerEnabled) {
-    display.classList.add("text-rose-400", "animate-pulse");
-    display.classList.remove("text-amber-300");
-  } else {
-    display.classList.add("text-amber-300");
-    display.classList.remove("text-rose-400", "animate-pulse");
-  }
-}
-
-function handleTimeout() {
-  HapticFX.triggerError();
-  AudioFX.playIncorrect();
-
-  document.getElementById("quiz-active-area").classList.add("hidden");
-  document.getElementById("quiz-success-panel").classList.add("hidden");
-  document.getElementById("quiz-timeout-panel").classList.remove("hidden");
-}
-
-function showSetupScreen() {
-  clearInterval(timerInterval);
-  if (tg) tg.BackButton.hide();
-  document.getElementById("timer-setup-card").classList.remove("hidden");
-  document.getElementById("quiz-quiz-container").classList.add("hidden");
-  document.getElementById("header-timer-box").classList.add("hidden");
-}
-
-/*************************************************************************
-* 4. محرك الكويز والتكرار
-*************************************************************************/
-function resetQuizSession() {
-  quizQueue = JSON.parse(JSON.stringify(QUIZ_DATA.questions));
-  originalQuizLength = quizQueue.length;
-  streakCount = 0;
-  totalAttempts = 0;
-  correctAttempts = 0;
-
-  document.getElementById("streak-count").innerText = "0";
-  document.getElementById("quiz-active-area").classList.remove("hidden");
-  document.getElementById("quiz-success-panel").classList.add("hidden");
-  document.getElementById("quiz-timeout-panel").classList.add("hidden");
-
-  updateProgress();
-  renderCurrentQuestion();
-}
-
-function updateProgress() {
-  const completed = originalQuizLength - quizQueue.length;
-  const percent = Math.max(0, Math.min(100, (completed / originalQuizLength) * 100));
-
-  document.getElementById("quiz-progress-fill").style.width = `${percent}%`;
-  document.getElementById("quiz-queue-count").innerText = `${completed} / ${originalQuizLength}`;
-}
-
-function renderCurrentQuestion() {
-  if (quizQueue.length === 0) {
-    clearInterval(timerInterval);
-    document.getElementById("quiz-active-area").classList.add("hidden");
-    document.getElementById("quiz-success-panel").classList.remove("hidden");
-
-    document.getElementById("stat-total-attempts").innerText = totalAttempts;
-    const acc = totalAttempts > 0 ? Math.round((correctAttempts / totalAttempts) * 100) : 100;
-    document.getElementById("stat-accuracy").innerText = `${acc}%`;
-
-    const timeSpentSeconds = totalTimeAllocated - timeRemaining;
-    const m = Math.floor(timeSpentSeconds / 60);
-    const s = timeSpentSeconds % 60;
-    document.getElementById("stat-time-spent").innerText = isTimerEnabled ? `${m}:${s < 10 ? '0' + s : s}` : '♾️';
-
-    // حفظ النتيجة في CloudStorage إن أمكن
-    if (tg?.CloudStorage) {
-      tg.CloudStorage.setItem("last_accuracy", `${acc}%`);
+        if (timeRemaining <= 0) {
+          clearInterval(timerInterval);
+          handleTimeout();
+        }
+      }, 1000);
     }
 
-    HapticFX.triggerSuccess();
-    return;
-  }
+    function updateTimerUI() {
+      const display = document.getElementById("timer-display");
+      if (!display) return;
 
-  const activeQ = quizQueue[0];
-  document.getElementById("quiz-question-text").innerText = activeQ.q;
+      const m = Math.floor(timeRemaining / 60);
+      const s = timeRemaining % 60;
+      const formatted = `${m < 10 ? '0' + m : m}:${s < 10 ? '0' + s : s}`;
+      display.innerText = formatted;
 
-  const feedbackPanel = document.getElementById("quiz-feedback-panel");
-  feedbackPanel.classList.add("hidden");
+      // تغيير لون العداد عند الاقتراب من الانتهاء (أقل من 30 ثانية)
+      if (timeRemaining <= 30 && isTimerEnabled) {
+        display.classList.add("text-rose-400", "animate-pulse");
+        display.classList.remove("text-amber-300");
+      } else {
+        display.classList.add("text-amber-300");
+        display.classList.remove("text-rose-400", "animate-pulse");
+      }
+    }
 
-  const optionsContainer = document.getElementById("quiz-options-grid");
-  optionsContainer.innerHTML = "";
+    function handleTimeout() {
+      HapticFX.triggerError();
+      AudioFX.playIncorrect();
 
-  activeQ.options.forEach((optText, idx) => {
-    const btn = document.createElement("button");
-    btn.className = "quiz-option-btn w-full p-4 text-right text-xs md:text-sm font-medium rounded-xl text-gray-200 flex justify-between items-center";
-    btn.innerHTML = `<span>${optText}</span><span class="text-amber-500/50 text-[10px]">◀</span>`;
-    btn.onclick = () => handleAnswerSubmission(idx, activeQ, btn);
-    optionsContainer.appendChild(btn);
-  });
+      document.getElementById("quiz-active-area").classList.add("hidden");
+      document.getElementById("quiz-success-panel").classList.add("hidden");
+      document.getElementById("quiz-timeout-panel").classList.remove("hidden");
+    }
 
-  renderMath(document.getElementById("quiz-active-area"));
-}
+    function showSetupScreen() {
+      clearInterval(timerInterval);
+      document.getElementById("timer-setup-card").classList.remove("hidden");
+      document.getElementById("quiz-quiz-container").classList.add("hidden");
+      document.getElementById("header-timer-box").classList.add("hidden");
+    }
 
-function handleAnswerSubmission(selectedIndex, currentQuestion, clickedBtn) {
-  totalAttempts++;
-  const allBtns = document.querySelectorAll(".quiz-option-btn");
-  allBtns.forEach(b => b.disabled = true);
+    /*************************************************************************
+     * 5. محرك الكويز والتكرار:
+     *************************************************************************/
+    function resetQuizSession() {
+      quizQueue = JSON.parse(JSON.stringify(QUIZ_DATA.questions));
+      originalQuizLength = quizQueue.length;
+      streakCount = 0;
+      totalAttempts = 0;
+      correctAttempts = 0;
 
-  const feedbackPanel = document.getElementById("quiz-feedback-panel");
-  feedbackPanel.classList.remove("hidden");
+      document.getElementById("streak-count").innerText = "0";
+      document.getElementById("quiz-active-area").classList.remove("hidden");
+      document.getElementById("quiz-success-panel").classList.add("hidden");
+      document.getElementById("quiz-timeout-panel").classList.add("hidden");
 
-  const isCorrect = selectedIndex === currentQuestion.correct;
+      updateProgress();
+      renderCurrentQuestion();
+    }
 
-  if (isCorrect) {
-    correctAttempts++;
-    streakCount++;
-    AudioFX.playCorrect();
-    HapticFX.triggerSuccess();
+    function updateProgress() {
+      const completed = originalQuizLength - quizQueue.length;
+      const percent = Math.max(0, Math.min(100, (completed / originalQuizLength) * 100));
+      
+      document.getElementById("quiz-progress-fill").style.width = `${percent}%`;
+      document.getElementById("quiz-queue-count").innerText = `${completed} / ${originalQuizLength}`;
+    }
 
-    clickedBtn.className = "w-full p-4 text-right text-xs md:text-sm font-medium rounded-xl border-2 border-emerald-500 bg-emerald-950/40 text-emerald-300 flex justify-between items-center";
+    function renderCurrentQuestion() {
+      if (quizQueue.length === 0) {
+        clearInterval(timerInterval);
+        document.getElementById("quiz-active-area").classList.add("hidden");
+        document.getElementById("quiz-success-panel").classList.remove("hidden");
+        
+        document.getElementById("stat-total-attempts").innerText = totalAttempts;
+        const acc = totalAttempts > 0 ? Math.round((correctAttempts / totalAttempts) * 100) : 100;
+        document.getElementById("stat-accuracy").innerText = `${acc}%`;
 
-    feedbackPanel.className = "p-5 rounded-xl text-xs md:text-sm bg-emerald-950/40 border border-emerald-500/40 text-emerald-300 space-y-2";
-    feedbackPanel.innerHTML = `
-      <div class="flex items-center gap-2 font-black text-emerald-400">
-        <span>✓ إجابة صحيحة ومتقنة!</span>
-      </div>
-      <p class="leading-relaxed text-zinc-300">${currentQuestion.exp}</p>
-      <button onclick="advanceQueue(true)" class="mt-2 px-5 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-black rounded-lg text-xs">
-        التالي ➔
-      </button>
-    `;
-  } else {
-    streakCount = 0;
-    AudioFX.playIncorrect();
-    HapticFX.triggerError();
+        // حساب الوقت المستغرق
+        const timeSpentSeconds = totalTimeAllocated - timeRemaining;
+        const m = Math.floor(timeSpentSeconds / 60);
+        const s = timeSpentSeconds % 60;
+        document.getElementById("stat-time-spent").innerText = isTimerEnabled ? `${m}:${s < 10 ? '0' + s : s}` : '∞';
 
-    clickedBtn.className = "w-full p-4 text-right text-xs md:text-sm font-medium rounded-xl border-2 border-rose-500 bg-rose-950/40 text-rose-300 flex justify-between items-center";
+        HapticFX.triggerSuccess();
+        return;
+      }
 
-    feedbackPanel.className = "p-5 rounded-xl text-xs md:text-sm bg-rose-950/40 border border-rose-500/40 text-rose-300 space-y-2";
-    feedbackPanel.innerHTML = `
-      <div class="flex items-center gap-2 font-black text-rose-400">
-        <span>✕ إجابة غير دقيقة!</span>
-      </div>
-      <p class="leading-relaxed text-zinc-300">${currentQuestion.exp}</p>
-      <p class="text-[10px] text-amber-400 font-bold">💡 نُقل السؤال إلى نهاية الطابور لتكراره وتأكيد حفظه.</p>
-      <button onclick="advanceQueue(false)" class="mt-2 px-5 py-2 bg-gradient-to-r from-rose-600 to-amber-600 text-white font-black rounded-lg text-xs">
-        متابعة التكرار ➔
-      </button>
-    `;
-  }
+      const activeQ = quizQueue[0];
+      document.getElementById("quiz-question-text").innerText = activeQ.q;
 
-  document.getElementById("streak-count").innerText = streakCount;
-  renderMath(feedbackPanel);
-}
+      const feedbackPanel = document.getElementById("quiz-feedback-panel");
+      feedbackPanel.classList.add("hidden");
 
-function advanceQueue(wasCorrect) {
-  if (wasCorrect) {
-    quizQueue.shift();
-  } else {
-    const failedQ = quizQueue.shift();
-    quizQueue.push(failedQ);
-  }
+      const optionsContainer = document.getElementById("quiz-options-grid");
+      optionsContainer.innerHTML = "";
 
-  updateProgress();
-  renderCurrentQuestion();
-}
+      activeQ.options.forEach((optText, idx) => {
+        const btn = document.createElement("button");
+        btn.className = "quiz-option-btn w-full p-4 text-right text-xs md:text-sm font-medium rounded-xl text-gray-200 flex justify-between items-center";
+        btn.innerHTML = `<span>${optText}</span><span class="text-amber-500/50 text-[10px]">◀</span>`;
+        btn.onclick = () => handleAnswerSubmission(idx, activeQ, btn);
+        optionsContainer.appendChild(btn);
+      });
 
-function shareResultsToTelegram() {
-  const acc = document.getElementById("stat-accuracy").innerText;
-  const shareText = `🧪 أتممت للتو اختبار الكيمياء الحيوية (الحموض الأمينية) بنسبة دقة ${acc}! 🏆\nجرب التحدي الآن عبر التطبيق المصغر!`;
-  const shareUrl = `https://t.me/share/url?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(shareText)}`;
-  
-  if (tg?.openTelegramLink) {
-    tg.openTelegramLink(shareUrl);
-  } else {
-    window.open(shareUrl, '_blank');
-  }
-}
+      renderMath(document.getElementById("quiz-active-area"));
+    }
 
-function renderMath(element) {
-  if (window.renderMathInElement && element) {
-    window.renderMathInElement(element, {
-      delimiters: [
-        {left: "$$", right: "$$", display: true},
-        {left: "$", right: "$", display: false}
-      ],
-      throwOnError: false
-    });
-  }
-}
-</script>
+    function handleAnswerSubmission(selectedIndex, currentQuestion, clickedBtn) {
+      totalAttempts++;
+      const allBtns = document.querySelectorAll(".quiz-option-btn");
+      allBtns.forEach(b => b.disabled = true);
+
+      const feedbackPanel = document.getElementById("quiz-feedback-panel");
+      feedbackPanel.classList.remove("hidden");
+
+      const isCorrect = selectedIndex === currentQuestion.correct;
+
+      if (isCorrect) {
+        correctAttempts++;
+        streakCount++;
+        AudioFX.playCorrect();
+        HapticFX.triggerSuccess();
+
+        clickedBtn.className = "w-full p-4 text-right text-xs md:text-sm font-medium rounded-xl border-2 border-emerald-500 bg-emerald-950/40 text-emerald-300 flex justify-between items-center";
+        
+        feedbackPanel.className = "p-5 rounded-xl text-xs md:text-sm bg-emerald-950/40 border border-emerald-500/40 text-emerald-300 space-y-2";
+        feedbackPanel.innerHTML = `
+          <div class="flex items-center gap-2 font-black text-emerald-400">
+            <span>✓ إجابة صحيحة ومتقنة!</span>
+          </div>
+          <p class="leading-relaxed text-zinc-300">${currentQuestion.exp}</p>
+          <button onclick="advanceQueue(true)" class="mt-2 px-5 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-black rounded-lg text-xs hover:opacity-90 transition-all">
+            التالي ➔
+          </button>
+        `;
+      } else {
+        streakCount = 0;
+        AudioFX.playIncorrect();
+        HapticFX.triggerError();
+
+        clickedBtn.className = "w-full p-4 text-right text-xs md:text-sm font-medium rounded-xl border-2 border-rose-500 bg-rose-950/40 text-rose-300 flex justify-between items-center";
+        
+        feedbackPanel.className = "p-5 rounded-xl text-xs md:text-sm bg-rose-950/40 border border-rose-500/40 text-rose-300 space-y-2";
+        feedbackPanel.innerHTML = `
+          <div class="flex items-center gap-2 font-black text-rose-400">
+            <span>✕ إجابة غير دقيقة!</span>
+          </div>
+          <p class="leading-relaxed text-zinc-300">${currentQuestion.exp}</p>
+          <p class="text-[10px] text-amber-400 font-bold">💡 نُقل السؤال إلى نهاية الطابور لتكراره وتأكيد حفظه.</p>
+          <button onclick="advanceQueue(false)" class="mt-2 px-5 py-2 bg-gradient-to-r from-rose-600 to-amber-600 text-white font-black rounded-lg text-xs hover:opacity-90 transition-all">
+            متابعة التكرار ➔
+          </button>
+        `;
+      }
+
+      document.getElementById("streak-count").innerText = streakCount;
+      renderMath(feedbackPanel);
+    }
+
+    function advanceQueue(wasCorrect) {
+      if (wasCorrect) {
+        quizQueue.shift();
+      } else {
+        const failedQ = quizQueue.shift();
+        quizQueue.push(failedQ);
+      }
+
+      updateProgress();
+      renderCurrentQuestion();
+    }
+
+    function renderMath(element) {
+      if (window.renderMathInElement && element) {
+        window.renderMathInElement(element, {
+          delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "$", right: "$", display: false}
+          ],
+          throwOnError: false
+        });
+      }
+    }
+  </script>
 </body>
 </html>
