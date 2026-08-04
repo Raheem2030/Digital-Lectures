@@ -1,0 +1,1323 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>اختبار السكاكر (الكربوهيدرات) الشامل</title>
+  
+  <!-- CDNs المعتمدة للتنسيق والهوية البصرية -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@800;900&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- سكريبت تيليجرام لتطبيقات الويب المصغرة (TMA SDK) -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+  <!-- مكتبة المعادلات الرياضية والكيميائية KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+  <style>
+    body {
+      font-family: 'IBM Plex Sans Arabic', sans-serif;
+      background-color: #0b0b0f !important;
+      color: #FFFFFF;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+    
+    h1, h2, h3, h4, h5, h6, .cairo-font {
+      font-family: 'Cairo', sans-serif;
+      font-weight: 900;
+    }
+
+    :root {
+      --dominant-violet: #8B5CF6;
+      --dominant-gold: #F59E0B;
+      --gold-glow: rgba(245, 158, 11, 0.25);
+      --violet-glow: rgba(139, 92, 246, 0.25);
+    }
+
+    /* إصلاح تداخل اللغة العربية مع المعادلات الكيميائية والرموز */
+    .katex, .katex-display {
+      direction: ltr !important;
+      unicode-bidi: isolate !important;
+      display: inline-block !important;
+      font-family: KaTeX_Main, sans-serif !important;
+    }
+    
+    .katex * {
+      direction: ltr !important;
+    }
+
+    /* البطاقات الزجاجية المحسنة */
+    .cyber-card-gold-violet {
+      background: rgba(15, 15, 22, 0.8);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.45), 0 0 15px rgba(139, 92, 246, 0.08);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .cyber-card-gold-violet:hover {
+      border-color: rgba(245, 158, 11, 0.45);
+      box-shadow: 0 0 25px rgba(139, 92, 246, 0.25), 0 0 10px rgba(245, 158, 11, 0.2);
+    }
+
+    /* خيارات الإجابة */
+    .quiz-option-btn {
+      background: rgba(23, 23, 33, 0.7);
+      border: 1px solid rgba(139, 92, 246, 0.15);
+      transition: all 0.2s ease-in-out;
+    }
+    .quiz-option-btn:hover:not(:disabled) {
+      border-color: var(--dominant-gold);
+      background: rgba(245, 158, 11, 0.1);
+      box-shadow: 0 0 15px rgba(245, 158, 11, 0.15);
+      transform: translateY(-2px);
+    }
+
+    /* شريط التقدّم النيون */
+    .progress-gold-violet {
+      background: linear-gradient(90deg, #8B5CF6 0%, #D97706 50%, #F59E0B 100%);
+      box-shadow: 0 0 12px rgba(245, 158, 11, 0.4);
+    }
+
+    /* تحسين حقول الإدخال */
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    input[type="number"] {
+      -moz-appearance: textfield;
+    }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #0b0b0f; }
+    ::-webkit-scrollbar-thumb { background: rgba(245, 158, 11, 0.3); border-radius: 3px; }
+  </style>
+</head>
+<body class="flex flex-col justify-between relative selection:bg-amber-500 selection:text-black">
+
+  <!-- ==================== الهيدر الرئيسي ==================== -->
+  <header class="border-b border-amber-500/20 bg-zinc-950/90 p-4 relative z-20">
+    <div class="max-w-4xl mx-auto flex flex-wrap justify-between items-center gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-violet-600 via-amber-500 to-amber-400 flex items-center justify-center shadow-lg shadow-amber-500/10 text-lg border border-amber-400/30">
+          🧪
+        </div>
+        <div>
+          <h1 id="quiz-deck-title" class="text-base md:text-lg font-black bg-gradient-to-r from-amber-200 via-violet-300 to-amber-400 bg-clip-text text-transparent">
+            جاري التحميل...
+          </h1>
+          <p id="user-welcome-msg" class="text-[11px] text-zinc-400">منصة الاختبارات الحركية المحددة بوقت</p>
+        </div>
+      </div>
+
+      <!-- العدادات والـ Streak -->
+      <div class="flex items-center gap-2 md:gap-3">
+        <!-- العداد الزمني -->
+        <div id="header-timer-box" class="hidden items-center gap-1.5 bg-zinc-900/90 border border-amber-500/40 px-3 py-1.5 rounded-xl shadow-lg shadow-amber-500/5">
+          <span class="text-amber-400 text-xs animate-pulse">⏳</span>
+          <span id="timer-display" class="text-xs font-black text-amber-300 font-mono tracking-wider">00:00</span>
+        </div>
+
+        <!-- عداد الـ Streak -->
+        <div class="flex items-center gap-2 bg-zinc-900/90 border border-violet-500/40 px-3 py-1.5 rounded-xl shadow-lg shadow-violet-500/5">
+          <span class="text-amber-400 text-xs">🔥</span>
+          <div class="text-right">
+            <span class="text-[9px] text-zinc-500 block leading-none">التتابع</span>
+            <span id="streak-count" class="text-xs font-black text-violet-300 font-mono">0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== المحتوى المركزي ==================== -->
+  <main class="max-w-3xl mx-auto w-full flex-grow p-4 md:p-6 z-10 flex flex-col justify-center">
+
+    <!-- ================= 1. شاشة ضبط الوقت ================= -->
+    <div id="timer-setup-card" class="cyber-card-gold-violet p-6 md:p-8 rounded-2xl border-2 border-amber-500/30 text-center space-y-6">
+      <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-violet-600/20 to-amber-500/20 border border-amber-400/40 flex items-center justify-center text-amber-400 text-3xl mx-auto shadow-inner">
+        ⏱️
+      </div>
+
+      <div>
+        <h2 class="text-lg md:text-xl font-black text-white">إعداد مؤقت الجلسة التكرارية</h2>
+        <p class="text-xs text-zinc-400 mt-1">حدد الوقت المخصص لإتمام مراجعة كافة الأسئلة (بالدقائق والثواني)</p>
+      </div>
+
+      <!-- أدوات التحكم بالدقائق والثواني -->
+      <div class="flex justify-center items-center gap-4 py-2">
+        <!-- الدقائق -->
+        <div class="flex flex-col items-center">
+          <label class="text-[10px] text-amber-400 font-bold mb-1">الدقائق</label>
+          <div class="flex items-center bg-zinc-950 rounded-xl border border-amber-500/40 p-1">
+            <button onclick="adjustTimeInput('minutes', 1)" class="w-8 h-8 rounded-lg bg-zinc-900 hover:bg-amber-500/20 text-amber-400 font-bold text-sm transition-all">+</button>
+            <input type="number" id="input-minutes" min="0" max="180" value="45" class="w-12 bg-transparent text-center font-mono font-bold text-base text-amber-300 focus:outline-none">
+            <button onclick="adjustTimeInput('minutes', -1)" class="w-8 h-8 rounded-lg bg-zinc-900 hover:bg-amber-500/20 text-amber-400 font-bold text-sm transition-all">-</button>
+          </div>
+        </div>
+
+        <span class="text-2xl font-black text-violet-400 mt-4">:</span>
+
+        <!-- الثواني -->
+        <div class="flex flex-col items-center">
+          <label class="text-[10px] text-violet-400 font-bold mb-1">الثواني</label>
+          <div class="flex items-center bg-zinc-950 rounded-xl border border-violet-500/40 p-1">
+            <button onclick="adjustTimeInput('seconds', 5)" class="w-8 h-8 rounded-lg bg-zinc-900 hover:bg-violet-500/20 text-violet-400 font-bold text-sm transition-all">+</button>
+            <input type="number" id="input-seconds" min="0" max="59" value="00" class="w-12 bg-transparent text-center font-mono font-bold text-base text-violet-300 focus:outline-none">
+            <button onclick="adjustTimeInput('seconds', -5)" class="w-8 h-8 rounded-lg bg-zinc-900 hover:bg-violet-500/20 text-violet-400 font-bold text-sm transition-all">-</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- الخيارات السريعة الجاهزة -->
+      <div class="flex justify-center gap-2 flex-wrap text-xs">
+        <button onclick="setPresetTime(20, 0)" class="px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800 hover:border-amber-400 text-zinc-300 transition-all">⚡ 20 دقيقة</button>
+        <button onclick="setPresetTime(45, 0)" class="px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800 hover:border-amber-400 text-zinc-300 transition-all">🎯 45 دقيقة</button>
+        <button onclick="setPresetTime(60, 0)" class="px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800 hover:border-amber-400 text-zinc-300 transition-all">🧠 60 دقيقة</button>
+        <button onclick="setPresetTime(0, 0)" class="px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800 hover:border-violet-400 text-zinc-300 transition-all">♾️ بدون وقت</button>
+      </div>
+
+      <button onclick="startSessionWithTimer()" class="w-full py-3.5 bg-gradient-to-r from-violet-600 via-amber-500 to-amber-400 text-black font-black rounded-xl text-xs md:text-sm hover:opacity-95 transition-all shadow-lg shadow-amber-500/20">
+        🚀 ابدأ التحدي الآن
+      </button>
+    </div>
+
+    <!-- ================= 2. ساحة الكويز النشطة ================= -->
+    <div id="quiz-quiz-container" class="hidden space-y-6">
+      
+      <!-- شريط التقدم التفاعلي -->
+      <div class="space-y-2">
+        <div class="flex justify-between items-center text-xs text-zinc-400 font-medium">
+          <span class="flex items-center gap-1.5 text-amber-400 font-bold">
+            <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+            <span>الأسئلة المنجزة</span>
+          </span>
+          <span class="font-mono text-violet-300 font-bold" id="quiz-queue-count" dir="ltr">0 / 0</span>
+        </div>
+
+        <div class="w-full bg-zinc-950 h-2.5 rounded-full border border-zinc-800 overflow-hidden p-0.5">
+          <div id="quiz-progress-fill" class="progress-gold-violet h-full w-0 rounded-full transition-all duration-300 ease-out"></div>
+        </div>
+      </div>
+
+      <!-- بطاقة السؤال النشط -->
+      <div class="cyber-card-gold-violet p-6 md:p-8 rounded-2xl border-2 border-violet-900/40 relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-2xl pointer-events-none"></div>
+        <div class="absolute bottom-0 left-0 w-32 h-32 bg-violet-600/5 rounded-full blur-2xl pointer-events-none"></div>
+
+        <div id="quiz-active-area" class="space-y-6">
+          <!-- نص السؤال -->
+          <div class="p-5 bg-zinc-950/70 rounded-xl border border-amber-500/20 shadow-inner">
+            <span class="text-[10px] text-amber-400 font-bold block mb-1">السؤال الحالي:</span>
+            <p id="quiz-question-text" class="text-sm md:text-base font-bold text-gray-100 leading-relaxed"></p>
+          </div>
+
+          <!-- شبكة الخيارات -->
+          <div id="quiz-options-grid" class="grid grid-cols-1 gap-3"></div>
+
+          <!-- لوحة التفسير العلمي -->
+          <div id="quiz-feedback-panel" class="hidden p-5 rounded-xl text-xs md:text-sm transition-all duration-300"></div>
+        </div>
+
+        <!-- لوحة النجاح واكتمال الكويز -->
+        <div id="quiz-success-panel" class="hidden flex flex-col items-center justify-center py-8 text-center space-y-4">
+          <div class="w-16 h-16 rounded-2xl bg-amber-500/10 border border-amber-400/40 flex items-center justify-center text-amber-400 text-3xl shadow-lg shadow-amber-500/20 animate-bounce">
+            🏆
+          </div>
+          <div>
+            <h3 class="text-lg font-black text-white">تم إتمام الاختبار بنجاح متفوق!</h3>
+            <p class="text-xs text-zinc-400 mt-1">نجحت في حل جميع الأسئلة وتثبيت مفاهيمها في الوقت المحدد.</p>
+          </div>
+
+          <div class="grid grid-cols-3 gap-3 w-full max-w-sm pt-2">
+            <div class="p-3 bg-zinc-950 rounded-xl border border-zinc-800 text-center">
+              <span class="text-[9px] text-zinc-500 block">المحاولات</span>
+              <span id="stat-total-attempts" class="text-xs font-bold text-amber-400 font-mono">0</span>
+            </div>
+            <div class="p-3 bg-zinc-950 rounded-xl border border-zinc-800 text-center">
+              <span class="text-[9px] text-zinc-500 block">نسبة الدقة</span>
+              <span id="stat-accuracy" class="text-xs font-bold text-emerald-400 font-mono">100%</span>
+            </div>
+            <div class="p-3 bg-zinc-950 rounded-xl border border-zinc-800 text-center">
+              <span class="text-[9px] text-zinc-500 block">الوقت المستغرق</span>
+              <span id="stat-time-spent" class="text-xs font-bold text-violet-300 font-mono">00:00</span>
+            </div>
+          </div>
+
+          <button onclick="showSetupScreen()" class="mt-4 px-6 py-2.5 bg-gradient-to-r from-violet-600 to-amber-500 text-white font-black rounded-xl text-xs hover:opacity-90 transition-all shadow-lg shadow-violet-900/30">
+            🔄 إعداد جلسة جديدة
+          </button>
+        </div>
+
+        <!-- لوحة انتهاء الوقت -->
+        <div id="quiz-timeout-panel" class="hidden flex flex-col items-center justify-center py-8 text-center space-y-4">
+          <div class="w-16 h-16 rounded-2xl bg-rose-500/10 border border-rose-500/40 flex items-center justify-center text-rose-400 text-3xl shadow-lg shadow-rose-950/50 animate-pulse">
+            ⏰
+          </div>
+          <div>
+            <h3 class="text-lg font-black text-rose-400">انتهى الوقت المخصص!</h3>
+            <p class="text-xs text-zinc-400 mt-1">حاول زيادة الوقت المحدد أو تحسين سرعة إجابتك في المرة القادمة.</p>
+          </div>
+
+          <button onclick="showSetupScreen()" class="mt-4 px-6 py-2.5 bg-gradient-to-r from-amber-500 to-rose-600 text-black font-black rounded-xl text-xs hover:opacity-90 transition-all shadow-lg shadow-amber-500/20">
+            🔄 إعادة التحدي وتعديل الوقت
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ==================== الفوتر ==================== -->
+  <footer class="bg-zinc-950/80 border-t border-zinc-900 py-3 text-center">
+    <p class="text-[10px] text-zinc-600">نظام التقييم التكراري المطور | الكيمياء الحيوية - السكريات</p>
+  </footer>
+
+  <!-- ==================== بيانات الأسئلة الشاملة (97 سؤالاً) ==================== -->
+  <script>
+    const QUIZ_DATA = {
+      title: "اختبار السكاكر (الكربوهيدرات) الشامل",
+      questions: [
+        {
+          id: "q1",
+          q: "السكريات الأحادية البسيطة تملك الصيغة العامة:",
+          options: ["$\\text{C}_n \\text{H}_{2n+1} \\text{O}_n$", "$\\text{C}_n \\text{H}_{2n} \\text{O}_n$", "$\\text{C}_n(\\text{H}_2\\text{O})_n$", "$\\text{C}_n(\\text{H}_2\\text{O})_{n-1}$"],
+          correct: 2,
+          exp: "تتألف السكريات كيميائياً من كربون وماء بنسب متساوية، ولذا تُسمى مائيات الفحم."
+        },
+        {
+          id: "q2",
+          q: "غليسر ألدهيد هو سكر كيتوني.",
+          options: ["صح", "خطأ"],
+          correct: 1,
+          exp: "غليسر ألدهيد هو سكر ألديهيدي ثلاثي الكربون (ألدوز)."
+        },
+        {
+          id: "q3",
+          q: "الفركتوز سكر ألديهيدي.",
+          options: ["صح", "خطأ"],
+          correct: 1,
+          exp: "الفركتوز هو سكر كيتوني سداسي الكربون."
+        },
+        {
+          id: "q4",
+          q: "عدد ذرات الكربون غير المتناظرة في سكر الغالاكتوز:",
+          options: ["2", "3", "4", "5"],
+          correct: 2,
+          exp: "الغالاكتوز سكر سداسي ألديهيدي يحتوي على 4 ذرات كربون غير متناظرة."
+        },
+        {
+          id: "q5",
+          q: "زمرة $\\text{OH}$ على الذرة قبل الأخيرة بالسكر تساهم في تحديد التماكب الفراغي (D أو L) دون تغيير اسم السكر الأساسي.",
+          options: ["صح", "خطأ"],
+          correct: 0,
+          exp: "اتجاه زمرة الهيدروكسيل على ذرة الكربون قبل الأخيرة يحدد الشكل الفراغي D أو L."
+        },
+        {
+          id: "q6",
+          q: "الغلوكوز والغالاكتوز من الأبيميرات (Epimers) عند ذرة الكربون رقم $C_4$.",
+          options: ["صح", "خطأ"],
+          correct: 0,
+          exp: "يختلف الغالاكتوز عن الغلوكوز فقط في توجيه زمرة الهيدروكسيل حول ذرة الكربون الرابعة."
+        },
+        {
+          id: "q7",
+          q: "يدخل في تركيب الحموض النووية السكر البسيط:",
+          options: ["غلوكوز", "ريبوز", "مانوز", "فركتوز"],
+          correct: 1,
+          exp: "يدخل سكر الريبوز في تركيب الحمض النووي RNA وجزيئات الطاقة مثل ATP."
+        },
+        {
+          id: "q8",
+          q: "الريبوز سكر خماسي كيتوني.",
+          options: ["صح", "خطأ"],
+          correct: 1,
+          exp: "الريبوز هو سكر خماسي ألديهيدي (ألدوز)."
+        },
+        {
+          id: "q9",
+          q: "اختر العبارة الصحيحة فيما يخص الفركتوز:",
+          options: ["أهم سكر سداسي للحصول على الطاقة", "يسمى سكر الفواكه وهو الأكثر حلاوة"],
+          correct: 1,
+          exp: "الفركتوز هو سكر الفواكه وهو الأكثر حلاوة، بينما الغلوكوز هو الأهم لاستخلاص الطاقة."
+        },
+        {
+          id: "q10",
+          q: "بذور اللوز سامة لأنها تعطي سيانيد الهيدروجين الناتج عن تحلل الديجوكسين.",
+          options: ["صح", "خطأ"],
+          correct: 1,
+          exp: "السمية ناتجة عن تحلل مركب الأميغدالين في بذور اللوز المر (وليس الديجوكسين)."
+        },
+        {
+          id: "q11",
+          q: "السكر الثنائي الذي يحوي على رابطة (أوزيد - أوزيد) هو:",
+          options: ["المالتوز", "اللاكتوز", "السكروز", "الأسلوبيوز"],
+          correct: 2,
+          exp: "تُستهلك المجموعتان المرجعتان للغلوكوز $C_1$ والفركتوز $C_2$ في رابطة السكروز مما يجعله غير مرجع."
+        },
+        {
+          id: "q12",
+          q: "سكر المالتوز:",
+          options: ["يتكون من جزيئتي غلوكوز وغالاكتوز", "يسمى سكر الشعير وهو سكر مرجع", "سكر ثنائي غير مرجع"],
+          correct: 1,
+          exp: "المالتوز يتكون من جزيئتي غلوكوز برابطة $\\alpha(1 \\rightarrow 4)$ وهو سكر مرجع ويسمى سكر الشعير."
+        },
+        {
+          id: "q13",
+          q: "السكروز هو سكر ثنائي غير مرجع يتألف من غلوكوز وفركتوز برابطة $\\alpha(1 \\rightarrow 2)\\beta$.",
+          options: ["صح", "خطأ"],
+          correct: 0,
+          exp: "لأن الرابطة الغليكوزيدية تشغل الكربونين الأنوميريين في كلا السكرين."
+        },
+        {
+          id: "q14",
+          q: "كحول سكري ينتج من إرجاع المانوز:",
+          options: ["المانيتول", "الغليسرول", "السوربيتول"],
+          correct: 0,
+          exp: "ينتج المانيتول مباشرة من تفاعل إرجاع سكر المانوز."
+        },
+        {
+          id: "q15",
+          q: "الغليسيرول ذو مذاق حلو لأنه كحول سكري.",
+          options: ["صح", "خطأ"],
+          correct: 0,
+          exp: "الغليسيرول كحول سكري حلو المذاق ينتج من إرجاع ثنائي هيدروكسي أسيتون."
+        },
+        {
+          id: "q16",
+          q: "تأكسد الغلوكوز ينتج عن الذرة $C_1$ حمض غلوكونيك، وعن الذرة $C_6$ حمض غلوكورونيك.",
+          options: ["صح", "خطأ"],
+          correct: 0,
+          exp: "أكسدة زمرة الألدهيد عند $C_1$ تعطي حمض الغلوكونيك، وأكسدة زمرة الكحول الأولية عند $C_6$ تنتج حمض الغلوكورونيك."
+        },
+        {
+          id: "q17",
+          q: "حمض الغلوكونيك ناتج عن أكسدة الغلوكوز في مجموعة الألدهيد إلى كربوكسيل.",
+          options: ["صح", "خطأ"],
+          correct: 0,
+          exp: "تتأكسد زمرة الألدهيد $C_1$ بواسطة عامل مؤكسد ضعيف لتعطي حمض الغلوكونيك."
+        },
+        {
+          id: "q18",
+          q: "كل السكريات التالية تحتوي على وحدات $\\text{D}-\\alpha-\\text{غلوكوز}$ فقط ما عدا:",
+          options: ["السيللوز", "الغليكوجين", "الأميلوز", "الأميلوبكتين"],
+          correct: 0,
+          exp: "يتألف السيلولوز من وحدات غلوكوز مرتبطة بروابط بيتا $\\beta(1 \\rightarrow 4)$."
+        },
+        {
+          id: "q19",
+          q: "السيلولوز سكر يدخل في تركيب العضلات.",
+          options: ["صح", "خطأ"],
+          correct: 1,
+          exp: "السيلولوز يدخل في الجدر الخلوية للنباتات، بينما سكر العضلات هو الغليكوجين."
+        },
+        {
+          id: "q20",
+          q: "الإنسان لا يهضم السيللوز لأن الروابط فيه من النمط بيتا $\\beta(1 \\rightarrow 4)$.",
+          options: ["صح", "خطأ"],
+          correct: 0,
+          exp: "لا يمتلك الإنسان الإنزيمات القادرة على تحطيم الروابط الغليكوزيدية $\\beta(1 \\rightarrow 4)$."
+        },
+        {
+          id: "q21",
+          q: "توجد الرابطة الغليكوزيدية $\\alpha(1 \\rightarrow 6)$ في:",
+          options: ["الأميلوز", "الأميلوبكتين", "السيللوز", "السكروز"],
+          correct: 1,
+          exp: "تتواجد الرابطة $\\alpha(1 \\rightarrow 6)$ عند نقاط التفرع في الأميلوبكتين والغليكوجين."
+        },
+        {
+          id: "q22",
+          q: "النشاء:",
+          options: ["يوجد بنسب عالية في البطاطا والقمح", "يتكون من غلوكوز وغالاكتوز", "لا يتحلمه بالأميلاز", "مصدر طاقة حيواني"],
+          correct: 0,
+          exp: "النشاء هو مخزن الطاقة الرئيسي في النبات، ووفير في البطاطا والقمح."
+        },
+        {
+          id: "q23",
+          q: "الأميلوبكتين يتألف من وحدات غلوكوز فقط.",
+          options: ["صح", "خطأ"],
+          correct: 0,
+          exp: "الأميلوبكتين سلسلة متفرعة تتكون بالكامل من جزيئات الغلوكوز."
+        },
+        {
+          id: "q24",
+          q: "الأميلوز يحتاج أنزيم الأميلاز فقط للهضم.",
+          options: ["صح", "خطأ"],
+          correct: 0,
+          exp: "الأميلوز سلسلة مستقيمة تحتوي روابط $\\alpha(1 \\rightarrow 4)$ فقط يستطيع الأميلاز تفكيكها."
+        },
+        {
+          id: "q25",
+          q: "الرابطة بين جزيئات النشا والغليكوجين هي رابطة $(1 \\rightarrow 4)$ فقط.",
+          options: ["صح", "خطأ"],
+          correct: 1,
+          exp: "كلاهما متفرع ويحتويان على روابط مستقيمة $(1 \\rightarrow 4)$ وروابط تفريع $(1 \\rightarrow 6)$."
+        },
+        {
+          id: "q26",
+          q: "ينتج عن وحدات متعاقبة من سكر ثنائي متكون من $\\text{N}-\\text{أسيل}-\\beta-\\text{غلوكوز أمين}$ و $\\beta-\\text{غلوكورونيك}$:",
+          options: ["الهيبارين", "حمض الهيالورونيك", "الكيتين", "الكوندرويتين الكبريتي"],
+          correct: 1,
+          exp: "يتألف حمض الهيالورونيك من تكرار حمض الغلوكورونيك و N-أستيل غلوكوز أمين."
+        },
+        {
+          id: "q27",
+          q: "يمتاز حمض الهيالورونيك بأنه:",
+          options: ["سكر متجانس", "يتكون من جزيئات صغيرة", "كبريتي", "مشحم ومزيت للمفاصل"],
+          correct: 3,
+          exp: "لزوجته العالية تمكنه من القيام بدور وسادة مشحمة ومزلقة للمفاصل."
+        },
+        {
+          id: "q28",
+          q: "السكريات المخاطية يطلق عليها اسم البروتيوغليكان.",
+          options: ["صح", "خطأ"],
+          correct: 1,
+          exp: "السكاكر المخاطية هي غلوكوز أمينو غليكان، وعند ارتباطها ببروتين تسمى بروتيوغليكان."
+        },
+        {
+          id: "q29",
+          q: "عدد مماكبات الهكسوكيتوز (Hexoketose) هو:",
+          options: ["4", "8", "16", "24"],
+          correct: 1,
+          exp: "يحتوي على 3 ذرات كربون غير متناظرة، وعدد المماكبات $2^3 = 8$."
+        },
+        {
+          id: "q30",
+          q: "الغلوكوز والغالاكتوز هما:",
+          options: ["أبيميران عند الكربون $C_4$", "مونوميران عند $C_4$", "أبيميران عند $C_2$"],
+          correct: 0,
+          exp: "يختلف الغالاكتوز عن الغلوكوز في توجيه الهيدروكسيل حول ذرة الكربون الرابعة $C_4$."
+        },
+        {
+          id: "q31",
+          q: "ينتج عن تكثف ذرة الكربون $C_2$ و $C_6$ في الفركتوز:",
+          options: ["ألفا وبيتا فركتوفورانوز", "ألفا وبيتا فركتوبيرانوز", "ألفا فركتوفورانوز", "ألفا فركتوبيرانوز"],
+          correct: 1,
+          exp: "تفاعل $C_6$ مع الكربون الأنوميري $C_2$ يغلق السكر على شكل حلقة سداسية بيرانوز."
+        },
+        {
+          id: "q32",
+          q: "عدد مماكبات البنتوز (Pentose isomers) الكلي (الألدوز والكيتوز معاً):",
+          options: ["4", "8", "12", "16"],
+          correct: 2,
+          exp: "الألدوبنتوز يملك 8 مماكبات والكيتوبنتوز 4 مماكبات، والمجموع 12."
+        },
+        {
+          id: "q33",
+          q: "الخاطئ حول سكر اللاكتوز (سكر الحليب):",
+          options: [
+            "يرتبط برابطة $\\beta-\\text{D}-\\text{غالاكتوبيرانوزيل} (1 \\rightarrow 4) \\beta-\\text{D}-\\text{غلوكوبيرانوزيد}$",
+            "يستخدم كوسط مغذي في المزارع البكتيرية",
+            "عوزه يؤدي إلى إسهال مائي وانتفاخ البطن",
+            "تتم حلمهته بوساطة إنزيم اللاكتاز"
+          ],
+          correct: 0,
+          exp: "اللاكتوز سكر مرجع، لذا تنتهي تسميته الكيميائية بـ غلوكوبيرانوز وليس غلوكوبيرانوزيد."
+        },
+        {
+          id: "q34",
+          q: "كل ما يلي صحيح عن الحمض اليوروني (Uronic Acid) عدا:",
+          options: ["يسهم في عديدات السكر المخاطية", "يوجد في الغضاريف والنسج", "له دور في إزالة السمية", "مؤكسد عند الذرة $C_1$"],
+          correct: 3,
+          exp: "ينتج الحمض اليوروني عن أكسدة الذرة الأخيرة $C_6$، بينما أكسدة $C_1$ تنتج حمض الألدونيك."
+        },
+        {
+          id: "q35",
+          q: "غلوكوز-6-فوسفات بوجود إنزيم فوسفغلوكوموتاز يعطي:",
+          options: ["غلوكوز-1-فوسفات", "فركتوز-1-فوسفات", "غلوكوز-6-فوسفات", "حمض الغلوكورونيك"],
+          correct: 0,
+          exp: "ينقل هذا الإنزيم زمرة الفوسفات عكوساً بين الكربون $C_6$ و $C_1$."
+        },
+        {
+          id: "q36",
+          q: "يتكون سلفات الكوندرويتين A من تكرار وحدات:",
+          options: [
+            "حمض غلوكورونيك و N-أستيل غالاكتوز أمين و 4-فوسفات (سلفات)",
+            "حمض إيدورونيك و N-أستيل غالاكتوز أمين و 4-فوسفات",
+            "حمض غلوكورونيك و N-أستيل غالاكتوز أمين و 6-فوسفات",
+            "حمض غلوكورونيك و N-أستيل غلوكوز أمين"
+          ],
+          correct: 0,
+          exp: "يتألف من تعاقب حمض D-غلوكورونيك و N-أستيل-D-غالاكتوز أمين مكبرت عند $C_4$."
+        },
+        {
+          id: "q37",
+          q: "يستخدم الأغاروز (Agarose) كوسط في تقنية:",
+          options: ["تفاعل البوليميراز المتسلسل (PCR)", "تحديد تسلسل الـ DNA", "الرحلان الكهربائي (Electrophoresis)", "تنقية البروتين"],
+          correct: 2,
+          exp: "يُستعمل الأغاروز كغربال هلامي في الرحلان الكهربائي لفصل الحموض النووية."
+        },
+        {
+          id: "q38",
+          q: "عند ارتباط السكر بالبروتين برابطة N-غليكوزيدية، يتم الارتباط عبر التسلسل التعرفي:",
+          options: ["Asn-X-Pro", "Asn-X-Ser (أو Thr)", "Asn-X-Tyr", "Asn-Gly-Phe"],
+          correct: 1,
+          exp: "ترتبط السلسلة السكرية بالحمض الأميني أسباراجين بشرط وجود Ser أو Thr بالموقع الثالث."
+        },
+        {
+          id: "q39",
+          q: "صيغة الحموض الدسمة هي $\\text{C}_n(\\text{H}_2\\text{O})_n$.",
+          options: ["صح", "خطأ"],
+          correct: 1,
+          exp: "هذه صيغة السكريات الأحادية البسيطة (مائيات الفحم) وليست الحموض الدسمة."
+        },
+        {
+          id: "q40",
+          q: "السكاكر تمثل 2% فقط من الوزن الجاف عند النباتات.",
+          options: ["صح", "خطأ"],
+          correct: 1,
+          exp: "تشكل السكريات 70% إلى 87% من الوزن الجاف للنباتات."
+        },
+        {
+          id: "q41",
+          q: "ليس لثنائي هيدروكسي الأستون نوع D و L لأنه لا يحوي أي ذرة كربون غير متناظرة.",
+          options: ["صح", "خطأ"],
+          correct: 0,
+          exp: "لعدم احتوائه على كربون كيرالي، لا يملك نشاطاً ضوئياً ولا تماكباً فراغياً."
+        },
+        {
+          id: "q42",
+          q: "سكر ليس له مماكبات من النمط D و L:",
+          options: ["ألدهيد غليسر", "ثنائي هيدروكسي الأسيتون", "سكروز"],
+          correct: 1,
+          exp: "هو السكر الوحيد الخالي من ذرات الكربون غير المتناظرة."
+        },
+        {
+          id: "q43",
+          q: "السكاكر الكيتونية عدد مماكباتها أكبر من السكاكر الألدهيدية.",
+          options: ["صح", "خطأ"],
+          correct: 1,
+          exp: "السكاكر الألدهيدية تملك ذرات كربون غير متناظرة أكثر وبالتالي مماكبات أكثر."
+        },
+        {
+          id: "q44",
+          q: "كل ما يلي صحيح فيما يخص السكاكر الكيتونية ما عدا:",
+          options: [
+            "تحوي رابطة ثنائية على الكربون رقم 2",
+            "تعتبر عديد كحولي",
+            "تحوي كربون وأوكسجين بنفس العدد ومضاعف هيدروجين",
+            "صيغتها $\\text{C}_n(\\text{H}_2\\text{O})_n$",
+            "مماكباتها أكثر من مماكبات السكر الألدهيدي"
+          ],
+          correct: 4,
+          exp: "مماكبات السكر الكيتوني أقل من الألدهيدي المقابل لنقص مراكز عدم التناظر فيه."
+        },
+        {
+          id: "q45",
+          q: "جميع السكاكر الأحادية فعالة كيميائياً وتملك القدرة على الإرجاع لزمرة الكربونيل.",
+          options: ["صح", "خطأ"],
+          correct: 0,
+          exp: "وجود زمرة الكربونيل الحرة يمنحها القدرة على إرجاع كواشف المعادن."
+        },
+        {
+          id: "q46",
+          q: "الغالاكتوز هو:",
+          options: ["سكر الفواكه", "بديل السكرين", "أكثر حلاوة من الغلوكوز", "4-إبيمير للغلوكوز على ذرة الكربون"],
+          correct: 3,
+          exp: "يختلف الغالاكتوز عن الغلوكوز في توجيه الهيدروكسيل حول ذرة الكربون الرابعة."
+        },
+        {
+          id: "q47",
+          q: "المانوز هو إبيمير للغلوكوز يختلف عنه بتوضع الهيدروكسيل بذرة الكربون الرابعة فقط.",
+          options: ["صح", "خطأ"],
+          correct: 1,
+          exp: "المانوز هو إبيمير للغلوكوز عند الكربون رقم $C_2$ وليس الرابع."
+        },
+        {
+          id: "q48",
+          q: "فركتوز منقوص الأكسجين يعطي سكر رامنوز.",
+          options: ["صح", "خطأ"],
+          correct: 1,
+          exp: "الرامنوز ينتج عن سكر المانوز منقوص الأوكسجين عند الكربون $C_6$."
+        },
+        {
+          id: "q49",
+          q: "يستخدم سكر D-xylose للكشف عن سوء امتصاص الأمعاء.",
+          options: ["صح", "خطأ"],
+          correct: 0,
+          exp: "يُعطى فموياً ويُقاس بالبول والدم للكشف عن كفاءة الامتصاص المعوي."
+        },
+        {
+          id: "q50",
+          q: "في اختبار الكزيلوز (D-xylose):",
+          options: ["يكون متناقصاً في البول في حال الداء الزلاقي", "سكر ثنائي", "يوجد داخل الخلايا", "يمتص بعد هضمه بالكسيلأز"],
+          correct: 0,
+          exp: "تلف الزغابات في الداء الزلاقي يقلل امتصاص الكسيلوز وبالتالي يقل بالبول."
+        },
+        {
+          id: "q51",
+          q: "يستخدم الفركتوز بالريجيم لأن الطاقة الناجمة عن تحلله أقل من الغلوكوز.",
+          options: ["صح", "خطأ"],
+          correct: 1,
+          exp: "الفركتوز يعطي نفس طاقة الغلوكوز لكنه أشد حلاوة بكثير فتُستعمل منه كميات أقل."
+        },
+        {
+          id: "q52",
+          q: "سكر اللاكتوز:",
+          options: ["أكثر حلاوة من السكروز", "سكر غير مرجع", "يتكون من غالاكتوز وغلوكوز", "يسمى سكر الشعير"],
+          correct: 2,
+          exp: "هو سكر ثنائي مرجع يتألف من الغالاكتوز والغلوكوز برابطة $\\beta(1 \\rightarrow 4)$."
+        },
+        {
+          id: "q53",
+          q: "اللاكتوز (أو مشتق اللاكتولوز) يُستخدم كملين معوي لأنه لا يتحلمه بالأمعاء.",
+          options: ["صح", "خطأ"],
+          correct: 0,
+          exp: "يسحب الماء بالحلولية إلى داخل الأمعاء مسبباً تليين البراز."
+        },
+        {
+          id: "q54",
+          q: "كل ما يلي صحيح عن سوء تحمل اللاكتوز ما عدا:",
+          options: ["ينشأ عن خلل بإنزيم اللاكتاز", "ينشأ نتيجة اضطرابات هضمية", "ينتج عنه نسبة كبيرة من $\\text{CO}_2$", "تخمره الجراثيم إلى حمض الخل"],
+          correct: 3,
+          exp: "تخمر اللاكتوز بالجراثيم ينتج عنه بشكل رئيسي حمض اللبن (اللاكتيك) وغازات."
+        },
+        {
+          id: "q55",
+          q: "الصحيح عن المالتوز:",
+          options: ["سكر ثنائي متكون من جزيئتي غلوكوز", "سكر غير مرجع", "يحوي روابط هيدروجينية فقط", "كل ما سبق صحيح"],
+          correct: 0,
+          exp: "يتكون المالتوز من جزيئتي غلوكوز برابطة $\\alpha(1 \\rightarrow 4)$ وهو سكر مرجع."
+        },
+        {
+          id: "q56",
+          q: "أي مما يلي سكر ثنائي غير مرجع:",
+          options: ["دي هيدروكسي أستون", "إريتروز", "السكروز", "فركتوز", "مالتوز"],
+          correct: 2,
+          exp: "السكروز غير مرجع لاشغال الرابطة الغليكوزيدية للكربونين الأنوميريين معاً."
+        },
+        {
+          id: "q57",
+          q: "سكر ثلاثي يتركب من ثلاث وحدات أحادية:",
+          options: ["رامنوز", "مانوز", "رافينوز", "إكسيلوز"],
+          correct: 2,
+          exp: "الرافينوز سكر ثلاثي يتكون من: غالاكتوز، وغلوكوز، وفركتوز."
+        },
+        {
+          id: "q58",
+          q: "يرجع الغلوكوز كيميائياً إلى:",
+          options: ["سوربيتول", "غليسيرول", "مانيتول", "مانيتول وسوربيتول معاً"],
+          correct: 0,
+          exp: "إرجاع زمرة الألدهيد في الغلوكوز ينتج الكحول السكري: السوربيتول."
+        },
+        {
+          id: "q59",
+          q: "إرجاع الفركتوز بواسطة عامل مرجع يعطي:",
+          options: ["سوربيتول فقط", "غليسرول", "مانيتول فقط", "خليط من السوربيتول والمانيتول"],
+          correct: 3,
+          exp: "انكسار الزمرة الكيتونية $C_2$ يعطي احتمالين متساويين في التناظر: سوربيتول ومانيتول."
+        },
+        {
+          id: "q60",
+          q: "تعتبر من الكحولات السكرية:",
+          options: ["سوربيتول", "مانيتول", "غليسرول", "السوربيتول والمانيتول", "جميع ما ذكر (السوربيتول والمانيتول والغليسرول)"],
+          correct: 4,
+          exp: "جميع المركبات المذكورة هي كحولات سكرية ناتجة عن إرجاع السكاكر."
+        },
+        {
+          id: "q61",
+          q: "تحول الغلوكوز لسوربيتول داخل الخلية يساهم في حدوث اختلاطات السكري (وفق مفتاح الدورة):",
+          options: ["صح", "خطأ"],
+          correct: 1,
+          exp: "اعتمدت بالدورة خطأ، مع أن التراكم الفائض علمياً يسبب الأذية الحلولية."
+        },
+        {
+          id: "q62",
+          q: "ينتج عن تحول ذرة الكربون رقم $C_6$ في الغلوكوز إلى زمرة كربوكسيل:",
+          options: ["حمض الغلوكونيك", "حمض الغلوكورونيك", "حمض الغلوكاريك"],
+          correct: 1,
+          exp: "أكسدة الكربون الأخير $C_6$ تنتج حمض اليورونيك (الغلوكورونيك)."
+        },
+        {
+          id: "q63",
+          q: "حمض الغلوكورونيك:",
+          options: ["ينتج عن أكسدة $C_6$ إلى كربوكسيل", "سلاح هام للكبد لإزالة سمية المواد الكارهة للماء", "كل ما سبق صحيح", "كل ما سبق خطأ"],
+          correct: 2,
+          exp: "يُصنع بأكسدة $C_6$ ويقترن بالسموم في الكبد لتحويلها لمركبات ذوابة."
+        },
+        {
+          id: "q64",
+          q: "حمض الغلوكورونيك في الكبد يعمل كعامل أساسي لإزالة السمية.",
+          options: ["صح", "خطأ"],
+          correct: 0,
+          exp: "يقترن بالبليروبين والأدوية والسموم ليسهل طرحها بالبول."
+        },
+        {
+          id: "q65",
+          q: "رمز GalNAc يشير إلى:",
+          options: ["سكر أميني (N-أستيل غالاكتوز أمين)", "حمض سكري", "سكر بروتيني"],
+          correct: 0,
+          exp: "هو سكر أميني مشتق بدخول زمرة أمين مأستلة عند الكربون 2."
+        },
+        {
+          id: "q66",
+          q: "كل ما يلي صحيح عن السيلولوز ماعدا:",
+          options: [
+            "يتكون من غلوكوز بروابط من النوع $\\alpha(1 \\rightarrow 4)$",
+            "غير متفرع ويقي من الإمساك والبواسير",
+            "سلسلة خطية غير متفرعة",
+            "يساعد في خفض الوزن",
+            "يقي من سرطان القولون"
+          ],
+          correct: 0,
+          exp: "روابط السيلولوز هي من النمط بيتا $\\beta(1 \\rightarrow 4)$ وليست ألفا."
+        },
+        {
+          id: "q67",
+          q: "من خواص السيلولوز الوظيفية بالهضم:",
+          options: ["يستخدم في حالات الإسهال", "له دور رابط للماء في القولون", "سكر متجانس ومتفرع", "روابطه من النوع $\\alpha(1 \\rightarrow 4)$"],
+          correct: 1,
+          exp: "يربط الماء ليزيد حجم البراز وتليينه مما يمنع الإمساك."
+        },
+        {
+          id: "q68",
+          q: "عبارة صحيحة فيما يتعلق بالسيلولوز:",
+          options: ["يطيل زمن مكوث الطعام في الأمعاء", "يقي من سرطان الرئة", "روابطه $\\alpha(1 \\rightarrow 4)$", "يستخدم في الإسهال", "كل ما سبق خطأ"],
+          correct: 4,
+          exp: "السيلولوز يقلل زمن المكوث، يقي من سرطان القولون، رابطته بيتا، ويُفيد بالإمساك."
+        },
+        {
+          id: "q69",
+          q: "الأميلوبكتين يحوي على وحدات غلوكوز فقط.",
+          options: ["صح", "خطأ"],
+          correct: 0,
+          exp: "بوليمر متجانس تتألف سلاسله وتفرعاته من الغلوكوز فقط."
+        },
+        {
+          id: "q70",
+          q: "يمتاز الأميلوز بأنه:",
+          options: ["منحل بالماء", "يحوي 80% روابط $\\alpha(1 \\rightarrow 6)$", "سلسلة متفرعة جداً", "غير منحل مطلقاً"],
+          correct: 0,
+          exp: "الأميلوز سلسلة خطية غير متفرعة تذوب بالماء لتشكل محلولاً رائقاً."
+        },
+        {
+          id: "q71",
+          q: "النشاء النباتي:",
+          options: ["يوجد في الإنسان والحيوان والنبات", "يوجد في أوراق النبات بكميات مرتفعة"],
+          correct: 1,
+          exp: "النشاء مخزن طاقة نباتي حصري يُصنع بأوراق النبات بالتصنيع الضوئي."
+        },
+        {
+          id: "q72",
+          q: "توجد الرابطة $\\alpha(1 \\rightarrow 6)$ في كل المركبات التالية ما عدا:",
+          options: ["النشاء", "الغليكوجين", "الأميلوبكتين", "الأميلوز", "الديكسترين"],
+          correct: 3,
+          exp: "الأميلوز سلسلة مستقيمة خالية من التفرعات تحوي $\\alpha(1 \\rightarrow 4)$ فقط."
+        },
+        {
+          id: "q73",
+          q: "الدكسترين يتكون من سلسلة مستقيمة غير متفرعة ناتجة عن الهضم الكامل للنشاء.",
+          options: ["صح", "خطأ"],
+          correct: 1,
+          exp: "الدكسترين ناتج هضم جزئي محدود ويحتوي على نقاط التفرع $\\alpha(1 \\rightarrow 6)$."
+        },
+        {
+          id: "q74",
+          q: "كل ما يلي صحيح عن الغليكوجين:",
+          options: [
+            "غليكوجين العضلات يخدم العضلات فقط",
+            "مخزون الكربوهيدرات في جسم الإنسان",
+            "الغلوكاغون يفعل غليكوجين فسفوريلاز لتحليله",
+            "الإجابتان الأولى والثانية",
+            "جميع ما ذكر صحيح"
+          ],
+          correct: 4,
+          exp: "يمثل مخزن السكر الحيواني، غليكوجين الكبد يحرر الغلوكوز للدم، والعضلات تستهلكه محلياً."
+        },
+        {
+          id: "q75",
+          q: "الغليكوجين أقل تفرعاً من الأميلوبكتين.",
+          options: ["صح", "خطأ"],
+          correct: 1,
+          exp: "الغليكوجين أشد تفرعاً وتقارباً في التفرعات من الأميلوبكتين."
+        },
+        {
+          id: "q76",
+          q: "في أثناء الصيام يتم تحلل الغليكوجين في الكبد والعضلات سوياً لتغذية الدم بالغلوكوز.",
+          options: ["صح", "خطأ"],
+          correct: 1,
+          exp: "غليكوجين الكبد فقط يطرح الغلوكوز بالدم لغياب إنزيم الفوسفاتاز بالعضلات."
+        },
+        {
+          id: "q77",
+          q: "يُستخدم غليكوجين الكبد للمحافظة على استتباب سكر الدم.",
+          options: ["صح", "خطأ"],
+          correct: 0,
+          exp: "يتفكك لغلوكوز يطرح في مجرى الدم عند الانخفاض لتعديل النسبة."
+        },
+        {
+          id: "q78",
+          q: "يدخل البكتين في تشكيل الهيكل الخارجي للحشرات بشكل رئيسي.",
+          options: ["صح", "خطأ"],
+          correct: 1,
+          exp: "الكيتين (Chitin) هو مكون هيكل الحشرات، بينما البكتين سكر نباتي."
+        },
+        {
+          id: "q79",
+          q: "يتألف من وحدات متناوبة من حمض الغلوكورونيك و N-أستيل غلوكوز أمين:",
+          options: ["حمض الهيالورونيك", "الكوندرويتين", "الهيبارين"],
+          correct: 0,
+          exp: "هذا هو التركيب البوليمري المتكرر لحمض الهيالورونيك."
+        },
+        {
+          id: "q80",
+          q: "من الاستخدامات الطبية لحمض الهيالورونيك:",
+          options: ["سكر بروتيني محفز", "سكر مخاطي كبريتي", "دواء يحقن داخل المفصل في التآكل المفصلي", "تغذية البكتيريا"],
+          correct: 2,
+          exp: "يُحقن داخل المفاصل لتعويض لزوجة السائل الزليلي وتقليل الاحتكاك."
+        },
+        {
+          id: "q81",
+          q: "علاج جفاف العيون يعتمد على قطرات تحتوي مركب:",
+          options: ["حمض الهيالورونيك", "النشاء", "الغليكوجين", "الأميلوز", "الديكسترين"],
+          correct: 0,
+          exp: "يمتلك الهيالورونيك قدرة عالية على حبس الماء وترطيب قرنية العين."
+        },
+        {
+          id: "q82",
+          q: "كل ما يلي صحيح عن الكوندرويتين (Chondroitin) ما عدا:",
+          options: [
+            "وحدات متناوبة من حمض D-غلوكورونيك و N-أستيل-D-غالاكتوز أمين",
+            "يشكل 40% من الوزن الجاف لغضروف الحاجز الأنفي",
+            "سكر مخاطي كبريتي",
+            "يدخل بتركيب قطرات عينية لعلاج جفاف العيون",
+            "محب جداً للماء"
+          ],
+          correct: 3,
+          exp: "الهيالورونيك هو المستعمل لقطرات جفاف العين، بينما الكوندرويتين يتركز بالغضاريف."
+        },
+        {
+          id: "q83",
+          q: "عدد مماكبات الـ D-هكسوزات (D-Hexoses) الكلي (الألدوز والكيتوز معاً) هو:",
+          options: ["8", "12", "16", "24"],
+          correct: 1,
+          exp: "يتكون من 8 مماكبات ألدوهكسوز D و 4 مماكبات كيتوهكسوز D (المجموع = 12)."
+        },
+        {
+          id: "q84",
+          q: "المماكب الفراغي للغلوكوز الذي يختلف عنه بالتوزع الفراغي حول الكربون رقم $C_4$ هو:",
+          options: ["المانوز", "الفركتوز", "الغالاكتوز", "الريبوز"],
+          correct: 2,
+          exp: "الغالاكتوز هو $C_4$-Epimer للغلوكوز."
+        },
+        {
+          id: "q85",
+          q: "سكر ثنائي غير مرجع يتكون من $\\alpha-\\text{D}-\\text{غليكوبيرانوزيل} (1 \\rightarrow 2) \\beta-\\text{D}-\\text{فركتوفورانوزيد}$:",
+          options: ["المالتوز", "اللاكتوز", "السكروز", "السلوبيوز"],
+          correct: 2,
+          exp: "هذا هو الاسم الكيميائي النظامي للسكروز غير المرجع."
+        },
+        {
+          id: "q86",
+          q: "المركب الناتج عن تكاثف ذرة الكربون $C_2$ مع ذرة الكربون $C_6$ في سكر D-فركتوز هو:",
+          options: ["ألفا وبيتا فركتوفورانوز", "ألفا وبيتا فركتوبيرانوز", "ألفا فركتوفورانوز فقط", "بيتا فركتوبيرانوز فقط"],
+          correct: 1,
+          exp: "تفاعل H عند $C_6$ مع $C_2$ الكيتونية يغلق الحلقة على شكل بيرانوز سداسي."
+        },
+        {
+          id: "q87",
+          q: "سكر خماسي كيتوني (Ketopentose) يدخل في تركيب حلقة البنتوز فوسفات:",
+          options: ["الريبوز", "الريبولوز", "الكسيلوز", "الأرابينوز"],
+          correct: 1,
+          exp: "الريبولوز هو السكر الخماسي الكيتوني (Ketopentose)."
+        },
+        {
+          id: "q88",
+          q: "الصيغة الكيميائية لسكر الريبوز منقوص الأكسجين (Deoxyribose) هي:",
+          options: ["$\\text{C}_5 \\text{H}_{10} \\text{O}_5$", "$\\text{C}_5 \\text{H}_{10} \\text{O}_4$", "$\\text{C}_6 \\text{H}_{12} \\text{O}_6$", "$\\text{C}_5 \\text{H}_8 \\text{O}_4$"],
+          correct: 1,
+          exp: "ينقص ذرة أكسجين واحدة عند $C_2$ مقارنة بالريبوز ($\\text{C}_5 \\text{H}_{10} \\text{O}_5$)."
+        },
+        {
+          id: "q89",
+          q: "كل ما يلي صحيح عن سكر الفركتوز ما عدا:",
+          options: [
+            "يسمى سكر الفواكه",
+            "يعطي طاقة تعادل الغلوكوز غراماً بغرام",
+            "مساوٍ للغلوكوز في درجة الحلاوة وأقل من السكروز",
+            "سكر سداسي كيتوني"
+          ],
+          correct: 2,
+          exp: "الفركتوز هو الأشد حلاوة بين السكاكر الأحادية وأعلى حلاوة من السكروز والغلوكوز."
+        },
+        {
+          id: "q90",
+          q: "سكر ثلاثي يتكون من ارتباط (غالاكتوز + غلوكوز + فركتوز):",
+          options: ["رامنوز", "مالتوز", "رافينوز", "لاكتولوز"],
+          correct: 2,
+          exp: "الرافينوز سكر ثلاثي متواجد بالبقوليات."
+        },
+        {
+          id: "q91",
+          q: "ينتج عن إرجاع سكر الفركتوز بواسطة عامل مرجع معدني:",
+          options: ["سوربيتول فقط", "غليسيرول فقط", "مانيتول فقط", "سوربيتول ومانيتول بنسب متساوية"],
+          correct: 3,
+          exp: "كسر الزمرة الكيتونية يولد احتمالين متساويين في التناظر (سوربيتول ومانيتول)."
+        },
+        {
+          id: "q92",
+          q: "سكر ثنائي مشتق غير مجانس لا يمتص في الأمعاء ويستخدم كملين معوي حلولي:",
+          options: ["السكروز", "اللاكتولوز", "السلوبيوز", "المالتوز"],
+          correct: 1,
+          exp: "اللاكتولوز لا يمتص بالأمعاء ويسحب الماء بالحلولية ليلين البطن."
+        },
+        {
+          id: "q93",
+          q: "ينتج حمض الغلوكورونيك كيميائياً عن أكسدة الغلوكوز عند ذرة الكربون رقم:",
+          options: ["$C_1$", "$C_2$", "$C_4$", "$C_6$"],
+          correct: 3,
+          exp: "أكسدة زمرة الكحول الأولية عند الكربون الأخير $C_6$ تنتج حمض الغلوكورونيك."
+        },
+        {
+          id: "q94",
+          q: "يتميز مركب الأميلوبكتين (Amylopectin) بـ:",
+          options: [
+            "يشكل 15% فقط من النشاء",
+            "يتطلب هضمه الكامل إنزيم الأميلاز والإنزيم مزيل التفرع (Debranching enzyme)",
+            "سلسلة خطية خالية تماماً من التفرع",
+            "يدخل في تركيب الغليكوجين"
+          ],
+          correct: 1,
+          exp: "يحتوي على روابط $\\alpha(1 \\rightarrow 4)$ وتفرعات $\\alpha(1 \\rightarrow 6)$ تتطلب إنزيم مزيل التفرع."
+        },
+        {
+          id: "q95",
+          q: "ينتج مركب الشيتوزان (Chitosan) المستخدم في طب الأسنان عن:",
+          options: ["أكسدة الكيتين بمؤكسد قوي", "نزع جزئي لمجموعة الأستيل من الكيتين", "إرجاع حمض الهيالورونيك", "بلمرة GalNAc"],
+          correct: 1,
+          exp: "يُحضر بنزع مجموعة الأستيل كيميائياً من بوليمر الكيتين."
+        },
+        {
+          id: "q96",
+          q: "جميع المركبات التالية تنتمي للسكاكر المخاطية (GAGs) ما عدا:",
+          options: ["الدكسترينات (Dextrins)", "الهيبارين (Heparin)", "حمض الهيالورونيك", "كوندرويتين سلفات"],
+          correct: 0,
+          exp: "الدكسترينات ناتجة عن هضم جزئي للنشاء وليست من السكاكر المخاطية."
+        },
+        {
+          id: "q97",
+          q: "المركب الكيميائي ذو الصيغة $\\text{C}_5 \\text{H}_{10} \\text{O}_4$ يسمى:",
+          options: ["الريبوز منقوص الأكسجين", "الفركتوز", "الريبوز", "كل ما سبق غير صحيح"],
+          correct: 0,
+          exp: "يُشتق الريبوز منقوص الأكسجين ($\\text{C}_5 \\text{H}_{10} \\text{O}_4$) بنزع أكسجين من الريبوز ($\\text{C}_5 \\text{H}_{10} \\text{O}_5$) عند $C_2$."
+        }
+      ]
+    };
+  </script>
+
+  <!-- ==================== المحرك البرمجي ==================== -->
+  <script>
+    /*************************************************************************
+     * 1. الصوت والتفاعل اللمسي (Audio & Haptics):
+     *************************************************************************/
+    const AudioFX = {
+      ctx: null,
+      init() { if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)(); },
+      playCorrect() {
+        try {
+          this.init(); const ctx = this.ctx; const osc = ctx.createOscillator(); const gain = ctx.createGain();
+          osc.connect(gain); gain.connect(ctx.destination); osc.type = 'sine';
+          osc.frequency.setValueAtTime(523.25, ctx.currentTime); osc.frequency.setValueAtTime(659.25, ctx.currentTime + 0.1);
+          gain.gain.setValueAtTime(0.15, ctx.currentTime); gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
+          osc.start(); osc.stop(ctx.currentTime + 0.35);
+        } catch(e) {}
+      },
+      playIncorrect() {
+        try {
+          this.init(); const ctx = this.ctx; const osc = ctx.createOscillator(); const gain = ctx.createGain();
+          osc.connect(gain); gain.connect(ctx.destination); osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(110, ctx.currentTime); gain.gain.setValueAtTime(0.2, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
+          osc.start(); osc.stop(ctx.currentTime + 0.4);
+        } catch(e) {}
+      }
+    };
+
+    const tg = window.Telegram?.WebApp;
+    const HapticFX = {
+      triggerSuccess() { if (tg?.HapticFeedback) try { tg.HapticFeedback.notificationOccurred('success'); } catch(e){} },
+      triggerError() { if (tg?.HapticFeedback) try { tg.HapticFeedback.notificationOccurred('error'); } catch(e){} },
+      triggerSelection() { if (tg?.HapticFeedback) try { tg.HapticFeedback.impactOccurred('light'); } catch(e){} }
+    };
+
+    /*************************************************************************
+     * 2. متغيرات حالة الكويز والمؤقت الزمني:
+     *************************************************************************/
+    let quizQueue = [];
+    let originalQuizLength = 0;
+    let streakCount = 0;
+    let totalAttempts = 0;
+    let correctAttempts = 0;
+
+    let timerInterval = null;
+    let totalTimeAllocated = 0;
+    let timeRemaining = 0;
+    let isTimerEnabled = false;
+
+    document.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("quiz-deck-title").innerText = QUIZ_DATA.title;
+
+      if (tg) {
+        try {
+          tg.ready(); tg.expand();
+          tg.setHeaderColor('#0b0b0f'); tg.setBackgroundColor('#0b0b0f');
+          const user = tg.initDataUnsafe?.user;
+          if (user) {
+            document.getElementById("user-welcome-msg").innerText = `مرحباً ${user.first_name || 'طالبنا العزيز'} • اختر الوقت وابدأ الاختبار`;
+          }
+        } catch (e) {}
+      }
+    });
+
+    /*************************************************************************
+     * 3. إدارات المؤقت:
+     *************************************************************************/
+    function adjustTimeInput(type, change) {
+      const input = document.getElementById(type === 'minutes' ? 'input-minutes' : 'input-seconds');
+      if (!input) return;
+      let val = parseInt(input.value || 0) + change;
+      if (val < 0) val = 0;
+      if (type === 'minutes' && val > 180) val = 180;
+      if (type === 'seconds' && val > 59) val = 59;
+      input.value = val < 10 ? `0${val}` : val;
+      HapticFX.triggerSelection();
+    }
+
+    function setPresetTime(mins, secs) {
+      document.getElementById('input-minutes').value = mins < 10 ? `0${mins}` : mins;
+      document.getElementById('input-seconds').value = secs < 10 ? `0${secs}` : secs;
+      HapticFX.triggerSelection();
+    }
+
+    function startSessionWithTimer() {
+      const mins = parseInt(document.getElementById('input-minutes').value || 0);
+      const secs = parseInt(document.getElementById('input-seconds').value || 0);
+
+      totalTimeAllocated = (mins * 60) + secs;
+      timeRemaining = totalTimeAllocated;
+      isTimerEnabled = totalTimeAllocated > 0;
+
+      document.getElementById("timer-setup-card").classList.add("hidden");
+      document.getElementById("quiz-quiz-container").classList.remove("hidden");
+
+      const headerTimerBox = document.getElementById("header-timer-box");
+      if (isTimerEnabled) {
+        headerTimerBox.classList.remove("hidden");
+        headerTimerBox.classList.add("flex");
+        startTimerCountdown();
+      } else {
+        headerTimerBox.classList.add("hidden");
+      }
+
+      resetQuizSession();
+    }
+
+    function startTimerCountdown() {
+      clearInterval(timerInterval);
+      updateTimerUI();
+
+      timerInterval = setInterval(() => {
+        timeRemaining--;
+        updateTimerUI();
+
+        if (timeRemaining <= 0) {
+          clearInterval(timerInterval);
+          handleTimeout();
+        }
+      }, 1000);
+    }
+
+    function updateTimerUI() {
+      const display = document.getElementById("timer-display");
+      if (!display) return;
+
+      const m = Math.floor(timeRemaining / 60);
+      const s = timeRemaining % 60;
+      const formatted = `${m < 10 ? '0' + m : m}:${s < 10 ? '0' + s : s}`;
+      display.innerText = formatted;
+
+      if (timeRemaining <= 30 && isTimerEnabled) {
+        display.classList.add("text-rose-400", "animate-pulse");
+        display.classList.remove("text-amber-300");
+      } else {
+        display.classList.add("text-amber-300");
+        display.classList.remove("text-rose-400", "animate-pulse");
+      }
+    }
+
+    function handleTimeout() {
+      HapticFX.triggerError();
+      AudioFX.playIncorrect();
+
+      document.getElementById("quiz-active-area").classList.add("hidden");
+      document.getElementById("quiz-success-panel").classList.add("hidden");
+      document.getElementById("quiz-timeout-panel").classList.remove("hidden");
+    }
+
+    function showSetupScreen() {
+      clearInterval(timerInterval);
+      document.getElementById("timer-setup-card").classList.remove("hidden");
+      document.getElementById("quiz-quiz-container").classList.add("hidden");
+      document.getElementById("header-timer-box").classList.add("hidden");
+    }
+
+    /*************************************************************************
+     * 4. محرك الكويز والتكرار المطور:
+     *************************************************************************/
+    function resetQuizSession() {
+      quizQueue = JSON.parse(JSON.stringify(QUIZ_DATA.questions));
+      originalQuizLength = quizQueue.length;
+      streakCount = 0;
+      totalAttempts = 0;
+      correctAttempts = 0;
+
+      document.getElementById("streak-count").innerText = "0";
+      document.getElementById("quiz-active-area").classList.remove("hidden");
+      document.getElementById("quiz-success-panel").classList.add("hidden");
+      document.getElementById("quiz-timeout-panel").classList.add("hidden");
+
+      updateProgress();
+      renderCurrentQuestion();
+    }
+
+    function updateProgress() {
+      const completed = originalQuizLength - quizQueue.length;
+      const percent = originalQuizLength > 0 ? Math.min(100, Math.max(0, (completed / originalQuizLength) * 100)) : 0;
+      
+      const fillEl = document.getElementById("quiz-progress-fill");
+      if (fillEl) {
+        fillEl.style.width = `${percent}%`;
+      }
+      
+      const countEl = document.getElementById("quiz-queue-count");
+      if (countEl) {
+        countEl.innerText = `${completed} / ${originalQuizLength}`;
+      }
+    }
+
+    function renderCurrentQuestion() {
+      if (quizQueue.length === 0) {
+        clearInterval(timerInterval);
+        document.getElementById("quiz-active-area").classList.add("hidden");
+        document.getElementById("quiz-success-panel").classList.remove("hidden");
+        
+        document.getElementById("stat-total-attempts").innerText = totalAttempts;
+        const acc = totalAttempts > 0 ? Math.round((correctAttempts / totalAttempts) * 100) : 100;
+        document.getElementById("stat-accuracy").innerText = `${acc}%`;
+
+        const timeSpentSeconds = totalTimeAllocated - timeRemaining;
+        const m = Math.floor(timeSpentSeconds / 60);
+        const s = timeSpentSeconds % 60;
+        document.getElementById("stat-time-spent").innerText = isTimerEnabled ? `${m}:${s < 10 ? '0' + s : s}` : '∞';
+
+        HapticFX.triggerSuccess();
+        return;
+      }
+
+      const activeQ = quizQueue[0];
+      document.getElementById("quiz-question-text").innerText = activeQ.q;
+
+      const feedbackPanel = document.getElementById("quiz-feedback-panel");
+      feedbackPanel.classList.add("hidden");
+
+      const optionsContainer = document.getElementById("quiz-options-grid");
+      optionsContainer.innerHTML = "";
+
+      activeQ.options.forEach((optText, idx) => {
+        const btn = document.createElement("button");
+        btn.className = "quiz-option-btn w-full p-4 text-right text-xs md:text-sm font-medium rounded-xl text-gray-200 flex justify-between items-center";
+        btn.innerHTML = `<span>${optText}</span><span class="text-amber-500/50 text-[10px]">◀</span>`;
+        btn.onclick = () => handleAnswerSubmission(idx, activeQ, btn);
+        optionsContainer.appendChild(btn);
+      });
+
+      renderMath(document.getElementById("quiz-active-area"));
+    }
+
+    function handleAnswerSubmission(selectedIndex, currentQuestion, clickedBtn) {
+      totalAttempts++;
+      const allBtns = document.querySelectorAll(".quiz-option-btn");
+      allBtns.forEach(b => b.disabled = true);
+
+      const feedbackPanel = document.getElementById("quiz-feedback-panel");
+      feedbackPanel.classList.remove("hidden");
+
+      const isCorrect = selectedIndex === currentQuestion.correct;
+
+      if (isCorrect) {
+        correctAttempts++;
+        streakCount++;
+        AudioFX.playCorrect();
+        HapticFX.triggerSuccess();
+
+        clickedBtn.className = "w-full p-4 text-right text-xs md:text-sm font-medium rounded-xl border-2 border-emerald-500 bg-emerald-950/40 text-emerald-300 flex justify-between items-center";
+        
+        feedbackPanel.className = "p-5 rounded-xl text-xs md:text-sm bg-emerald-950/40 border border-emerald-500/40 text-emerald-300 space-y-2";
+        feedbackPanel.innerHTML = `
+          <div class="flex items-center gap-2 font-black text-emerald-400">
+            <span>✓ إجابة صحيحة ومتقنة!</span>
+          </div>
+          <p class="leading-relaxed text-zinc-300">${currentQuestion.exp}</p>
+          <button onclick="advanceQueue(true)" class="mt-2 px-5 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-black rounded-lg text-xs hover:opacity-90 transition-all">
+            التالي ➔
+          </button>
+        `;
+      } else {
+        streakCount = 0;
+        AudioFX.playIncorrect();
+        HapticFX.triggerError();
+
+        clickedBtn.className = "w-full p-4 text-right text-xs md:text-sm font-medium rounded-xl border-2 border-rose-500 bg-rose-950/40 text-rose-300 flex justify-between items-center";
+        
+        feedbackPanel.className = "p-5 rounded-xl text-xs md:text-sm bg-rose-950/40 border border-rose-500/40 text-rose-300 space-y-2";
+        feedbackPanel.innerHTML = `
+          <div class="flex items-center gap-2 font-black text-rose-400">
+            <span>✕ إجابة غير دقيقة!</span>
+          </div>
+          <p class="leading-relaxed text-zinc-300">${currentQuestion.exp}</p>
+          <p class="text-[10px] text-amber-400 font-bold">💡 نُقل السؤال إلى نهاية الطابور لتكراره وتأكيد حفظه.</p>
+          <button onclick="advanceQueue(false)" class="mt-2 px-5 py-2 bg-gradient-to-r from-rose-600 to-amber-600 text-white font-black rounded-lg text-xs hover:opacity-90 transition-all">
+            متابعة التكرار ➔
+          </button>
+        `;
+      }
+
+      document.getElementById("streak-count").innerText = streakCount;
+      renderMath(feedbackPanel);
+    }
+
+    function advanceQueue(wasCorrect) {
+      if (wasCorrect) {
+        quizQueue.shift();
+      } else {
+        const failedQ = quizQueue.shift();
+        quizQueue.push(failedQ);
+      }
+
+      updateProgress();
+      renderCurrentQuestion();
+    }
+
+    function renderMath(element) {
+      if (window.renderMathInElement && element) {
+        try {
+          window.renderMathInElement(element, {
+            delimiters: [
+              {left: "$$", right: "$$", display: true},
+              {left: "$", right: "$", display: false}
+            ],
+            throwOnError: false
+          });
+        } catch (e) {}
+      }
+    }
+  </script>
+</body>
+</html>
