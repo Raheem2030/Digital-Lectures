@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>اختبار علم الإنزيمات الشامل</title>
+  
+  <!-- CDNs المعتمدة للتنسيق والهوية البصرية -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@800;900&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- سكريبت تيليجرام لتطبيقات الويب المصغرة (TMA SDK) -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+  <!-- مكتبة المعادلات الرياضية والكيميائية KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+  <style>
+    body {
+      font-family: 'IBM Plex Sans Arabic', sans-serif;
+      background-color: #0b0b0f !important;
+      color: #FFFFFF;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+    
+    h1, h2, h3, h4, h5, h6, .cairo-font {
+      font-family: 'Cairo', sans-serif;
+      font-weight: 900;
+    }
+
+    :root {
+      --dominant-violet: #8B5CF6;
+      --dominant-gold: #F59E0B;
+      --gold-glow: rgba(245, 158, 11, 0.25);
+      --violet-glow: rgba(139, 92, 246, 0.25);
+    }
+
+    /* البطاقات الزجاجية المحسنة */
+    .cyber-card-gold-violet {
+      background: rgba(15, 15, 22, 0.85);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.45), 0 0 15px rgba(139, 92, 246, 0.08);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .cyber-card-gold-violet:hover {
+      border-color: rgba(245, 158, 11, 0.45);
+      box-shadow: 0 0 25px rgba(139, 92, 246, 0.25), 0 0 10px rgba(245, 158, 11, 0.2);
+    }
+
+    /* خيارات الإجابة */
+    .quiz-option-btn {
+      background: rgba(23, 23, 33, 0.7);
+      border: 1px solid rgba(139, 92, 246, 0.15);
+      transition: all 0.2s ease-in-out;
+    }
+    .quiz-option-btn:hover:not(:disabled) {
+      border-color: var(--dominant-gold);
+      background: rgba(245, 158, 11, 0.1);
+      box-shadow: 0 0 15px rgba(245, 158, 11, 0.15);
+      transform: translateY(-2px);
+    }
+
+    /* شريط التقدّم النيون */
+    .progress-gold-violet {
+      background: linear-gradient(90deg, #8B5CF6 0%, #D97706 50%, #F59E0B 100%);
+      box-shadow: 0 0 12px rgba(245, 158, 11, 0.4);
+    }
+
+    /* تحسين حقول الإدخال */
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    input[type="number"] {
+      -moz-appearance: textfield;
+    }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #0b0b0f; }
+    ::-webkit-scrollbar-thumb { background: rgba(245, 158, 11, 0.3); border-radius: 3px; }
+  </style>
+</head>
+<body class="flex flex-col justify-between relative selection:bg-amber-500 selection:text-black">
+
+  <!-- ==================== الهيدر الرئيسي ==================== -->
+  <header class="border-b border-amber-500/20 bg-zinc-950/90 p-4 relative z-20">
+    <div class="max-w-4xl mx-auto flex flex-wrap justify-between items-center gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-violet-600 via-amber-500 to-amber-400 flex items-center justify-center shadow-lg shadow-amber-500/10 text-lg border border-amber-400/30">
+          🧬
+        </div>
+        <div>
+          <h1 id="quiz-deck-title" class="text-base md:text-lg font-black bg-gradient-to-r from-amber-200 via-violet-300 to-amber-400 bg-clip-text text-transparent">
+            اختبار علم الإنزيمات الحركي
+          </h1>
+          <p id="user-welcome-msg" class="text-[11px] text-zinc-400">منصة التقييم المتقدم والتكرار المتباعد</p>
+        </div>
+      </div>
+
+      <!-- أدوات التحكم والعدادات -->
+      <div class="flex items-center gap-2 md:gap-3">
+        <!-- العداد الزمني -->
+        <div id="header-timer-box" class="hidden items-center gap-1.5 bg-zinc-900/90 border border-amber-500/40 px-3 py-1.5 rounded-xl shadow-lg shadow-amber-500/5">
+          <span class="text-amber-400 text-xs animate-pulse">⏳</span>
+          <span id="timer-display" class="text-xs font-black text-amber-300 font-mono tracking-wider">00:00</span>
+        </div>
+
+        <!-- عداد الـ Streak -->
+        <div class="flex items-center gap-2 bg-zinc-900/90 border border-violet-500/40 px-3 py-1.5 rounded-xl shadow-lg shadow-violet-500/5">
+          <span class="text-amber-400 text-xs">🔥</span>
+          <div class="text-right">
+            <span class="text-[9px] text-zinc-500 block leading-none">التتابع</span>
+            <span id="streak-count" class="text-xs font-black text-violet-300 font-mono">0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== المحتوى المركزي ==================== -->
+  <main class="max-w-3xl mx-auto w-full flex-grow p-4 md:p-6 z-10 flex flex-col justify-center">
+
+    <!-- ================= 1. شاشة ضبط الوقت (قبل البدء) ================= -->
+    <div id="timer-setup-card" class="cyber-card-gold-violet p-6 md:p-8 rounded-2xl border-2 border-amber-500/30 text-center space-y-6">
+      <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-violet-600/20 to-amber-500/20 border border-amber-400/40 flex items-center justify-center text-amber-400 text-3xl mx-auto shadow-inner">
+        ⏱️
+      </div>
+
+      <div>
+        <h2 class="text-lg md:text-xl font-black text-white">إعداد مؤقت التحدي الحركي</h2>
+        <p class="text-xs text-zinc-400 mt-1">حدد الوقت المخصص لإتمام مراجعة أسئلة الإنزيمات (45 سؤالاً)</p>
+      </div>
+
+      <!-- أدوات التحكم بالدقائق والثواني -->
+      <div class="flex justify-center items-center gap-4 py-2">
+        <!-- الدقائق -->
+        <div class="flex flex-col items-center">
+          <label class="text-[10px] text-amber-400 font-bold mb-1">الدقائق</label>
+          <div class="flex items-center bg-zinc-950 rounded-xl border border-amber-500/40 p-1">
+            <button onclick="adjustTimeInput('minutes', 1)" class="w-8 h-8 rounded-lg bg-zinc-900 hover:bg-amber-500/20 text-amber-400 font-bold text-sm transition-all">+</button>
+            <input type="number" id="input-minutes" min="0" max="180" value="20" class="w-12 bg-transparent text-center font-mono font-bold text-base text-amber-300 focus:outline-none">
+            <button onclick="adjustTimeInput('minutes', -1)" class="w-8 h-8 rounded-lg bg-zinc-900 hover:bg-amber-500/20 text-amber-400 font-bold text-sm transition-all">-</button>
+          </div>
+        </div>
+
+        <span class="text-2xl font-black text-violet-400 mt-4">:</span>
+
+        <!-- الثواني -->
+        <div class="flex flex-col items-center">
+          <label class="text-[10px] text-violet-400 font-bold mb-1">الثواني</label>
+          <div class="flex items-center bg-zinc-950 rounded-xl border border-violet-500/40 p-1">
+            <button onclick="adjustTimeInput('seconds', 5)" class="w-8 h-8 rounded-lg bg-zinc-900 hover:bg-violet-500/20 text-violet-400 font-bold text-sm transition-all">+</button>
+            <input type="number" id="input-seconds" min="0" max="59" value="00" class="w-12 bg-transparent text-center font-mono font-bold text-base text-violet-300 focus:outline-none">
+            <button onclick="adjustTimeInput('seconds', -5)" class="w-8 h-8 rounded-lg bg-zinc-900 hover:bg-violet-500/20 text-violet-400 font-bold text-sm transition-all">-</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- الخيارات السريعة الجاهزة -->
+      <div class="flex justify-center gap-2 flex-wrap text-xs">
+        <button onclick="setPresetTime(10, 0)" class="px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800 hover:border-amber-400 text-zinc-300 transition-all">⚡ 10 دقائق</button>
+        <button onclick="setPresetTime(20, 0)" class="px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800 hover:border-amber-400 text-zinc-300 transition-all">🎯 20 دقيقة</button>
+        <button onclick="setPresetTime(35, 0)" class="px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800 hover:border-amber-400 text-zinc-300 transition-all">🧠 35 دقيقة</button>
+        <button onclick="setPresetTime(0, 0)" class="px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800 hover:border-violet-400 text-zinc-300 transition-all">♾️ بدون وقت</button>
+      </div>
+
+      <button onclick="startSessionWithTimer()" class="w-full py-3.5 bg-gradient-to-r from-violet-600 via-amber-500 to-amber-400 text-black font-black rounded-xl text-xs md:text-sm hover:opacity-95 transition-all shadow-lg shadow-amber-500/20">
+        🚀 ابدأ الاختبار الحركي الآن
+      </button>
+    </div>
+
+    <!-- ================= 2. ساحة الكويز النشطة ================= -->
+    <div id="quiz-quiz-container" class="hidden space-y-6">
+      
+      <!-- شريط التقدم التفاعلي -->
+      <div class="space-y-2">
+        <div class="flex justify-between items-center text-xs text-zinc-400 font-medium">
+          <span class="flex items-center gap-1.5 text-amber-400 font-bold">
+            <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+            <span>الأسئلة المنجزة</span>
+          </span>
+          <span class="font-mono text-violet-300 font-bold" id="quiz-queue-count">0 / 0</span>
+        </div>
+
+        <div class="w-full bg-zinc-950 h-2.5 rounded-full border border-zinc-800 overflow-hidden p-0.5">
+          <div id="quiz-progress-fill" class="progress-gold-violet h-full w-0 rounded-full transition-all duration-300 ease-out"></div>
+        </div>
+      </div>
+
+      <!-- بطاقة السؤال النشط -->
+      <div class="cyber-card-gold-violet p-6 md:p-8 rounded-2xl border-2 border-violet-900/40 relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-2xl pointer-events-none"></div>
+        <div class="absolute bottom-0 left-0 w-32 h-32 bg-violet-600/5 rounded-full blur-2xl pointer-events-none"></div>
+
+        <div id="quiz-active-area" class="space-y-6">
+          <!-- نص السؤال -->
+          <div class="p-5 bg-zinc-950/70 rounded-xl border border-amber-500/20 shadow-inner">
+            <span class="text-[10px] text-amber-400 font-bold block mb-1">السؤال الحالي:</span>
+            <p id="quiz-question-text" class="text-sm md:text-base font-bold text-gray-100 leading-relaxed"></p>
+          </div>
+
+          <!-- شبكة الخيارات -->
+          <div id="quiz-options-grid" class="grid grid-cols-1 gap-3"></div>
+
+          <!-- لوحة التفسير العلمي -->
+          <div id="quiz-feedback-panel" class="hidden p-5 rounded-xl text-xs md:text-sm transition-all duration-300"></div>
+        </div>
+
+        <!-- لوحة النجاح واكتمال الكويز -->
+        <div id="quiz-success-panel" class="hidden flex flex-col items-center justify-center py-8 text-center space-y-4">
+          <div class="w-16 h-16 rounded-2xl bg-amber-500/10 border border-amber-400/40 flex items-center justify-center text-amber-400 text-3xl shadow-lg shadow-amber-500/20 animate-bounce">
+            🏆
+          </div>
+          <div>
+            <h3 class="text-lg font-black text-white">تم إتمام اختبار الإنزيمات بنجاح!</h3>
+            <p class="text-xs text-zinc-400 mt-1">أتقنت جميع المفاهيم وتغلبت على الأسئلة في الوقت المحدد.</p>
+          </div>
+
+          <div class="grid grid-cols-3 gap-3 w-full max-w-sm pt-2">
+            <div class="p-3 bg-zinc-950 rounded-xl border border-zinc-800 text-center">
+              <span class="text-[9px] text-zinc-500 block">إجمالي المحاولات</span>
+              <span id="stat-total-attempts" class="text-xs font-bold text-amber-400 font-mono">0</span>
+            </div>
+            <div class="p-3 bg-zinc-950 rounded-xl border border-zinc-800 text-center">
+              <span class="text-[9px] text-zinc-500 block">نسبة الدقة</span>
+              <span id="stat-accuracy" class="text-xs font-bold text-emerald-400 font-mono">100%</span>
+            </div>
+            <div class="p-3 bg-zinc-950 rounded-xl border border-zinc-800 text-center">
+              <span class="text-[9px] text-zinc-500 block">الوقت المستغرق</span>
+              <span id="stat-time-spent" class="text-xs font-bold text-violet-300 font-mono">00:00</span>
+            </div>
+          </div>
+
+          <button onclick="showSetupScreen()" class="mt-4 px-6 py-2.5 bg-gradient-to-r from-violet-600 to-amber-500 text-white font-black rounded-xl text-xs hover:opacity-90 transition-all shadow-lg shadow-violet-900/30">
+            🔄 إعداد جلسة جديدة
+          </button>
+        </div>
+
+        <!-- لوحة انتهاء الوقت -->
+        <div id="quiz-timeout-panel" class="hidden flex flex-col items-center justify-center py-8 text-center space-y-4">
+          <div class="w-16 h-16 rounded-2xl bg-rose-500/10 border border-rose-500/40 flex items-center justify-center text-rose-400 text-3xl shadow-lg shadow-rose-950/50 animate-pulse">
+            ⏰
+          </div>
+          <div>
+            <h3 class="text-lg font-black text-rose-400">انتهى الوقت المخصص!</h3>
+            <p class="text-xs text-zinc-400 mt-1">حاول زيادة الوقت المحدد أو تحسين سرعة إجابتك في المرة القادمة.</p>
+          </div>
+
+          <button onclick="showSetupScreen()" class="mt-4 px-6 py-2.5 bg-gradient-to-r from-amber-500 to-rose-600 text-black font-black rounded-xl text-xs hover:opacity-90 transition-all shadow-lg shadow-amber-500/20">
+            🔄 إعادة التحدي وتعديل الوقت
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ==================== الفوتر ==================== -->
+  <footer class="bg-zinc-950/80 border-t border-zinc-900 py-3 text-center">
+    <p class="text-[10px] text-zinc-600">نظام التقييم التكراري المطور - بنك الإنزيمات | V9.0</p>
+  </footer>
+
+  <!-- ==================== بنك الأسئلة الشامل (45 سؤالاً) ==================== -->
+  <script>
+    const QUIZ_DATA = {
+      title: "اختبار علم الإنزيمات الشامل",
+      questions: [
+        {
+          id: "q1",
+          q: "الإنزيمات هي:",
+          options: [
+            "إما بروتينات أو سكريات متعددة أو مادة دسمة",
+            "تحتاج دائماً إلى مساعد إنزيمي",
+            "ثابتة تجاه الحرارة",
+            "تخفض الحاجز الطاقي للتفاعل (طاقة التنشيط)"
+          ],
+          correct: 3,
+          exp: "الإنزيمات جزيئات حيوية من طبيعة بروتينية (باستثناء الريبوزيمات). تعمل على تسريع التفاعلات الكيميائية عن طريق تخفيض طاقة التنشيط (الحاجز الطاقي)."
+        },
+        {
+          id: "q2",
+          q: "تُصنف الإنزيمات من الناحية الشكلية الفراغية على أنها من:",
+          options: [
+            "البروتينات الليفية (Fibrous Proteins)",
+            "البروتينات الكروية (Globular Proteins)",
+            "البروتينات البسيطة فقط",
+            "لا شيء مما سبق"
+          ],
+          correct: 1,
+          exp: "تعتبر الإنزيمات بروتينات كروية تتألف من 62 إلى 2500 حمض أميني وتعتمد فعاليتها على بنيتها ثلاثية الأبعاد."
+        },
+        {
+          id: "q3",
+          q: "تتكون الإنزيمات البسيطة من الأحماض الأمينية فقط.",
+          options: ["صح", "خطأ"],
+          correct: 0,
+          exp: "تتألف الإنزيمات البسيطة حصراً من حموض أمينية دون أي جزء غير بروتيني (مثل التريبسين، البيبسين، واليورياز)."
+        },
+        {
+          id: "q4",
+          q: "الإنزيم المستخدم عند الانتقال من السكر الكيتوني إلى الألدهيدي هو:",
+          options: [
+            "إيزوميراز (Isomerase)",
+            "ايبميراز (Epimerase)",
+            "موتاز (Mutase)",
+            "هكسوكيناز (Hexokinase)"
+          ],
+          correct: 0,
+          exp: "تقوم إنزيمات التماكب (Isomerases) بتحويل المتماكبات البنيوية أو الفراغية داخل الجزيء نفسه (مثل تحول الغلوكوز-6-فوسفات إلى فركتوز-6-فوسفات)."
+        },
+        {
+          id: "q5",
+          q: "كل العوامل التالية تؤثر على سرعة التفاعل الإنزيمي ما عدا:",
+          options: [
+            "درجة الحرارة",
+            "تركيز الركيزة",
+            "درجة الحموضة (pH)",
+            "البنية الثانوية للإنزيم"
+          ],
+          correct: 3,
+          exp: "العوامل الخارجية الحركية المؤثرة هي الحرارة، الأس الهيدروجيني pH، وتركيز الإنزيم والركيزة. أما البنية الثانوية فخاصية بنيوية ثابتة."
+        },
+        {
+          id: "q6",
+          q: "قيمة $K_m$ المنخفضة تعبر عن ألفة منخفضة بين الإنزيم والركيزة.",
+          options: ["صح", "خطأ"],
+          correct: 1,
+          exp: "التصحيح: قيمة $K_m$ المنخفضة تعبر عن ألفة عالية جداً (High Affinity) بين الإنزيم والركيزة."
+        },
+        {
+          id: "q7",
+          q: "يمكن تحديد السرعة القصوى للتفاعل الإنزيمي ($V_{\\max}$) بدقة بوساطة:",
+          options: [
+            "معادلة ميكائيليس-منتن",
+            "السرعة الابتدائية",
+            "ثابت ميكائيليس-منتن",
+            "رسم لينويفر-بيرك (Lineweaver-Burk Plot)"
+          ],
+          correct: 3,
+          exp: "رسم لينويفر-بيرك (ثنائي المقلوب الخطي) هو الطريقة الأسهل والأدق لتحديد قيم $K_m$ و $V_{\\max}$ من نقاط التقاطع مع المحاور."
+        },
+        {
+          id: "q8",
+          q: "كل العبارات التالية صحيحة حول التثبيط التنافسي ما عدا:",
+          options: [
+            "يتنافس الركازة والمثبط على الارتباط بالمقر الفعال",
+            "يزيد من قيمة ثابت ميكائيليس-منتن ($K_m$)",
+            "يزيد من السرعة العظمى للتفاعل ($V_{\\max}$)",
+            "يمكن التغلب على المثبط التنافسي بزيادة تركيز الركازة"
+          ],
+          correct: 2,
+          exp: "في التثبيط التنافسي تبقى السرعة العظمى ($V_{\\max}$) ثابتة دون تغيير بينما تزداد قيمة $K_m$ الظاهرية."
+        },
+        {
+          id: "q9",
+          q: "المثبط التنافسي ينافس الركازة على المقر الفعال للإنزيم.",
+          options: ["صح", "خطأ"],
+          correct: 0,
+          exp: "يرتبط المثبط التنافسي مباشرة بالموقع الفعال نظراً لتشابهه البنيوي مع الركازة مانعاً إياها من الارتباط."
+        },
+        {
+          id: "q10",
+          q: "في التثبيط التنافسي قيمة $K_m$ تنخفض.",
+          options: ["صح", "خطأ"],
+          correct: 1,
+          exp: "التصحيح: في التثبيط التنافسي قيمة $K_m$ تزداد (ترتفع) بسبب انخفاض الألفة الظاهرية."
+        },
+        {
+          id: "q11",
+          q: "تؤثر المثبطات اللاتنافسية بشكل نوعي ومباشر على:",
+          options: [
+            "السرعة العظمى ($V_{\\max}$)",
+            "ثابت ميكائيليس-منتن ($K_m$)",
+            "بنية الركيزة",
+            "كل ما ورد صحيح"
+          ],
+          correct: 0,
+          exp: "يرتبط المثبط اللاتنافسي بموقع آخر مسبباً انخفاض السرعة العظمى ($V_{\\max}$) مع بقاء ثابت ميكائيليس ($K_m$) ثابتاً دون تغيير."
+        },
+        {
+          id: "q12",
+          q: "في التثبيط اللاتنافسي بالنسبة لثابت ميكائيليس ($K_m$):",
+          options: [
+            "ترتفع $K_m$",
+            "تنخفض $K_m$",
+            "لا تتغير $K_m$",
+            "يتغير كل من $K_m$ و $V_{\\max}$ بنفس النسبة"
+          ],
+          correct: 2,
+          exp: "في التثبيط اللاتنافسي تبقى $K_m$ ثابتة دون تغيير لعدم تأثر ألفة الارتباط بالموقع الفعال."
+        },
+        {
+          id: "q13",
+          q: "كل مما يلي صحيح عن التثبيط التنافسي ما عدا:",
+          options: [
+            "تتنافس الركازة مع المثبط على الموقع الفعال",
+            "ليس له تأثير على الثابت $K_m$",
+            "ليس له تأثير على السرعة العظمى $V_{\\max}$",
+            "زيادة تركيز الركازة يتغلب على التثبيط"
+          ],
+          correct: 1,
+          exp: "العبارة الخاطئة هي أن التثبيط التنافسي ليس له تأثير على $K_m$؛ لأنه يؤدي فعلياً إلى زيادة قيمة $K_m$."
+        },
+        {
+          id: "q14",
+          q: "تمائم الإنزيمات (Coenzymes) هي:",
+          options: [
+            "مواد عضوية غير بروتينية",
+            "وزنها الجزيئي منخفض ومقاومة للحرارة",
+            "ترتبط مع بعض الإنزيمات بروابط غير تكافؤية أو تكافؤية",
+            "كل ما سبق صحيح"
+          ],
+          correct: 3,
+          exp: "تمائم الإنزيمات مرافقات عضوية غير بروتينية، منخفضة الوزن الجزيئي ومقاومة للحرارة وتساعد في التحفيز."
+        },
+        {
+          id: "q15",
+          q: "مجال الأس الهيدروجيني (pH) الأمثل لعمل إنزيم التريبسين هو:",
+          options: [
+            "7.8 - 8.7",
+            "1.5 - 1.6",
+            "4.5 - 5.2",
+            "6.1 - 6.8"
+          ],
+          correct: 0,
+          exp: "يعمل التريبسين في الأمعاء الدقيقة ويتطلب وسطاً قلوياً خفيفاً قيمته المثلى بين 7.8 و 8.7."
+        },
+        {
+          id: "q16",
+          q: "الإنزيم (النظير) الذي يوجد في القلب والكريات الحمر بشكل رئيسي ويستخدم لتشخيص الاحتشاء القلبي هو:",
+          options: ["LDH1", "LDH2", "LDH3", "LDH4"],
+          correct: 0,
+          exp: "يرتفع النظير LDH1 مصلّياً بشكل نوعي عند حدوث احتشاء العضلة القلبية أو انحلال الدم."
+        },
+        {
+          id: "q17",
+          q: "نتحرى عن سرطان البروستات النقيلي عبر قياس فعالية إنزيم:",
+          options: [
+            "LDH1",
+            "ACP (الفوسفاتاز الحمضي)",
+            "ALP (الفوسفاتاز القلوي)",
+            "CK (كرياتين كيناز)"
+          ],
+          correct: 1,
+          exp: "يُعد الفوسفاتاز الحمضي البروستاتي (ACP) واصماً حيوياً ترتفع مستوياته في المصل في حالة سرطان البروستات النقيلي."
+        },
+        {
+          id: "q18",
+          q: "في أمراض الرئة (مثل الاحتشاء أو الاحتقان الرئوي) يتم الاستقصاء مصلّياً عن النظير الإنزيمي:",
+          options: ["LDH1", "LDH2", "LDH3", "LDH4"],
+          correct: 2,
+          exp: "يتواجد النظير الثالث (LDH3) بتركيز مرتفع في الأنسجة الرئوية ويزداد مصلّياً عند تلف الرئة."
+        },
+        {
+          id: "q19",
+          q: "عند تنشيط طليعة البيبسين (البيبسينوجين) وتحويلها إلى بيبسين فعال، يفقد الإنزيم حوالي:",
+          options: [
+            "5% من وزنه الجزيئي",
+            "10% من وزنه الجزيئي",
+            "20% من وزنه الجزيئي",
+            "40% من وزنه الجزيئي"
+          ],
+          correct: 2,
+          exp: "يفقد البيبسينوجين جزءاً ببتيدياً مانعاً يعادل حوالي 20% من وزنه الجزيئي لينتح البيبسين الفعال."
+        },
+        {
+          id: "q20",
+          q: "يؤدي تنشيط طليعة التريبسين (التريبسينوجين) إلى تريبسين فعال إلى اقتطاع:",
+          options: [
+            "حمض أميني واحد",
+            "ستة حموض أمينية",
+            "أربعة حموض أمينية",
+            "عشرة حموض أمينية"
+          ],
+          correct: 1,
+          exp: "يتم اقتطاع ستة أحماض أمينية فقط عند تنشيط التريبسينوجين فلا يتغير وزنه الجزيئي كثيراً."
+        },
+        {
+          id: "q21",
+          q: "عندما يكون تركيز الركازة $[S]$ مساوياً تماماً لقيمة ثابت ميكائيليس $K_m$، فإن سرعة التفاعل تساوي:",
+          options: [
+            "السرعة القصوى $V_{\\max}$",
+            "نصف السرعة القصوى ($\\frac{1}{2} V_{\\max}$)",
+            "ضعف السرعة القصوى $2 V_{\\max}$",
+            "صفر"
+          ],
+          correct: 1,
+          exp: "تعريف $K_m$ هو تركيز الركازة الذي تكون عنده سرعة التفاعل مساوية لنصف السرعة القصوى."
+        },
+        {
+          id: "q22",
+          q: "عندما يكون تركيز الركازة كبيراً جداً مقارنة بثابت ميكائيليس ($[S] \\gg K_m$)، فإن سرعة التفاعل:",
+          options: [
+            "تثبت وتساوي السرعة القصوى $V_{\\max}$ (تفاعل رتبة صفر)",
+            "تزداد بشكل خطي (تفاعل رتبة أولى)",
+            "تنخفض نتيجة تشبع الإنزيم",
+            "تصبح مستقلة عن تركيز الإنزيم"
+          ],
+          correct: 0,
+          exp: "عند التراكيز العالية جداً يتشبع الإنزيم بالكامل وتصل السرعة لأقصاها $V_{\\max}$ وتصبح من الرتبة صفر."
+        },
+        {
+          id: "q23",
+          q: "كل ما يلي صحيح عن الإنزيمات الوظيفية في البلازما ما عدا:",
+          options: [
+            "تصنع معظمها في الكبد ويطرحها في الدم",
+            "تصل إلى الدم كنتيجة طبيعية لموت الخلايا وتخربها",
+            "لها وظيفة محددة ومعروفة داخل مجرى الدم",
+            "من أمثلتها عوامل التخثر والرينين"
+          ],
+          correct: 1,
+          exp: "وصول الإنزيمات للدم نتيجة موت الخلايا هو ميزة الإنزيمات غير الوظيفية، أما الوظيفية فترشح للدم لتمارس وظيفتها."
+        },
+        {
+          id: "q24",
+          q: "يتألف نظير الإنزيم LDH5 (الخاص بالكبد والعضلات) من قسيمات من النوع الفراغي:",
+          options: ["HHHH", "HHMM", "MMMM", "HMMM"],
+          correct: 2,
+          exp: "يتكون النظير الخامس LDH5 من أربع قسيمات عضلية متماثلة (MMMM)."
+        },
+        {
+          id: "q25",
+          q: "في حالات اليرقان الانسدادي (انسداد القناة الصفراوية)، يتم الاستقصاء مصلّياً عن ارتفاع إنزيم:",
+          options: [
+            "ACP (الفوسفاتاز الحمضي)",
+            "ALP (الفوسفاتاز القلوي)",
+            "LDH1",
+            "البيبسين"
+          ],
+          correct: 1,
+          exp: "يرتفع الفوسفاتاز القلوي (ALP) مصلّياً في حالات انسداد الطرق الصفراوية وأمراض العظام."
+        },
+        {
+          id: "q26",
+          q: "يؤدي تمسخ البروتين (Denaturation) إلى تخريب البنى الفراغية التالية ما عدا:",
+          options: [
+            "البنية الأولية",
+            "البنية الثانوية",
+            "البنية الثالثية",
+            "البنية الرابعة"
+          ],
+          correct: 0,
+          exp: "لا يؤثر التمسخ على البنية الأولية المكونة من الروابط الببتيدية التساهمية القوية بين الحموض الأمينية."
+        },
+        {
+          id: "q27",
+          q: "يثبط الأسبرين (Aspirin) إنزيم COX1 بشكل:",
+          options: ["عكوس", "غير عكوس", "تنافسي عكوس"],
+          correct: 1,
+          exp: "يرتبط الأسبرين تساهمياً بشكل غير عكوس مع إنزيم الأكسدة الحلقية COX1 فيعطله نهائياً."
+        },
+        {
+          id: "q28",
+          q: "يدل تصنيف الإنزيمات في الصنف الثالث (EC 3) على إنزيمات:",
+          options: [
+            "الأكسدة والإرجاع",
+            "التماكب",
+            "الحلمهة (Hydrolases)",
+            "الاصطناع والربط"
+          ],
+          correct: 2,
+          exp: "الصنف EC 3 يمثل إنزيمات الحلمهة التي تفصم الروابط بمشاركة جزيء الماء."
+        },
+        {
+          id: "q29",
+          q: "كل العبارات التالية صحيحة عن الإنزيمات ما عدا:",
+          options: [
+            "يحتوي الموقع الفعال غالباً على 3 أو 4 أحماض أمينية",
+            "لا تتعلق فعالية الإنزيم بالبنية الفراغية",
+            "بعض الإنزيمات تحوي في بنيتها عناصر معدنية",
+            "الإنزيم جزيء ذو طبيعة بروتينية بالأساس"
+          ],
+          correct: 1,
+          exp: "تعتمد فعالية الإنزيم ونشاطه التحفيزي اعتماداً كلياً على بنيته الفراغية ثلاثية الأبعاد."
+        },
+        {
+          id: "q30",
+          q: "درجة الحموضة (pH) المثلى لعمل إنزيم أميلاز البنكرياس هي:",
+          options: ["1.5 - 1.6", "4.6 - 5.2", "6.7 - 7.0", "7.8 - 8.7"],
+          correct: 2,
+          exp: "يعمل أميلاز البنكرياس في وسط معتدل تقريباً تقع قيمته بين 6.7 و 7.0."
+        },
+        {
+          id: "q31",
+          q: "يقدر ثابت ميكائيليس-منتن ($K_m$) بواحدة:",
+          options: ["mol/min", "mol/l", "g/mol", "ليس له واحدة"],
+          correct: 1,
+          exp: "ثابت $K_m$ هو تركيز ركيزة، ولذلك يُقاس بوحدة التركيز المولي (mol/l)."
+        },
+        {
+          id: "q32",
+          q: "ينتمي إنزيم بيروفات كاربوكسيلاز (Pyruvate carboxylase) إلى صنف إنزيمات:",
+          options: [
+            "الاصطناع والربط (Ligases)",
+            "التفكك (Lyases)",
+            "الأكسدة والإرجاع",
+            "الحلمهة"
+          ],
+          correct: 0,
+          exp: "ينتمي للصنف السادس (EC 6) لأنه يربط جزيئين معاً (البيروفات و CO2) باستهلاك طاقة ATP."
+        },
+        {
+          id: "q33",
+          q: "يستخدم تمثيل (منحنى) لينويفر-بيرك في:",
+          options: [
+            "معرفة السرعة القصوى $V_{\\max}$ بدقة",
+            "معرفة ثابت ميكائيليس $K_m$ بدقة",
+            "تحديد وفهم آلية عمل المثبطات الإنزيمية",
+            "كل ما سبق صحيح"
+          ],
+          correct: 3,
+          exp: "رسم ثنائي المقلوب الخطي يحدد قيم الثوابت بدقة ويميز نوع التثبيط الإنزيمي."
+        },
+        {
+          id: "q34",
+          q: "يثبط مركب DIFP (أو DIPF) بشكل غير عكوس إنزيم:",
+          options: [
+            "الكولين أستيراز (والكيموتربسين)",
+            "الأميلاز اللعابي",
+            "اليورياز",
+            "البيبسين"
+          ],
+          correct: 0,
+          exp: "يرتبط مركب DIPF تساهمياً مع ثمالة السيرين في الموقع الفعال لإينزيمات الكولين أستيراز والكيموتربسين."
+        },
+        {
+          id: "q35",
+          q: "يثبط دواء ديسولفيرام (Disulfiram) إنزيم ألدهيد ديهايدروجيناز مسبباً تراكم مركب:",
+          options: [
+            "الإيتانول",
+            "حمض الخل",
+            "أسيت ألدهيد (Acetaldehyde)",
+            "الميتانول"
+          ],
+          correct: 2,
+          exp: "يؤدي تثبيط الإنزيم بتناول الديسولفيرام إلى تراكم الأسيت ألدهيد السام مما يسبب أعراضاً حادة."
+        },
+        {
+          id: "q36",
+          q: "كل مما يلي يعتبر من المثبطات غير العكوسة للإنزيمات ما عدا:",
+          options: ["الرصاص", "مركب DIPF", "السلفاميدات (Sulfonamides)", "الزرنيخ"],
+          correct: 2,
+          exp: "تعتبر السلفاميدات مثبطات تنافسية عكوسة، بينما البقية مثبطات غير عكوسة."
+        },
+        {
+          id: "q37",
+          q: "يقوم إنزيم فوسفوغلوكوموتاز (Phosphoglucomutase) بتحويل غلوكوز-6-فوسفات إلى:",
+          options: [
+            "فركتوز-6-فوسفات",
+            "غلوكوز-1-فوسفات",
+            "غلوكوز حر وبيروفات",
+            "غلوكوز غير مفسفر"
+          ],
+          correct: 1,
+          exp: "ينتمي لإنزيمات التماكب ويقوم بنقل زمرة الفوسفات داخل الجزيء من الكربون 6 إلى الكربون 1."
+        },
+        {
+          id: "q38",
+          q: "الكيموتربسين ينتج من:",
+          options: [
+            "المعدة بشكل غير فعال",
+            "الكبد بشكل فعال",
+            "الأمعاء بشكل فعال",
+            "البنكرياس بشكل غير فعال"
+          ],
+          correct: 3,
+          exp: "يُفرز من البنكرياس كطليعة غير فعالة (كيموتربسينوجين) لحماية الخلايا من الهضم الذاتي."
+        },
+        {
+          id: "q39",
+          q: "يعتبر الرصاص الذي يسبب التسمم بالرصاص كل مما يلي ماعدا:",
+          options: [
+            "مثبط تنافسي",
+            "يشكل روابط تشاركية مع مجموعات SH",
+            "لا يشبه الجزيء المثبط",
+            "يسبب شلل للإنزيم"
+          ],
+          correct: 0,
+          exp: "الرصاص مثبط غير عكوس (وليس تنافسياً) يرتبط تساهمياً مع مجموعات السلفهيدريل."
+        },
+        {
+          id: "q40",
+          q: "ارتفاع درجة حرارة التفاعلات الإنزيمية فوق الـ 40 درجة مئوية يؤدي لحدوث ما يلي ما عدا:",
+          options: [
+            "استمرار التفاعل بنشاط أعلى",
+            "عدم فعالية الإنزيم",
+            "تخرب المراكز التفاعلية للبروتين",
+            "قلة متانة الروابط الفراغية"
+          ],
+          correct: 0,
+          exp: "الارتفاع فوق 40°C يسبب تمسخ بنية الإنزيم وتخرب موقعه الفعال متسبباً في توقف التفاعل."
+        },
+        {
+          id: "q41",
+          q: "من أحد أسباب عدم فعالية الإنزيم كل مما يلي ماعدا:",
+          options: [
+            "ارتفاع درجة الحرارة فوق حد معين",
+            "المثبطات التنافسية",
+            "المثبطات اللاتنافسية",
+            "درجة الحموضة المثالية"
+          ],
+          correct: 3,
+          exp: "درجة الحموضة المثالية توفر أعلى فعالية ونشاط للإنزيم."
+        },
+        {
+          id: "q42",
+          q: "المرافق الإنزيمي لإنزيم مالات ديهيدروجيناز عند أكسدة المالات إلى أوكسالوأسيتات هو:",
+          options: [
+            "PP (النياسين / $NAD^+$)",
+            "B1 (التيامين)",
+            "B2 (الريبوفلافين)",
+            "B5 (حمض البانتوثينيك)"
+          ],
+          correct: 0,
+          exp: "يعتمد مالات ديهيدروجيناز على $NAD^+$ المشتق من فيتامين PP (النياسين)."
+        },
+        {
+          id: "q43",
+          q: "المرافق الإنزيمي لنزع $CO_2$ من ألفا كيتوغلوتارات هو:",
+          options: [
+            "البيوتين (Biotin)",
+            "تيامين ثنائي الفوسفات (TPP)",
+            "فلافين أحادي النكليوتيد (FMN)",
+            "البيريدوكسال فوسفات (PLP)"
+          ],
+          correct: 1,
+          exp: "يتطلب تفاعل نزع الكربوكسيل التأكسدي مرافق تيامين ثنائي الفوسفات (TPP المشتق من فيتامين B1)."
+        },
+        {
+          id: "q44",
+          q: "يشارك الكالسيوم في تفعيل جميع الإنزيمات التالية عدا:",
+          options: [
+            "مالات ديهيدروجيناز",
+            "بيروفات ديهيدروجيناز",
+            "ألفا كيتوغلوتارات ديهيدروجيناز",
+            "إيزوسيترات ديهيدروجيناز"
+          ],
+          correct: 0,
+          exp: "الكالسيوم مفعل لإنزيمات نزع الهيدروجين المتقدرية باستثناء إنزيم مالات ديهيدروجيناز."
+        },
+        {
+          id: "q45",
+          q: "يُثبط إنزيم الألفا كيتوغلوتارات ديهيدروجيناز بواسطة:",
+          options: [
+            "الزرنيخ",
+            "المالونات",
+            "الفلوروأسيتات",
+            "الأسبرين"
+          ],
+          correct: 0,
+          exp: "يثبط الزرنيخ إنزيم ألفا كيتوغلوتارات ديهيدروجيناز بشكل نوعي."
+        }
+      ]
+    };
+  </script>
+
+  <!-- ==================== المحرك البرمجي المطور ==================== -->
+  <script>
+    /*************************************************************************
+     * 1. الصوت والتفاعل اللمسي (Audio & Haptics):
+     *************************************************************************/
+    const AudioFX = {
+      ctx: null,
+      init() { if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)(); },
+      playCorrect() {
+        try {
+          this.init(); const ctx = this.ctx; const osc = ctx.createOscillator(); const gain = ctx.createGain();
+          osc.connect(gain); gain.connect(ctx.destination); osc.type = 'sine';
+          osc.frequency.setValueAtTime(523.25, ctx.currentTime); osc.frequency.setValueAtTime(659.25, ctx.currentTime + 0.1);
+          gain.gain.setValueAtTime(0.15, ctx.currentTime); gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
+          osc.start(); osc.stop(ctx.currentTime + 0.35);
+        } catch(e) {}
+      },
+      playIncorrect() {
+        try {
+          this.init(); const ctx = this.ctx; const osc = ctx.createOscillator(); const gain = ctx.createGain();
+          osc.connect(gain); gain.connect(ctx.destination); osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(110, ctx.currentTime); gain.gain.setValueAtTime(0.2, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
+          osc.start(); osc.stop(ctx.currentTime + 0.4);
+        } catch(e) {}
+      }
+    };
+
+    const tg = window.Telegram?.WebApp;
+    const HapticFX = {
+      triggerSuccess() { if (tg?.HapticFeedback) try { tg.HapticFeedback.notificationOccurred('success'); } catch(e){} },
+      triggerError() { if (tg?.HapticFeedback) try { tg.HapticFeedback.notificationOccurred('error'); } catch(e){} },
+      triggerSelection() { if (tg?.HapticFeedback) try { tg.HapticFeedback.impactOccurred('light'); } catch(e){} }
+    };
+
+    /*************************************************************************
+     * 2. متغيرات حالة الكويز والمؤقت الزمني:
+     *************************************************************************/
+    let quizQueue = [];
+    let originalQuizLength = 0;
+    let streakCount = 0;
+    let totalAttempts = 0;
+    let correctAttempts = 0;
+
+    let timerInterval = null;
+    let totalTimeAllocated = 0;
+    let timeRemaining = 0;
+    let isTimerEnabled = false;
+
+    document.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("quiz-deck-title").innerText = QUIZ_DATA.title;
+
+      if (tg) {
+        try {
+          tg.ready(); tg.expand();
+          tg.setHeaderColor('#0b0b0f'); tg.setBackgroundColor('#0b0b0f');
+          const user = tg.initDataUnsafe?.user;
+          if (user) {
+            document.getElementById("user-welcome-msg").innerText = `مرحباً ${user.first_name || 'طالبنا العزيز'} • اختر الوقت وابدأ التحدي`;
+          }
+        } catch (e) {}
+      }
+
+      renderMath(document.body);
+    });
+
+    /*************************************************************************
+     * 3. إدارة المؤقت:
+     *************************************************************************/
+    function adjustTimeInput(type, change) {
+      const input = document.getElementById(type === 'minutes' ? 'input-minutes' : 'input-seconds');
+      if (!input) return;
+      let val = parseInt(input.value || 0) + change;
+      if (val < 0) val = 0;
+      if (type === 'minutes' && val > 180) val = 180;
+      if (type === 'seconds' && val > 59) val = 59;
+      input.value = val < 10 ? `0${val}` : val;
+      HapticFX.triggerSelection();
+    }
+
+    function setPresetTime(mins, secs) {
+      document.getElementById('input-minutes').value = mins < 10 ? `0${mins}` : mins;
+      document.getElementById('input-seconds').value = secs < 10 ? `0${secs}` : secs;
+      HapticFX.triggerSelection();
+    }
+
+    function startSessionWithTimer() {
+      const mins = parseInt(document.getElementById('input-minutes').value || 0);
+      const secs = parseInt(document.getElementById('input-seconds').value || 0);
+
+      totalTimeAllocated = (mins * 60) + secs;
+      timeRemaining = totalTimeAllocated;
+      isTimerEnabled = totalTimeAllocated > 0;
+
+      document.getElementById("timer-setup-card").classList.add("hidden");
+      document.getElementById("quiz-quiz-container").classList.remove("hidden");
+
+      const headerTimerBox = document.getElementById("header-timer-box");
+      if (isTimerEnabled) {
+        headerTimerBox.classList.remove("hidden");
+        headerTimerBox.classList.add("flex");
+        startTimerCountdown();
+      } else {
+        headerTimerBox.classList.add("hidden");
+      }
+
+      resetQuizSession();
+    }
+
+    function startTimerCountdown() {
+      clearInterval(timerInterval);
+      updateTimerUI();
+
+      timerInterval = setInterval(() => {
+        timeRemaining--;
+        updateTimerUI();
+
+        if (timeRemaining <= 0) {
+          clearInterval(timerInterval);
+          handleTimeout();
+        }
+      }, 1000);
+    }
+
+    function updateTimerUI() {
+      const display = document.getElementById("timer-display");
+      if (!display) return;
+
+      const m = Math.floor(timeRemaining / 60);
+      const s = timeRemaining % 60;
+      const formatted = `${m < 10 ? '0' + m : m}:${s < 10 ? '0' + s : s}`;
+      display.innerText = formatted;
+
+      if (timeRemaining <= 30 && isTimerEnabled) {
+        display.classList.add("text-rose-400", "animate-pulse");
+        display.classList.remove("text-amber-300");
+      } else {
+        display.classList.add("text-amber-300");
+        display.classList.remove("text-rose-400", "animate-pulse");
+      }
+    }
+
+    function handleTimeout() {
+      HapticFX.triggerError();
+      AudioFX.playIncorrect();
+
+      document.getElementById("quiz-active-area").classList.add("hidden");
+      document.getElementById("quiz-success-panel").classList.add("hidden");
+      document.getElementById("quiz-timeout-panel").classList.remove("hidden");
+    }
+
+    function showSetupScreen() {
+      clearInterval(timerInterval);
+      document.getElementById("timer-setup-card").classList.remove("hidden");
+      document.getElementById("quiz-quiz-container").classList.add("hidden");
+      document.getElementById("header-timer-box").classList.add("hidden");
+    }
+
+    /*************************************************************************
+     * 4. محرك الكويز والتكرار المطور:
+     *************************************************************************/
+    function resetQuizSession() {
+      quizQueue = JSON.parse(JSON.stringify(QUIZ_DATA.questions));
+      originalQuizLength = quizQueue.length;
+      streakCount = 0;
+      totalAttempts = 0;
+      correctAttempts = 0;
+
+      document.getElementById("streak-count").innerText = "0";
+      document.getElementById("quiz-active-area").classList.remove("hidden");
+      document.getElementById("quiz-success-panel").classList.add("hidden");
+      document.getElementById("quiz-timeout-panel").classList.add("hidden");
+
+      updateProgress();
+      renderCurrentQuestion();
+    }
+
+    function updateProgress() {
+      const completed = originalQuizLength - quizQueue.length;
+      const percent = originalQuizLength > 0 ? Math.min(100, Math.max(0, (completed / originalQuizLength) * 100)) : 0;
+      
+      const fillEl = document.getElementById("quiz-progress-fill");
+      if (fillEl) {
+        fillEl.style.width = `${percent}%`;
+      }
+      
+      const countEl = document.getElementById("quiz-queue-count");
+      if (countEl) {
+        countEl.innerText = `${completed} / ${originalQuizLength}`;
+      }
+    }
+
+    function renderCurrentQuestion() {
+      if (quizQueue.length === 0) {
+        clearInterval(timerInterval);
+        document.getElementById("quiz-active-area").classList.add("hidden");
+        document.getElementById("quiz-success-panel").classList.remove("hidden");
+        
+        document.getElementById("stat-total-attempts").innerText = totalAttempts;
+        const acc = totalAttempts > 0 ? Math.round((correctAttempts / totalAttempts) * 100) : 100;
+        document.getElementById("stat-accuracy").innerText = `${acc}%`;
+
+        const timeSpentSeconds = totalTimeAllocated - timeRemaining;
+        const m = Math.floor(timeSpentSeconds / 60);
+        const s = timeSpentSeconds % 60;
+        document.getElementById("stat-time-spent").innerText = isTimerEnabled ? `${m}:${s < 10 ? '0' + s : s}` : '∞';
+
+        HapticFX.triggerSuccess();
+        return;
+      }
+
+      const activeQ = quizQueue[0];
+      document.getElementById("quiz-question-text").innerText = activeQ.q;
+
+      const feedbackPanel = document.getElementById("quiz-feedback-panel");
+      feedbackPanel.classList.add("hidden");
+
+      const optionsContainer = document.getElementById("quiz-options-grid");
+      optionsContainer.innerHTML = "";
+
+      activeQ.options.forEach((optText, idx) => {
+        const btn = document.createElement("button");
+        btn.className = "quiz-option-btn w-full p-4 text-right text-xs md:text-sm font-medium rounded-xl text-gray-200 flex justify-between items-center";
+        btn.innerHTML = `<span>${optText}</span><span class="text-amber-500/50 text-[10px]">◀</span>`;
+        btn.onclick = () => handleAnswerSubmission(idx, activeQ, btn);
+        optionsContainer.appendChild(btn);
+      });
+
+      renderMath(document.getElementById("quiz-active-area"));
+    }
+
+    function handleAnswerSubmission(selectedIndex, currentQuestion, clickedBtn) {
+      totalAttempts++;
+      const allBtns = document.querySelectorAll(".quiz-option-btn");
+      allBtns.forEach(b => b.disabled = true);
+
+      const feedbackPanel = document.getElementById("quiz-feedback-panel");
+      feedbackPanel.classList.remove("hidden");
+
+      const isCorrect = selectedIndex === currentQuestion.correct;
+
+      if (isCorrect) {
+        correctAttempts++;
+        streakCount++;
+        AudioFX.playCorrect();
+        HapticFX.triggerSuccess();
+
+        clickedBtn.className = "w-full p-4 text-right text-xs md:text-sm font-medium rounded-xl border-2 border-emerald-500 bg-emerald-950/40 text-emerald-300 flex justify-between items-center";
+        
+        feedbackPanel.className = "p-5 rounded-xl text-xs md:text-sm bg-emerald-950/40 border border-emerald-500/40 text-emerald-300 space-y-2";
+        feedbackPanel.innerHTML = `
+          <div class="flex items-center gap-2 font-black text-emerald-400">
+            <span>✓ إجابة صحيحة ومتقنة!</span>
+          </div>
+          <p class="leading-relaxed text-zinc-300">${currentQuestion.exp}</p>
+          <button onclick="advanceQueue(true)" class="mt-2 px-5 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-black rounded-lg text-xs hover:opacity-90 transition-all">
+            التالي ➔
+          </button>
+        `;
+      } else {
+        streakCount = 0;
+        AudioFX.playIncorrect();
+        HapticFX.triggerError();
+
+        clickedBtn.className = "w-full p-4 text-right text-xs md:text-sm font-medium rounded-xl border-2 border-rose-500 bg-rose-950/40 text-rose-300 flex justify-between items-center";
+        
+        feedbackPanel.className = "p-5 rounded-xl text-xs md:text-sm bg-rose-950/40 border border-rose-500/40 text-rose-300 space-y-2";
+        feedbackPanel.innerHTML = `
+          <div class="flex items-center gap-2 font-black text-rose-400">
+            <span>✕ إجابة غير دقيقة!</span>
+          </div>
+          <p class="leading-relaxed text-zinc-300">${currentQuestion.exp}</p>
+          <p class="text-[10px] text-amber-400 font-bold">💡 نُقل السؤال إلى نهاية الطابور لتكراره وتأكيد حفظه.</p>
+          <button onclick="advanceQueue(false)" class="mt-2 px-5 py-2 bg-gradient-to-r from-rose-600 to-amber-600 text-white font-black rounded-lg text-xs hover:opacity-90 transition-all">
+            متابعة التكرار ➔
+          </button>
+        `;
+      }
+
+      document.getElementById("streak-count").innerText = streakCount;
+      renderMath(feedbackPanel);
+    }
+
+    function advanceQueue(wasCorrect) {
+      if (wasCorrect) {
+        quizQueue.shift();
+      } else {
+        const failedQ = quizQueue.shift();
+        quizQueue.push(failedQ);
+      }
+
+      updateProgress();
+      renderCurrentQuestion();
+    }
+
+    function renderMath(element) {
+      if (window.renderMathInElement && element) {
+        try {
+          window.renderMathInElement(element, {
+            delimiters: [
+              {left: "$$", right: "$$", display: true},
+              {left: "$", right: "$", display: false}
+            ],
+            throwOnError: false
+          });
+        } catch (e) {}
+      }
+    }
+  </script>
+</body>
+</html>
