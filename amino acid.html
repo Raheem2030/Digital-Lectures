@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>نظام التقييم التكراري والمؤقت | جامعة حماة</title>
+  <title>الكيمياء الحيوية: اختبار وتلخيص الحموض الأمينية</title>
   
   <!-- CDNs المعتمدة للتنسيق والهوية البصرية -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -39,7 +38,7 @@
       --violet-glow: rgba(139, 92, 246, 0.25);
     }
 
-    /* التوازن بين الذهبي والبنفسجي في الإطارات والبطاقات الزجاجية */
+    /* البطاقات الزجاجية المحسنة */
     .cyber-card-gold-violet {
       background: rgba(15, 15, 22, 0.8);
       border: 1px solid rgba(245, 158, 11, 0.2);
@@ -67,7 +66,7 @@
       transform: translateY(-2px);
     }
 
-    /* شريط التقدّم النيون متدرج بين الذهبي والبنفسجي */
+    /* شريط التقدّم النيون */
     .progress-gold-violet {
       background: linear-gradient(90deg, #8B5CF6 0%, #D97706 50%, #F59E0B 100%);
       box-shadow: 0 0 12px rgba(245, 158, 11, 0.4);
@@ -87,45 +86,57 @@
     ::-webkit-scrollbar-track { background: #0b0b0f; }
     ::-webkit-scrollbar-thumb { background: rgba(245, 158, 11, 0.3); border-radius: 3px; }
 
-    /* أنيميشن التبويب الجانبي */
+    /* أنيميشن فتح التبويب الجانبي */
     .drawer-open {
       transform: translateX(0) !important;
+    }
+
+    .summary-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+      font-size: 0.8rem;
+    }
+    .summary-table th, .summary-table td {
+      border: 1px solid rgba(245, 158, 11, 0.2);
+      padding: 8px 10px;
+      text-align: right;
+    }
+    .summary-table th {
+      background: rgba(139, 92, 246, 0.2);
+      color: #F59E0B;
     }
   </style>
 </head>
 <body class="flex flex-col justify-between relative selection:bg-amber-500 selection:text-black">
 
   <!-- ==================== الهيدر الرئيسي ==================== -->
-  <header class="border-b border-amber-500/20 bg-zinc-950/80 p-4 sticky top-0 z-30 backdrop-blur-md">
-    <div class="max-w-4xl mx-auto flex justify-between items-center">
+  <header class="border-b border-amber-500/20 bg-zinc-950/90 p-4 relative z-20">
+    <div class="max-w-4xl mx-auto flex flex-wrap justify-between items-center gap-3">
       <div class="flex items-center gap-3">
-        <!-- أيقونة برابط تدرج ذهبي - بنفسجي -->
         <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-violet-600 via-amber-500 to-amber-400 flex items-center justify-center shadow-lg shadow-amber-500/10 text-lg border border-amber-400/30">
           🧪
         </div>
         <div>
           <h1 id="quiz-deck-title" class="text-base md:text-lg font-black bg-gradient-to-r from-amber-200 via-violet-300 to-amber-400 bg-clip-text text-transparent">
-            جاري التحميل...
+            الكيمياء الحيوية: الحموض الأمينية
           </h1>
-          <p id="user-welcome-msg" class="text-[11px] text-zinc-400">منصة الاختبارات الحركية المحددة بوقت</p>
+          <p id="user-welcome-msg" class="text-[11px] text-zinc-400">اختبار تكراري تفاعلي + ملخص شامل</p>
         </div>
       </div>
 
       <!-- أدوات التحكم والعدادات -->
       <div class="flex items-center gap-2 md:gap-3">
-        <!-- زر فتح الملخص العلمي -->
-        <button onclick="toggleSummaryDrawer()" class="flex items-center gap-1.5 bg-gradient-to-r from-amber-500/20 to-violet-600/20 hover:from-amber-500/30 hover:to-violet-600/30 border border-amber-500/40 px-3 py-1.5 rounded-xl text-amber-300 text-xs font-bold transition-all shadow-lg hover:shadow-amber-500/10">
+        <button onclick="toggleSummaryDrawer()" class="flex items-center gap-2 bg-gradient-to-r from-amber-500/20 via-violet-600/20 to-amber-500/20 hover:from-amber-500/30 hover:to-violet-600/30 border border-amber-400/40 px-3 py-1.5 rounded-xl text-amber-300 text-xs font-bold transition-all shadow-md shadow-amber-500/10 active:scale-95">
           <span>📖</span>
-          <span class="hidden sm:inline">الملخص الشامل</span>
+          <span>الملخص العلمي</span>
         </button>
 
-        <!-- العداد الزمني -->
         <div id="header-timer-box" class="hidden items-center gap-1.5 bg-zinc-900/90 border border-amber-500/40 px-3 py-1.5 rounded-xl shadow-lg shadow-amber-500/5">
           <span class="text-amber-400 text-xs animate-pulse">⏳</span>
           <span id="timer-display" class="text-xs font-black text-amber-300 font-mono tracking-wider">00:00</span>
         </div>
 
-        <!-- عداد الـ Streak -->
         <div class="flex items-center gap-2 bg-zinc-900/90 border border-violet-500/40 px-3 py-1.5 rounded-xl shadow-lg shadow-violet-500/5">
           <span class="text-amber-400 text-xs">🔥</span>
           <div class="text-right">
@@ -137,184 +148,125 @@
     </div>
   </header>
 
-  <!-- ==================== التبويب الجانبي (الملخص العلمي) ==================== -->
-  <!-- خلفية معتمة -->
+  <!-- ==================== التبويب الجانبي (الملخص العلمي المدمج) ==================== -->
   <div id="summary-backdrop" onclick="toggleSummaryDrawer()" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-40 hidden transition-opacity"></div>
 
-  <!-- الدرج الجانبي -->
   <aside id="summary-drawer" class="fixed top-0 right-0 h-full w-full max-w-2xl bg-zinc-950 border-l border-amber-500/30 z-50 transition-transform duration-300 ease-in-out transform translate-x-full overflow-y-auto p-6 space-y-6 shadow-2xl">
     
-    <!-- رأس الدرج -->
     <div class="flex justify-between items-center border-b border-zinc-800 pb-4 sticky top-0 bg-zinc-950/95 z-10 backdrop-blur-md pt-2">
       <div class="flex items-center gap-2">
         <span class="text-xl">📚</span>
-        <h2 class="text-base md:text-lg font-black text-amber-300">ملخص الكيمياء الحيوية: الحموض الأمينية</h2>
+        <h2 class="text-base md:text-lg font-black text-amber-300">ملخص الحموض الأمينية (Amino Acids)</h2>
       </div>
       <button onclick="toggleSummaryDrawer()" class="w-8 h-8 rounded-lg bg-zinc-900 border border-zinc-800 hover:border-amber-400 text-zinc-400 hover:text-white flex items-center justify-center transition-all font-bold">
         ✕
       </button>
     </div>
 
-    <!-- محتوى الملخص الشامل -->
-    <div class="space-y-8 text-xs md:text-sm text-zinc-300 leading-relaxed">
-
-      <!-- قسم 1: مقدمة وبنية -->
-      <section class="space-y-3">
-        <h3 class="text-sm md:text-base font-black text-amber-400 border-r-4 border-amber-400 pr-2">أولاً: مقدمة تأسيسية وبنية الحموض الأمينية</h3>
-        <ul class="list-disc list-inside space-y-1.5 text-zinc-300 bg-zinc-900/60 p-4 rounded-xl border border-zinc-800">
-          <li><strong class="text-violet-300">طبيعة البروتينات:</strong> مركبات متعددة الحموض الأمينية (بوليميرات)، وتعطي عند حلمهتها حموضاً أمينية من جديد.</li>
-          <li><strong class="text-violet-300">البنية الكيميائية:</strong> كربون (ألفا $\alpha$) تحل عليه بنفس الوقت زمرة كربوكسيل ($COOH$), وزمرة أمين ($NH_2$), وسلسلة جانبية ($R$).</li>
-          <li><strong class="text-violet-300">الوفرة:</strong> يوجد أكثر من 300 حمض في الطبيعة، و20 فقط منها معيارية تدعم بروتينات البشر.</li>
+    <!-- محتوى الملخص العلمي -->
+    <div id="summary-content-area" class="space-y-6 text-xs md:text-sm text-zinc-300 leading-relaxed">
+      
+      <!-- أولاً: البنية والتصنيف التغذوي -->
+      <section class="p-4 bg-zinc-900/60 rounded-xl border border-amber-500/20 space-y-3">
+        <h3 class="text-sm font-bold text-amber-400 border-b border-zinc-800 pb-1">أولاً: البنية الأساسية والتصنيف التغذوي</h3>
+        <ul class="list-disc list-inside space-y-1.5 text-zinc-300">
+          <li><strong class="text-violet-300">طبيعة البروتينات:</strong> بوليميرات تتألف من حموض أمينية وتسترجع بحلمأتها بالإنزيمات أو الوسائط الكيميائية.</li>
+          <li><strong class="text-violet-300">البنية الكيميائية:</strong> كربون ألفا ($\alpha$) يحمل زمرة كربوكسيل حمضية ($-\text{COOH}$)، وزمرة أمين قلوية ($-\text{NH}_2$)، وسلسلة جانبية ($R$).</li>
+          <li><strong class="text-violet-300">الوفرة:</strong> يوجد أكثر من 300 حمض أميني، يدخل منها 20 حمضاً فقط في تركيب بروتينات البشر (الحموض المعيارية).</li>
         </ul>
 
-        <h4 class="font-bold text-violet-300 pt-2">التصنيف التغذوي (Nutritional Classification):</h4>
-        <div class="overflow-x-auto">
-          <table class="w-full text-right border-collapse bg-zinc-900/80 rounded-xl overflow-hidden border border-zinc-800 text-[11px] md:text-xs">
-            <thead>
-              <tr class="bg-violet-950/60 text-amber-300 border-b border-zinc-800">
-                <th class="p-2.5">التصنيف</th>
-                <th class="p-2.5">المفهوم</th>
-                <th class="p-2.5">أمثلة اختبارية</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-zinc-800/60">
-              <tr>
-                <td class="p-2.5 font-bold text-amber-400">أساسية (تغذوية)</td>
-                <td class="p-2.5">لا يصنعها الجسم، وتؤخذ من الغذاء حصراً.</td>
-                <td class="p-2.5 text-violet-300">Leu, Val, Met, Phe</td>
-              </tr>
-              <tr>
-                <td class="p-2.5 font-bold text-emerald-400">غير أساسية</td>
-                <td class="p-2.5">يصنعها الجسم داخلياً.</td>
-                <td class="p-2.5 text-violet-300">Tyr (يصنع بهدركسلة Phe)</td>
-              </tr>
-              <tr>
-                <td class="p-2.5 font-bold text-violet-400">نصف تغذوية</td>
-                <td class="p-2.5">يحتاجها الجسم في سن النمو فقط.</td>
-                <td class="p-2.5 text-violet-300">Arg, His</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <table class="summary-table">
+          <thead>
+            <tr>
+              <th>التصنيف التغذوي</th>
+              <th>المفهوم</th>
+              <th>أمثلة متكررة اختبارياً</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="font-bold text-amber-300">أساسية</td>
+              <td>لا يصنعها الجسم ويجب أخذها من الغذاء</td>
+              <td>اللوسين (Leu)، الفالين (Val)، الميثيونين (Met)، الفينيل ألانين (Phe)، الليزين (Lys)</td>
+            </tr>
+            <tr>
+              <td class="font-bold text-amber-300">غير أساسية</td>
+              <td>يصنعها الجسم داخلياً</td>
+              <td>التيروزين (Tyr) (يصنع بهدركسلة الفينيل ألانين)</td>
+            </tr>
+            <tr>
+              <td class="font-bold text-amber-300">نصف أساسية</td>
+              <td>يحتاجها الجسم في مرحلة النمو النشط فقط</td>
+              <td>الأرجنين (Arg)، الهستدين (His)</td>
+            </tr>
+          </tbody>
+        </table>
       </section>
 
-      <!-- قسم 2: التصنيف حسب السلسلة الجانبية -->
-      <section class="space-y-3">
-        <h3 class="text-sm md:text-base font-black text-amber-400 border-r-4 border-amber-400 pr-2">ثانياً: تصنيف الحموض الأمينية حسب السلسلة الجانبية ($R$)</h3>
-        <div class="space-y-3">
-          
-          <div class="p-3.5 bg-zinc-900/70 rounded-xl border border-zinc-800 space-y-1">
-            <h4 class="font-bold text-amber-300 text-xs md:text-sm">1. اللاقطبية (الكارهة للماء):</h4>
-            <p class="text-[11px] text-zinc-400">أليفاتية مفتوحة/متفرعة، لا تشارك بالروابط الهيدروجينية.</p>
-            <p class="text-zinc-200"><strong>- اللوسين (Leu):</strong> 6 كربونات. | <strong>- الإيزولوسين (Ile):</strong> 6 كربونات متفرع مفتوح بلا حلقة. | <strong>- الفالين (Val):</strong> 5 كربونات.</p>
-            <p class="text-zinc-200"><strong>- الغليسين (Gly):</strong> أبسط حمض ($R=H$)، يشكل 33% من الكولاجين. | <strong>- البرولين (Pro):</strong> يحوي حلقة إيمينو، ويتحول لهيدروكسي برولين بوجود فيتامين C.</p>
-          </div>
-
-          <div class="p-3.5 bg-zinc-900/70 rounded-xl border border-zinc-800 space-y-1">
-            <h4 class="font-bold text-amber-300 text-xs md:text-sm">2. العطرية (Aromatic):</h4>
-            <p class="text-[11px] text-zinc-400">تمتص الأشعة فوق البنفسجية لامتلاكها حلقة عطرية.</p>
-            <p class="text-zinc-200"><strong>- الفينيل ألانين (Phe):</strong> لاقطبي غير مشحون (حلقة بنزن). | <strong>- التيروزين (Tyr):</strong> قطبي غير مشحون (زمرة هيدروكسيل)، طليعة الأدرينالين والدرقية.</p>
-            <p class="text-zinc-200"><strong>- التربتوفان (Trp):</strong> يحوي حلقة أندولية، يمتلك أقصى امتصاص للضوء ($280nm$)، طليعة فيتامين B3 والسيروتونين.</p>
-          </div>
-
-          <div class="p-3.5 bg-zinc-900/70 rounded-xl border border-zinc-800 space-y-1">
-            <h4 class="font-bold text-amber-300 text-xs md:text-sm">3. القطبية (غير المشحونة):</h4>
-            <p class="text-zinc-200"><strong>- السيرين (Ser) والثريونين (Thr):</strong> يحويان زمرة هيدروكسيل. الثريونين بمركزين غير متناظرين ($\alpha, \beta$).</p>
-            <p class="text-zinc-200"><strong>- السيستئين (Cys):</strong> حمض كبريتي ($SH$). | <strong>- الأسباراجين (Asn) والغلوتامين (Gln):</strong> قطبية بسبب الزمرة الأميدية.</p>
-          </div>
-
-          <div class="p-3.5 bg-zinc-900/70 rounded-xl border border-zinc-800 space-y-1">
-            <h4 class="font-bold text-amber-300 text-xs md:text-sm">4. القلوية (مشحونة إيجابياً):</h4>
-            <p class="text-zinc-200"><strong>- الليزين (Lys):</strong> 4 زمر ميتيلين ($CH_2$)، موجب بالوسط الفيزيولوجي ($pH=7.4$).</p>
-            <p class="text-zinc-200"><strong>- الأرجنين (Arg):</strong> يحوي زمرة غوانيدية و4 ذرات آزوت إجمالاً. | <strong>- الهستيدين (His):</strong> يحوي حلقة الإيميدازول.</p>
-          </div>
-
-          <div class="p-3.5 bg-zinc-900/70 rounded-xl border border-zinc-800 space-y-1">
-            <h4 class="font-bold text-amber-300 text-xs md:text-sm">5. الحمضية (مشحونة سلبياً):</h4>
-            <p class="text-zinc-200"><strong>- الأسبارتيك (Asp):</strong> كربوكسيل إضافي على كربون بيتا ($\beta$). | <strong>- الغلوتاميك (Glu):</strong> كربوكسيل إضافي على كربون غاما ($\gamma$).</p>
-          </div>
-
-        </div>
+      <!-- ثانياً: تصنيف الحموض حسب السلسلة الجانبية R -->
+      <section class="p-4 bg-zinc-900/60 rounded-xl border border-amber-500/20 space-y-3">
+        <h3 class="text-sm font-bold text-amber-400 border-b border-zinc-800 pb-1">ثانياً: تصنيف الحموض الأمينية حسب السلسلة الجانبية ($R$)</h3>
+        
+        <table class="summary-table">
+          <thead>
+            <tr>
+              <th>الصف الكيميائي</th>
+              <th>الخصائص وأبرز الأحماض</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="font-bold text-amber-300">اللاقطبية (الكارهة للماء)</td>
+              <td>
+                • <strong>Gly (الغليسين):</strong> أصغر حمض، جذره H، متناظر وغير فعال ضوئياً.<br>
+                • <strong>Pro (البرولين):</strong> حمض إيميني حلقي، أساسي للكولاجين (يتطلب فيتامين C لإنتاج هيدروكسي برولين).<br>
+                • <strong>Leu, Val, Ile:</strong> أحماض أليفاتية متفرعة.
+              </td>
+            </tr>
+            <tr>
+              <td class="font-bold text-amber-300">العطرية (Aromatic)</td>
+              <td>
+                • <strong>Phe (الفينيل ألانين):</strong> لاقطبي يحوي حلقة بنزن.<br>
+                • <strong>Tyr (التيروزين):</strong> قطبي لوجود $-\text{OH}$، طليعة الكاتيكولامينات وهرمونات الدرق.<br>
+                • <strong>Trp (التربتوفان):</strong> يحوي حلقة إندول، أعلى امتصاص ضوئي عند $280\text{ nm}$، طليعة B3 والسيروتونين.
+              </td>
+            </tr>
+            <tr>
+              <td class="font-bold text-amber-300">القطبية غير المشحونة</td>
+              <td>
+                • <strong>Ser, Thr:</strong> تحوي زمر هيدروكسيل قادرة على الفسفرة. (Thr يحوي ذرتي كربون غير متناظرتين).<br>
+                • <strong>Cys (السيستئين):</strong> حمض كبريتي يحوي زمرة $-\text{SH}$، يمتص عند $240\text{ nm}$.<br>
+                • <strong>Asn, Gln:</strong> تحوي زمر أميدية.
+              </td>
+            </tr>
+            <tr>
+              <td class="font-bold text-amber-300">القلوية (مشحونة إيجابياً)</td>
+              <td>
+                • <strong>Lys (الليزين):</strong> يحوي زمرة أمين إضافية، موجبة عند $\text{pH}=7.4$.<br>
+                • <strong>Arg (الأرجنين):</strong> يحوي زمرة غوانيدية (4 ذرات آزوت).<br>
+                • <strong>His (الهستيدين):</strong> يحوي حلقة إيميدازول، متأين عند $\text{pH}=6$.
+              </td>
+            </tr>
+            <tr>
+              <td class="font-bold text-amber-300">الحمضية (مشحونة سلبياً)</td>
+              <td>
+                • <strong>Asp (الأسبارتيك):</strong> الكربوكسيل الإضافي على كربون بيتا ($\beta$).<br>
+                • <strong>Glu (الغلوتاميك):</strong> الكربوكسيل الإضافي على كربون غاما ($\gamma$).
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </section>
 
-      <!-- قسم 3: الحموض غير البروتينية -->
-      <section class="space-y-3">
-        <h3 class="text-sm md:text-base font-black text-amber-400 border-r-4 border-amber-400 pr-2">ثالثاً: الحموض الأمينية غير البروتينية</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
-          <div class="p-3 bg-zinc-900/60 rounded-lg border border-zinc-800"><strong class="text-amber-300">الأورنيثين والسترولين:</strong> وسائط في حلقة البولة.</div>
-          <div class="p-3 bg-zinc-900/60 rounded-lg border border-zinc-800"><strong class="text-amber-300">بيتا-ألانين:</strong> في حمض البانتوتين (فيتامين B).</div>
-          <div class="p-3 bg-zinc-900/60 rounded-lg border border-zinc-800"><strong class="text-amber-300">GABA:</strong> ناقل عصبي مثبط يتشكل بنزع كربوكسيل الغلوتامات.</div>
-          <div class="p-3 bg-zinc-900/60 rounded-lg border border-zinc-800"><strong class="text-amber-300">التورين:</strong> ينظم اقتران الحموض الصفراوية.</div>
-        </div>
-      </section>
-
-      <!-- قسم 4: الخواص والـ pH -->
-      <section class="space-y-3">
-        <h3 class="text-sm md:text-base font-black text-amber-400 border-r-4 border-amber-400 pr-2">رابعاً: الخواص الفيزيائية والتشردية وسلوك الـ pH</h3>
-        <ul class="list-disc list-inside space-y-1 bg-zinc-900/60 p-3.5 rounded-xl border border-zinc-800">
-          <li><strong>الفعالية الضوئية:</strong> الكربون $\alpha$ غير متناظر في جميع الحموض <em>عدا الغليسين</em> (غير فعال ضوئياً).</li>
-          <li><strong>الشكل الفراغي:</strong> بروتينات الكائنات تبنى حصراً من الحموض $L$.</li>
-          <li><strong>نقطة التعادل الكهربائي (pI):</strong> تكون الانحلالية فيها أصغرية والشحنة الصافية معدومة.</li>
+      <!-- ثالثاً: الخواص التشردية والتفاعلات -->
+      <section class="p-4 bg-zinc-900/60 rounded-xl border border-amber-500/20 space-y-3">
+        <h3 class="text-sm font-bold text-amber-400 border-b border-zinc-800 pb-1">ثالثاً: الخواص التشردية والتفاعلات الكيميائية</h3>
+        <ul class="list-disc list-inside space-y-1 text-zinc-300">
+          <li><strong>نقطة التعادل الكهربائي ($\text{pI}$):</strong> تكون فيها الشحنة الصافية معدومة (شاردة ثنائية القطب Zwitterion)، والانحلالية أصغرية.</li>
+          <li><strong>تفاعل الننهدرين:</strong> يعطي لوناً <em>بنفسجياً</em> مع جميع الأحماض، و<em>أصفراً</em> مع البرولين والهيدروكسي برولين.</li>
+          <li><strong>نزع الكربوكسيل (Decarboxylation):</strong> ينتج غاز $\text{CO}_2$ وأمينات فعلية (Trp $\rightarrow$ سيروتونين، His $\rightarrow$ هيستامين، Glu $\rightarrow$ GABA).</li>
+          <li><strong>إزالة السمية الكبدية:</strong> يُربط حمض البنزوئيك مع الغليسين حصراً لإنتاج <em>حمض الهيبوريك</em>.</li>
         </ul>
-
-        <h4 class="font-bold text-violet-300 pt-1">سلوك الشحنة الصافية حسب وسط الـ pH:</h4>
-        <div class="overflow-x-auto">
-          <table class="w-full text-right border-collapse bg-zinc-900/80 rounded-xl overflow-hidden border border-zinc-800 text-[11px]">
-            <thead>
-              <tr class="bg-amber-950/40 text-amber-300 border-b border-zinc-800">
-                <th class="p-2">الحمض الأميني</th>
-                <th class="p-2">وسط الـ pH</th>
-                <th class="p-2">الشحنة الصافية</th>
-                <th class="p-2">التفسير</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-zinc-800/60">
-              <tr>
-                <td class="p-2 font-bold text-zinc-200">الأسبارتيك (Asp)</td>
-                <td class="p-2 text-rose-400">شديد الحموضة ($pH=2$)</td>
-                <td class="p-2 font-mono text-emerald-400 font-bold">+1</td>
-                <td class="p-2 text-zinc-400">الكربوكسيل معتدل (0), والأمين موجب (+1).</td>
-              </tr>
-              <tr>
-                <td class="p-2 font-bold text-zinc-200">الأسبارتيك (Asp)</td>
-                <td class="p-2 text-violet-400">شديد القلوية ($pH=11/12$)</td>
-                <td class="p-2 font-mono text-rose-400 font-bold">-2</td>
-                <td class="p-2 text-zinc-400">الأمين معتدل (0), والأنيونان الكربوكسيليان (-2).</td>
-              </tr>
-              <tr>
-                <td class="p-2 font-bold text-zinc-200">الليزين (Lys)</td>
-                <td class="p-2 text-rose-400">شديد الحموضة ($pH=1$)</td>
-                <td class="p-2 font-mono text-emerald-400 font-bold">+2</td>
-                <td class="p-2 text-zinc-400">الكربوكسيل معتدل (0), والزمرتان الأمينيتان (+2).</td>
-              </tr>
-              <tr>
-                <td class="p-2 font-bold text-zinc-200">الهستيدين (His)</td>
-                <td class="p-2 text-amber-400">معتدل تقريباً ($pH=6$)</td>
-                <td class="p-2 text-amber-300 font-bold">-1 وسالبة و+2 جزئياً</td>
-                <td class="p-2 text-zinc-400">الإيميدازول نصف متشردة لكسب الشحنة.</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <!-- قسم 5: التفاعلات الكيميائية -->
-      <section class="space-y-3 pb-4">
-        <h3 class="text-sm md:text-base font-black text-amber-400 border-r-4 border-amber-400 pr-2">خامساً: أهم التفاعلات الكيميائية</h3>
-        <div class="space-y-2">
-          <div class="p-3 bg-zinc-900/60 rounded-xl border border-zinc-800">
-            <strong class="text-amber-300 block mb-1">1. إزالة السمية والميتيلة:</strong>
-            ربط حمض البنزوئيك مع الغليسين يحدث حصراً في <strong>الكبد</strong> لتشكيل حمض الهيبوريك. الميثيونين يعتبر الواهب الأهم للميتيل بفضل (SAM).
-          </div>
-          <div class="p-3 bg-zinc-900/60 rounded-xl border border-zinc-800">
-            <strong class="text-amber-300 block mb-1">2. تفاعل الننهدرين:</strong>
-            يعطي لوناً <strong>بنفسجياً</strong> مع كافة الحموض الأمينية، بينما يعطي مع البرولين والهيدروكسي برولين لوناً <strong>أصفراً</strong>.
-          </div>
-          <div class="p-3 bg-zinc-900/60 rounded-xl border border-zinc-800">
-            <strong class="text-amber-300 block mb-1">3. الفسفرة والأمدة:</strong>
-            الفسفرة تحدث على زمر الهيدروكسيل (Ser, Thr, Tyr). بينما الأمدة تنتج الأسباراجين بربط النشادر بحمض الأسبارتيك.
-          </div>
-        </div>
       </section>
 
     </div>
@@ -323,7 +275,7 @@
   <!-- ==================== المحتوى المركزي ==================== -->
   <main class="max-w-3xl mx-auto w-full flex-grow p-4 md:p-6 z-10 flex flex-col justify-center">
 
-    <!-- ================= 1. شاشة ضبط الوقت (قبل البدء) ================= -->
+    <!-- شاشة ضبط الوقت -->
     <div id="timer-setup-card" class="cyber-card-gold-violet p-6 md:p-8 rounded-2xl border-2 border-amber-500/30 text-center space-y-6">
       <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-violet-600/20 to-amber-500/20 border border-amber-400/40 flex items-center justify-center text-amber-400 text-3xl mx-auto shadow-inner">
         ⏱️
@@ -331,24 +283,21 @@
 
       <div>
         <h2 class="text-lg md:text-xl font-black text-white">إعداد مؤقت الجلسة التكرارية</h2>
-        <p class="text-xs text-zinc-400 mt-1">حدد الوقت المخصص لإتمام مراجعة كافة الأسئلة (بالدقائق والثواني)</p>
+        <p class="text-xs text-zinc-400 mt-1">حدد الوقت المخصص لإتمام مراجعة كافة أسئلة الكيمياء الحيوية (67 سؤالاً)</p>
       </div>
 
-      <!-- أدوات التحكم بالدقائق والثواني -->
       <div class="flex justify-center items-center gap-4 py-2">
-        <!-- الدقائق -->
         <div class="flex flex-col items-center">
           <label class="text-[10px] text-amber-400 font-bold mb-1">الدقائق</label>
           <div class="flex items-center bg-zinc-950 rounded-xl border border-amber-500/40 p-1">
             <button onclick="adjustTimeInput('minutes', 1)" class="w-8 h-8 rounded-lg bg-zinc-900 hover:bg-amber-500/20 text-amber-400 font-bold text-sm transition-all">+</button>
-            <input type="number" id="input-minutes" min="0" max="180" value="15" class="w-12 bg-transparent text-center font-mono font-bold text-base text-amber-300 focus:outline-none">
+            <input type="number" id="input-minutes" min="0" max="180" value="25" class="w-12 bg-transparent text-center font-mono font-bold text-base text-amber-300 focus:outline-none">
             <button onclick="adjustTimeInput('minutes', -1)" class="w-8 h-8 rounded-lg bg-zinc-900 hover:bg-amber-500/20 text-amber-400 font-bold text-sm transition-all">-</button>
           </div>
         </div>
 
         <span class="text-2xl font-black text-violet-400 mt-4">:</span>
 
-        <!-- الثواني -->
         <div class="flex flex-col items-center">
           <label class="text-[10px] text-violet-400 font-bold mb-1">الثواني</label>
           <div class="flex items-center bg-zinc-950 rounded-xl border border-violet-500/40 p-1">
@@ -359,11 +308,10 @@
         </div>
       </div>
 
-      <!-- الخيارات السريعة الجاهزة -->
       <div class="flex justify-center gap-2 flex-wrap text-xs">
-        <button onclick="setPresetTime(5, 0)" class="px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800 hover:border-amber-400 text-zinc-300 transition-all">⚡ 5 دقائق</button>
-        <button onclick="setPresetTime(15, 0)" class="px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800 hover:border-amber-400 text-zinc-300 transition-all">🎯 15 دقيقة</button>
-        <button onclick="setPresetTime(30, 0)" class="px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800 hover:border-amber-400 text-zinc-300 transition-all">🧠 30 دقيقة</button>
+        <button onclick="setPresetTime(10, 0)" class="px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800 hover:border-amber-400 text-zinc-300 transition-all">⚡ 10 دقائق</button>
+        <button onclick="setPresetTime(25, 0)" class="px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800 hover:border-amber-400 text-zinc-300 transition-all">🎯 25 دقيقة</button>
+        <button onclick="setPresetTime(45, 0)" class="px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800 hover:border-amber-400 text-zinc-300 transition-all">🧠 45 دقيقة</button>
         <button onclick="setPresetTime(0, 0)" class="px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800 hover:border-violet-400 text-zinc-300 transition-all">♾️ بدون وقت</button>
       </div>
 
@@ -372,51 +320,47 @@
       </button>
     </div>
 
-    <!-- ================= 2. ساحة الكويز النشطة ================= -->
+    <!-- ساحة الكويز النشطة -->
     <div id="quiz-quiz-container" class="hidden space-y-6">
       
-      <!-- شريط التقدم التفاعلي -->
       <div class="space-y-2">
         <div class="flex justify-between items-center text-xs text-zinc-400 font-medium">
           <span class="flex items-center gap-1.5 text-amber-400 font-bold">
             <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
-            <span>الأسئلة المتبقية</span>
+            <span>الأسئلة المنجزة</span>
           </span>
           <span class="font-mono text-violet-300 font-bold" id="quiz-queue-count">0 / 0</span>
         </div>
 
-        <div class="w-full bg-zinc-950 h-2 rounded-full border border-zinc-800 overflow-hidden p-0.5">
-          <div id="quiz-progress-fill" class="progress-gold-violet h-full w-0 rounded-full transition-all duration-300"></div>
+        <div class="w-full bg-zinc-950 h-2.5 rounded-full border border-zinc-800 overflow-hidden p-0.5">
+          <div id="quiz-progress-fill" class="progress-gold-violet h-full w-0 rounded-full transition-all duration-300 ease-out"></div>
         </div>
       </div>
 
-      <!-- بطاقة السؤال النشط -->
+      <!-- بطاقة السؤال -->
       <div class="cyber-card-gold-violet p-6 md:p-8 rounded-2xl border-2 border-violet-900/40 relative overflow-hidden">
         <div class="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-2xl pointer-events-none"></div>
         <div class="absolute bottom-0 left-0 w-32 h-32 bg-violet-600/5 rounded-full blur-2xl pointer-events-none"></div>
 
         <div id="quiz-active-area" class="space-y-6">
-          <!-- نص السؤال -->
           <div class="p-5 bg-zinc-950/70 rounded-xl border border-amber-500/20 shadow-inner">
             <span class="text-[10px] text-amber-400 font-bold block mb-1">السؤال الحالي:</span>
             <p id="quiz-question-text" class="text-sm md:text-base font-bold text-gray-100 leading-relaxed"></p>
           </div>
 
-          <!-- شبكة الخيارات -->
           <div id="quiz-options-grid" class="grid grid-cols-1 gap-3"></div>
 
-          <!-- لوحة التفسير العلمي -->
           <div id="quiz-feedback-panel" class="hidden p-5 rounded-xl text-xs md:text-sm transition-all duration-300"></div>
         </div>
 
-        <!-- لوحة النجاح واكتمال الكويز -->
+        <!-- شاشة الإتمام -->
         <div id="quiz-success-panel" class="hidden flex flex-col items-center justify-center py-8 text-center space-y-4">
           <div class="w-16 h-16 rounded-2xl bg-amber-500/10 border border-amber-400/40 flex items-center justify-center text-amber-400 text-3xl shadow-lg shadow-amber-500/20 animate-bounce">
             🏆
           </div>
           <div>
-            <h3 class="text-lg font-black text-white">تم إتمام الاختبار بنجاح متفوق!</h3>
-            <p class="text-xs text-zinc-400 mt-1">نجحت في حل جميع الأسئلة وتثبيت مفاهيمها في الوقت المحدد.</p>
+            <h3 class="text-lg font-black text-white">تم إتمام مراجعة الحموض الأمينية بنجاح!</h3>
+            <p class="text-xs text-zinc-400 mt-1">أتقنت جميع المفاهيم والأسئلة وتم تثبيتها بنجاح.</p>
           </div>
 
           <div class="grid grid-cols-3 gap-3 w-full max-w-sm pt-2">
@@ -435,18 +379,18 @@
           </div>
 
           <button onclick="showSetupScreen()" class="mt-4 px-6 py-2.5 bg-gradient-to-r from-violet-600 to-amber-500 text-white font-black rounded-xl text-xs hover:opacity-90 transition-all shadow-lg shadow-violet-900/30">
-            🔄 إعداد جلسة جديدة
+            🔄 إعداد جلسة مراجعة جديدة
           </button>
         </div>
 
-        <!-- لوحة انتهاء الوقت (Timeout Panel) -->
+        <!-- شاشة انتهاء الوقت -->
         <div id="quiz-timeout-panel" class="hidden flex flex-col items-center justify-center py-8 text-center space-y-4">
           <div class="w-16 h-16 rounded-2xl bg-rose-500/10 border border-rose-500/40 flex items-center justify-center text-rose-400 text-3xl shadow-lg shadow-rose-950/50 animate-pulse">
             ⏰
           </div>
           <div>
             <h3 class="text-lg font-black text-rose-400">انتهى الوقت المخصص!</h3>
-            <p class="text-xs text-zinc-400 mt-1">حاول زيادة الوقت المحدد أو تحسين سرعة إجابتك في المرة القادمة.</p>
+            <p class="text-xs text-zinc-400 mt-1">حاول زيادة الوقت المخصص للجلسة لإنهاء جميع الأسئلة.</p>
           </div>
 
           <button onclick="showSetupScreen()" class="mt-4 px-6 py-2.5 bg-gradient-to-r from-amber-500 to-rose-600 text-black font-black rounded-xl text-xs hover:opacity-90 transition-all shadow-lg shadow-amber-500/20">
@@ -459,543 +403,575 @@
 
   </main>
 
-  <!-- ==================== الفوتر ==================== -->
   <footer class="bg-zinc-950/80 border-t border-zinc-900 py-3 text-center">
-    <p class="text-[10px] text-zinc-600">نظام التقييم التكراري المطور | جامعة حماة V9.0</p>
+    <p class="text-[10px] text-zinc-600">نظام التقييم التكراري المطور | الكيمياء الحيوية V9.0</p>
   </footer>
 
-  <!-- ==================== البيانات والإدارات البرمجية ==================== -->
+  <!-- ==================== مجموعة الأسئلة المدمجة بالكامل ==================== -->
   <script>
     const QUIZ_DATA = {
-      title: "اختبار الكيمياء الحيوية | الحموض الأمينية وخصائصها",
+      title: "الكيمياء الحيوية: بنية وتفاعلات الحموض الأمينية",
       questions: [
         {
           id: "q1",
-          q: "تعطي البروتينات عند الحلمهة بواسطة الانزيمات او الوسائط الكيميائية:",
-          options: ["سكريات معقدة", "حموض دهنية", "حموض أمينية من جديد", "ببتيدات فقط"],
+          q: "الحمض الأميني الغليسين (Glycine) هو:",
+          options: [
+            "يدخل في تشكيل بروتين الإيلاستين بشكل رئيسي.",
+            "يصنف من الحموض الأمينية الكارهة للماء.",
+            "أصغر وأبسط حمض أميني بحيث الجذر R هو H.",
+            "كل ما سبق صحيح."
+          ],
           correct: 2,
-          exp: "البروتينات ما هي إلا مركبات متعددة الحموض الأمينية (بوليميرات)، لذا فإن تفككها وحلمهتها يعطي حموضاً أمينية من جديد."
+          exp: "تتميز جميـع الحموض الأمينية بوجود ذرة كربون ألفا غير متناظرة ولها فعالية ضوئية ما عدا الغليسين؛ حيث يتكون جذره الجانبي R من ذرة هيدروجين فقط."
         },
         {
           id: "q2",
-          q: "تحل ذرة الكربون ألفا في الحموض الأمينية بنفس الوقت مع:",
-          options: ["زمرة كربوكسيل وزمرة هيدروكسيل", "زمرة أمين وزمرة فوسفات", "زمرة كربوكسيل وزمرة أمين", "زمرة سلفهدريل وزمرة كربوكسيل"],
-          correct: 2,
-          exp: "الحموض الأمينية هي مركبات عضوية تتميز باحتوائها على كربون (ألفا) تحل عليه بنفس الوقت زمرة كربوكسيل (ذات طبيعة حمضية) وزمرة أمين (ذات طبيعة قلوية) وسلسلة جانبية."
+          q: "يكون الحمض الأميني من السلسلة D إذا كانت زمرة الكربوكسيل (COOH) على اليمين.",
+          options: ["صح", "خطأ"],
+          correct: 1,
+          exp: "خطأ، التصنيف الفراغي للسلسلة D يعتمد على توضع المجموعة الأمينية (NH2) على يمين كربون ألفا وليس الكربوكسيل."
         },
         {
           id: "q3",
-          q: "الحموض الأمينية الـ 20 التي تدخل في تركيب البروتينات تدعى:",
-          options: ["الحموض الأمينية غير البروتينية", "الحموض الأمينية المعيارية", "الحموض الأمينية النصف تغذوية", "الحموض الأمينية الكيتونية"],
-          correct: 1,
-          exp: "يوجد أكثر من 300 حمض أميني في الطبيعة، ولكن 20 منها فقط تدخل في تركيب بروتينات البشر وتسمى بالحموض الأمينية المعيارية."
+          q: "حمض الثريونين (Threonine)، كل مما يلي صحيح ما عدا:",
+          options: [
+            "هو غير قطبي.",
+            "هو غير فعال كيميائياً.",
+            "هو يزيد عن السيرين بمجموعة ميتيل.",
+            "كل الإجابات خاطئة."
+          ],
+          correct: 0,
+          exp: "الثريونين صُنف تحت الفئة الثالثة: الحموض الأمينية القطبية وغير المشحونة لاحتوائه على زمرة هيدروكسيل OH."
         },
         {
           id: "q4",
-          q: "الحموض الأمينية التي لا يستطيع الجسم انتاجها تدعى:",
-          options: ["الحموض الأمينية اللاقطبية", "الحموض الأمينية التغذوية (الأساسية)", "الحموض الأمينية غير الأساسية", "الحموض الأمينية العطرية"],
-          correct: 1,
-          exp: "هي 10 حموض أمينية لا يستطيع جسم الإنسان اصطناعها، بل يجب الحصول عليها من الغذاء وتسمى الحموض الأمينية التغذوية أو الأساسية."
+          q: "حمض الإيزولوسين (Isoleucine)، كل ما يلي صحيح ما عدا:",
+          options: [
+            "حمض أميني أليفاتي (ذو سلسلة جانبية أليفاتية).",
+            "له نفس بنية اللوسين مع اختلاف في ترتيب الذرات (مماكب بنيوي).",
+            "يوجد فيه 6 ذرات كربون.",
+            "محب للماء (Hydrophilic)."
+          ],
+          correct: 3,
+          exp: "الإيزولوسين ينتمي للحموض اللاقطبية الكارهة للماء (Hydrophobic)."
         },
         {
           id: "q5",
-          q: "الحموض الأمينية النصف تغذوية هي:",
-          options: ["الأرجنين والهستدين", "اللوسين والفالين", "الغليسين والبرولين", "الميثيونين والتربتوفان"],
-          correct: 0,
-          exp: "يحتاجها الجسم خلال فترة معينة (أثناء سن النمو فقط)، وبعدها تصبح الكميات الواردة مع الطعام كافية لعدم حدوث حالات مرضية."
+          q: "أي من الأحماض التاليلة يصنف كحمض أميني عطري (Aromatic)؟",
+          options: ["Val (الفالين)", "Ser (السيرين)", "Gly (الغليسين)", "Tyr (التيروزين)"],
+          correct: 3,
+          exp: "الحموض العطرية الثلاثة الرئيسية هي: الفينيل ألانين (Phe)، التربتوفان (Trp)، والتيروزين (Tyr)."
         },
         {
           id: "q6",
-          q: "من الحموض الأمينية الأساسية:",
-          options: ["اللوسين (Leu)", "التيروزين (Tyr)", "السيرين (Ser)", "الغلوتامين (Gln)"],
+          q: "ما هي المجموعات الوظيفية المميزة في السلاسل الجانبية لكل من التربتوفان، الهستيدين، والأرجنين على التوالي؟",
+          options: [
+            "إندول ، إيميدازول ، غوانيدية",
+            "إيميدازول ، إندول ، غوانيدية",
+            "غوانيدية ، إندول ، إيميدازول",
+            "إندول ، غوانيدية ، إيميدازول"
+          ],
           correct: 0,
-          exp: "اللوسين (Leu) يصنف من الحموض الأمينية الأساسية (التغذوية) التي لا يصنعها الجسم ويجب الحصول عليها من الغذاء."
+          exp: "يحوي التربتوفان حلقة الإندول، والهستيدين يحوي حلقة الإيميدازول، والأرجنين يحوي الزمرة الغوانيدية."
         },
         {
           id: "q7",
-          q: "الحموض الامينية اللاقطبية تكون سلسلتها الجانبية:",
-          options: ["أليفاتية ولا تشارك في الروابط الهيدروجينية", "عطرية قطبية", "مشحونة بشحنة موجبة", "تحوي زمرة أميدية"],
-          correct: 0,
-          exp: "الحموض الأمينية غير القطبية (الكارهة للماء) تكون سلسلتها الجانبية أليفاتية، ولا تشارك في الروابط الهيدروجينية والأيونية."
+          q: "الحمض الأميني الذي يحوي مجموعة أمينية إضافية في سلسلته الجانبية هو:",
+          options: ["Asp (حمض الأسبارتيك)", "Tyr (التيروزين)", "Ala (الألانين)", "Lys (الليزين)"],
+          correct: 3,
+          exp: "الليزين (Lys) واللايسين من الحموض القلوية ذات الشحنة الموجبة لاحتوائها على مجموعة أمين إضافية في السلسلة الجانبية."
         },
         {
           id: "q8",
-          q: "الإيزولوسين، كل ما يلي صحيح ما عدا:",
-          options: ["حمض أميني خطي", "نفس بنية اللوسين مع اختلاف في ترتيب الذرات", "يوجد فيه 6 كربونات", "محب للماء"],
-          correct: 3,
-          exp: "الإيزولوسين ينتمي إلى مجموعة الحموض الأمينية اللاقطبية (الكارهة للماء)، لذا فإن عبارة 'محب للماء' هي العبارة الخاطئة."
+          q: "حمض الأسبارتيك (Aspartate)، كل ما يلي صحيح ما عدا:",
+          options: [
+            "حمض أميني قطبي مشحون (حمضي).",
+            "يشكل الأسباراجين بعد اتحاده مع النشادر.",
+            "يحتوي على كربوكسيل على ذرة الكربون غاما (γ).",
+            "يحمل شحنة سالبة عند الرقم الهيدروجيني الفسيولوجي."
+          ],
+          correct: 2,
+          exp: "تتوضع زمرة الكربوكسيل الثانية في الأسبارتيك على كربون بيتا (β)، بينما تتوضع على كربون غاما (γ) في حمض الغلوتاميك."
         },
         {
           id: "q9",
-          q: "الحمض الاميني الذي تكون سلسلته الجانبية عطرية وغير مشحون هو:",
-          options: ["الفنيل ألانين", "الغلوتامين", "الأرجنين", "السيرين"],
+          q: "الحموض الأمينية الأساسية (Phe - Lys - His) ضرورية تغذوياً ولا يصنعها الجسم.",
+          options: ["صح", "خطأ"],
           correct: 0,
-          exp: "الفنيل ألانين (Phe) ينتمي إلى الحموض الأمينية العطرية، وتكون سلسلته الجانبية غير قطبية وغير مشحونة."
+          exp: "صحيح، هي حموض لا يستطيع جسم الإنسان اصطناعها ويجب الحصول عليها عبر الغذاء."
         },
         {
           id: "q10",
-          q: "حمض اميني ضعيف القطبية يحوي زمرة أندولية:",
-          options: ["الهستدين", "الفنيل ألانين", "التربتوفان", "التيروزين"],
-          correct: 2,
-          exp: "التربتوفان يصنف كحمض عطري، وهو ضعيف القطبية بسبب احتوائه على الحلقة الأندولية."
+          q: "الحمض الأميني الأكثر امتصاصاً للأشعة فوق البنفسجية عند طول الموجة 280 نانومتر هو:",
+          options: ["التيروزين (Tyrosine)", "التربتوفان (Tryptophan)", "الفينيل ألانين (Phenylalanine)", "السيستئين (Cysteine)"],
+          correct: 1,
+          exp: "تمتص الأحماض العطرية عند 280nm، ويُعزى معظم امتصاص البروتينات في هذه المنطقة إلى التربتوفان لملازمتة قمة امتصاص عالية."
         },
         {
           id: "q11",
-          q: "حموض امينية قطبية تحوي زمرة أميدية:",
-          options: ["السيرين والترونين", "الاسباراجين والغلوتامين", "السيستئين والميثيونين", "الليزين والأرجنين"],
-          correct: 1,
-          exp: "تنتمي هذه الحموض إلى الصف القطبي، وتأتي قطبية كل من الأسباراجين والغلوتامين من الزمرة الأميدية."
+          q: "مجموع الشحنة الكلية للـ ألانين (Alanine) في وسط شديد القلوية (pH = 11) هي:",
+          options: ["+1", "0", "-1", "-2"],
+          correct: 2,
+          exp: "في الوسط القلوي الشديد تفقد الزمرة الأمينية بروتونها لتصبح معتدلة وتتشرد الكربوكسيل بشحنة سالبة فتصبح المحصلة -1."
         },
         {
           id: "q12",
-          q: "حمض اميني قلوي يحوي زمرة غوانيدية:",
-          options: ["الهستدين", "الأرجنين", "الليزين", "التيروزين"],
+          q: "يشتق هرمون الأدرينالين حيوياً من حمض الألانين.",
+          options: ["صح", "خطأ"],
           correct: 1,
-          exp: "الأرجنين حمض أميني قلوي يحمل شحنة موجبة متوضعة على الزمرة الغوانيدية المميزة له مما يجعله شديد القطبية."
+          exp: "خطأ، يشتق الأدرينالين والكاتيكولامينات وهرمونات الدرق حيوياً من حمض التيروزين (Tyrosine)."
         },
         {
           id: "q13",
-          q: "حمض اميني قلوي يحوي حلقة الايميدازول العطرية:",
-          options: ["الهستدين", "التربتوفان", "البرولين", "الفنيل ألانين"],
-          correct: 0,
-          exp: "الهستدين حمض أميني قلوي يحمل حلقة الإيميدازول العطرية التي تمنحه خصائصه."
+          q: "حمض الهيستيدين (Histidine)، أي من العبارات التالية صحيحة كلياً عنه؟",
+          options: [
+            "لا يستطيع تشكيل روابط هيدروجينية.",
+            "لا يدخل في بنية الحلزون ألفا.",
+            "له دور مهم في تصنيع الكولاجين.",
+            "يساهم في تشكيل الهيستامين والكولاجين.",
+            "كل ما سبق خاطئ."
+          ],
+          correct: 4,
+          exp: "الهستيدين حمض أميني قطبي كهرلي مشحون يملك حلقة إيميدازول ويتشكل منه الهيستامين بنزع الكربوكسيل."
         },
         {
           id: "q14",
-          q: "الحمض الأميني الهستيدين:",
-          options: ["يدخل في تركيب بروتين الكولاجين و الهيستامين", "يسهم في تشكيل بروتين الكولاجين", "غير قادر على تشكيل روابط هيدروجينية", "كل ما سبق خطأ"],
-          correct: 3,
-          exp: "الهستيدين حمض أميني قلوي، وينتج عنه الهيستامين بنزع الكربوكسيل، والخيارات المطروحة غير دقيقة أو خاطئة بالكامل."
+          q: "ما هو الغاز المنطلق والناتج عن تفاعل نزع الكربوكسيل الإنزيمي (Decarboxylation) للحموض الأمينية؟",
+          options: ["ثنائي أكسيد الكربون (CO2)", "الأوكسجين (O2)", "النيتروجين (N2)", "غاز النشادر (NH3)"],
+          correct: 0,
+          exp: "تؤدي عملية نزع زمرة الكربوكسيل بتأثير إنزيم ديكربوكسيلاز إلى انطلاق غاز CO2 وتشكيل الأمينات الناقلة."
         },
         {
           id: "q15",
-          q: "حمضان امينيان يظهران في عملية الاصطناع الحيوي للبولة (ولا يدخلان في تركيب البروتينات):",
-          options: ["الأورنيثين والسترولين", "الغليسين والبرولين", "السيرين والتيروزين", "الأسبارتيك والغلوتاميك"],
-          correct: 0,
-          exp: "هما حمضان أمينيان يظهران كمرحلة وسيطة في الاصطناع الحيوي للبولة ولا يدخلان في تركيب البروتين."
+          q: "أي من الحموض الأمينية التالية يُعتبر غير فعال كيميائياً في تفاعلات الأسترة أو الفسفرة وتشكيل الجسور الكبريتية؟",
+          options: ["التيروزين (Tyrosine)", "السيستيئين (Cysteine)", "السيرين (Serine)", "الثريونين (Threonine)"],
+          correct: 3,
+          exp: "تدخل زمر الهيدروكسيل في السيرين والتيروزين تفاعلات الفسفرة، والسيستئين تشكيل روابط الديسولفيد، بينما الثريونين أقلم تفاعلية طبقاً للمقرر."
         },
         {
           id: "q16",
-          q: "يوجد في تركيب حمض البانتوتين (Vit B):",
-          options: ["غاما امين وحمض الزبدة", "بيتا الانين", "كالدين", "غلوتاتيون"],
-          correct: 1,
-          exp: "بيتا-ألانين هو حمض أميني ليس من النوع ألفا، ويعد جزءاً من حمض البانتوتين."
+          q: "تعطي البروتينات عند حلمهتها بواسطة الأنزيمات أو الوسائط الكيميائية:",
+          options: ["شحوم مركبة.", "سكريات أحادية.", "حموضاً أمينية من جديد.", "كولسترول حر."],
+          correct: 2,
+          exp: "البروتينات بوليميرات تتشكل من ترابط الحموض الأمينية وتعطي عند تفككها المائي حموضاً أمينية."
         },
         {
           id: "q17",
-          q: "حمض غاما امينو الزبدة (GABA) يتشكل في النسيج الدماغي ويقوم بـ:",
-          options: ["نقل السيالة العصبية", "اصطناع هرمونات الغدة الدرقية", "إزالة السمية في الكبد", "تركيب الكولاجين"],
+          q: "أي من الحموض الأمينية التالية يلعب دور ناقل عصبي (أو طليعة مباشرة له) في النسيج العصبي؟",
+          options: [
+            "الغلايسين (Glycine) وحمض غاما أمينوبوتيريك (GABA).",
+            "الألانين (Alanine) والفالين (Valine).",
+            "الليسين (Lysine) والميثيونين (Methionine).",
+            "الأسباراجين (Asparagine) والغلوتامين (Glutamine)."
+          ],
           correct: 0,
-          exp: "يتشكل (GABA) من حمض الغلوتامات بعملية نزع كربوكسيل في النسيج الدماغي ويقوم بنقل السيالة العصبية."
+          exp: "الغلايسين وGABA (الذي يشتق من نزع كربوكسيل الغلوتامات) يعتبران من أهم النواقل العصبية المثبطة."
         },
         {
           id: "q18",
-          q: "يوجد في الصفراء ويقترن مع الحموض الصفراوية:",
-          options: ["بيتا الانين", "التورين", "السيروتونين", "الهيستامين"],
+          q: "كم عدد الحموض الأمينية المعيارية (Standard) التي تدخل في تركيب البروتينات لدى البشر؟",
+          options: ["300 حمض أميني.", "20 حمضاً أمينياً.", "10 حموض أمينية.", "26 حمضاً أمينياً."],
           correct: 1,
-          exp: "التورين حمض أميني لا ينتمي للنوع ألفا، يوجد في الصفراء ويقترن مع الحموض الصفراوية."
+          exp: "يدخل 20 حمضاً أمينياً معيارياً فقط في شفرة اصطناع البروتينات البشرية من أصل أكثر من 300 حمض في الطبيعة."
         },
         {
           id: "q19",
-          q: "ذرة الكربون الفا (في جميع الحموض الأمينية عدا الغليسين) تكون:",
-          options: ["متناظرة", "غير متناظرة (مرتبطة بأربع متبادلات مختلفة)", "مرتبطة بثلاث متبادلات فقط", "لا ترتبط بزمرة كربوكسيل"],
-          correct: 1,
-          exp: "لأنها تكون مرتبطة بأربع متبادلات مختلفة، مما يمنحها الفعالية الضوئية وتشكل مماكبات فراغية، ما عدا الغليسين."
+          q: "تُصنف الحموض الأمينية (الأرجنين Arginine والهيستيدين Histidine) بأنها:",
+          options: [
+            "حموض أمينية غير أساسية دائماً.",
+            "حموض أمينية أساسية بشكل كامل في جميع مراحل العمر.",
+            "حموض أمينية نصف أساسية (تغذوية) يحتاجها الجسم أثناء سن النمو.",
+            "حموض أمينية لا تدخل في تركيب البروتينات مطلقاً."
+          ],
+          correct: 2,
+          exp: "الأرجنين والهستيدين أحماض نصف أساسية تعجز أجهزة الجسم عن اصطناعها بكفاية في مرحلة النمو السريع فقط."
         },
         {
           id: "q20",
-          q: "أي من الحموض الأمينية التالية يمتص الأشعة فوق البنفسجية بشدة (عند 280nm):",
-          options: ["Gln", "Glu", "Gly", "Trp"],
-          correct: 3,
-          exp: "الحموض الأمينية العطرية، وبشكل خاص التربتوفان (Trp)، تمتص الضوء بشدة في المنطقة فوق البنفسجية عند طول موجة 280 نانومتر."
+          q: "البرولين حمض لا قطبي كاره للماء، وتتصل سلسلته الجانبية بذرة كربون ألفا والزمرة الأمينية حلقةً بآن واحد.",
+          options: ["صح", "خطأ"],
+          correct: 0,
+          exp: "صحيح، البرولين يمتلك بنية حلقية غير متجانسة فريدة تضم الكربون ألفا والزمرة الأمينية (حمض إيميني)."
         },
         {
           id: "q21",
-          q: "عند وضع حمض الاسبارتيك في وسط شديد القلوية pH = 11 تكون شحنته:",
-          options: ["0", "1", "-1", "-2"],
-          correct: 3,
-          exp: "حمض الأسبارتيك حمض أميني حمضي (يحتوي زمرتي كربوكسيل). عند درجة حموضة قلوية عالية (pH=11)، تتشرد زمرتا الكربوكسيل لتعطي شحنة (-2)، وتفقد زمرة الأمين بروتونها لتصبح (0)، فتكون الشحنة الصافية (-2)."
+          q: "يتميز الحمض الأميني العطري التربتوفان (Tryptophan) بكونه:",
+          options: [
+            "حمض أميني شديد القطبية لاحتوائه على زمرة هيدروكسيل.",
+            "حمض أميني ضعيف القطبية ويحتوي في سلسلته الجانبية على زمرة إندولية.",
+            "حمض أميني غير فعال ضوئياً لعدم احتوائه على كربون ألفا متناظر.",
+            "حمض أميني حامضي يحمل شحنة سالبة فسيولوجياً."
+          ],
+          correct: 1,
+          exp: "التربتوفان يحوي زمرة إندول وهو ضعيف القطبية ويمتلك أكبر قدرة على امتصاص الضوء عند 280nm."
         },
         {
           id: "q22",
-          q: "يمكن لذرات الهيدروجين في المجموعة الامينية ان تستبدل بجذور المتيل في تفاعل:",
-          options: ["الأسترة", "الفسفرة", "المتيلة (تشكيل البيتائينات)", "نزع الكربوكسيل"],
-          correct: 2,
-          exp: "يمكن للمجموعة الأمينية أن تتفاعل لتشكيل مشتقات أحادية، ثنائية، أو ثلاثية المتيل (البيتائينات) عبر تفاعل المتيلة."
+          q: "يعتبر التيروزين (Tyrosine) حمضاً أمينياً قطبياً بسبب احتوائه في سلسلته الجانبية على زمرة:",
+          options: ["إيميدازول (Imidazole).", "غوانيدية (Guanidino).", "أميدية (Amide).", "هيدروكسيل (Hydroxyl)."],
+          correct: 3,
+          exp: "وجود مجموعة الهيدروكسيل OH الفينولية على الحلقة العطرية في التيروزين تكسبه صفة القطبية غير المشحونة."
         },
         {
           id: "q23",
-          q: "يتم ربط المركب الاوروماتي مثل حمض البنزوئيك الى الزمرة الامينية للحمض الاميني الغليسين في:",
-          options: ["الكلية", "الكبد", "النسيج الدماغي", "العضلات"],
+          q: "تعود قطبية الحمضين الأمينيين الأسبرجين (Asn) والغلوتامين (Gln) بشكل رئيسي إلى احتوائهما على زمرة:",
+          options: ["ثيولية (Thiol).", "أميدية (Amide).", "غوانيدية (Guanidino).", "كربوكسيلية إضافية."],
           correct: 1,
-          exp: "هذا التفاعل أساسي لإزالة السمية وطرحها خارج الجسم، حيث يتم ربط حمض البنزويك بالغليسين في الكبد لتشكيل 'حمض الهيبوريك' منزوع السمية."
+          exp: "تنشأ قطبيتهما من وجود المجموعة الأميدية (-CONH2) في السلسلة الجانبية."
         },
         {
           id: "q24",
-          q: "تفاعل نزع الكربوكسيل يتم بوجود أنزيم:",
-          options: ["دي كربوكسيلاز (Decarboxylase)", "ترانس أميناز (Transaminase)", "ديهيدروجيناز (Dehydrogenase)", "بولي ميراز (Polymerase)"],
-          correct: 0,
-          exp: "يحدث تفاعل نزع الكربوكسيل في الخلايا الحية بواسطة إنزيم ديكربوكسيلاز، ويرافق الإنزيم الفوسفات بيريدوكسال."
+          q: "حمض الهيستيدين (Histidine)، أي مما يلي صحيح بخصوص شحنته وبنيته؟",
+          options: [
+            "يحتوي على زمرة غوانيدية ويكون سالباً عند pH=6.",
+            "يحتوي على حلقة الإيميدازول العطرية ويكون مشحوناً بشحنة إيجابية عند pH=6.",
+            "هو حمض أميني لا قطبي كاره للماء لا يتشرد مطلقاً.",
+            "يحتوي على كبريت وهو جزء من فيتامين B."
+          ],
+          correct: 1,
+          exp: "يحوي الهستيدين حلقة إيميدازول ذات pKa تقارب 6.0، فتتأين وتكسبه شحنة موجبة عند pH=6."
         },
         {
           id: "q25",
-          q: "السيروتونين ناتج عن:",
-          options: ["نزع الزمرة الكربوكسيلية للتربتوفان", "نزع الزمرة الكربوكسيلية للهستدين", "المتيلة للغليسين", "الفسفرة للسيرين"],
-          correct: 0,
-          exp: "ينتج السيروتونين عن طريق تفاعل نزع الكربوكسيل للحمض الأميني التربتوفان."
+          q: "أي من الحموض الأمينية التالية لا تدخل في تركيب البروتينات، ولكنها تلعب دوراً وسيطاً في حلقة البولة (Urea Cycle)؟",
+          options: ["الليسين والأرجنين.", "الأورنيثين (Ornithine) والسيترولين (Citrulline).", "الأسبارتات والغلوتامات.", "التورين وبيتا-ألانين."],
+          correct: 1,
+          exp: "الأورنيثين والسترولين هما حمضان أمينان غير بروتينيين يظهران كمرحلة وسيطة في تصنيع البولة."
         },
         {
           id: "q26",
-          q: "ينتج الهيستامين عن:",
-          options: ["نزع زمرة الكربوكسيل للهستدين", "نزع زمرة الكربوكسيل للتربتوفان", "إضافة زمرة هيدروكسيل للفينيل ألانين", "نزع أمين تأكسدي للغلوتامات"],
+          q: "طابق المشتقات التالية بخصائصها: (1) بيتا-ألانين ، (2) التورين ، (3) حمض GABA:",
+          options: [
+            "1-فيتامين B5 ، 2-الصفراء ، 3-ناقل عصبي مثبط من الغلوتامات",
+            "1-الصفراء ، 2-فيتامين B5 ، 3-ناقل عصبي مثبط من الغلوتامات",
+            "1-ناقل عصبي ، 2-الصفراء ، 3-فيتامين B5",
+            "1-فيتامين B5 ، 2-ناقل عصبي ، 3-الصفراء"
+          ],
           correct: 0,
-          exp: "عبر إنزيم ديكربوكسيلاز، يتم نزع كربوكسيل الهستدين لتكوين الأمين الفعال وهو الهيستامين."
+          exp: "بيتا-ألانين يدخل في فيتامين B5 (البانتوثين)، والتورين يقترن بحموض الصفراء، وGABA ناقل مثبط ينشأ من الغلوتامات."
         },
         {
           id: "q27",
-          q: "يكون تفاعل الننهدرين بنفسجي اللون مع:",
-          options: ["الحموض الامينية (ما عدا البرولين)", "السكريات", "الدسم", "النكليوتيدات"],
+          q: "تنقص ذوبانية (انحلالية) الحموض الأمينية في المحلات القطبية كلما زاد طول سلسلتها الجانبية الأليفاتية.",
+          options: ["صح", "خطأ"],
           correct: 0,
-          exp: "الننهدرين كاشف يعطي مركباً بنفسجياً مع الحموض الأمينية، ما عدا 'البرولين' والهيدروكسي برولين اللذين يشكلان معقداً أصفر."
+          exp: "صحيح، لأن زيادة طول السلسلة الهيدروكربونية يزيد من الخاصية الكارهة للماء ويقلل الذوبان في الماء."
         },
         {
           id: "q28",
-          q: "حمض أميني يدخل بتركيب 33% من بنية الكولاجين:",
-          options: ["هيستيدين", "فينيل الانين", "غليسين", "ارجينين"],
-          correct: 2,
-          exp: "الغليسين هو الحمض الأميني الأصغر حجماً، وتواجده بكثرة (حوالي 33%) ضروري لبنية الكولاجين."
+          q: "تتميز الحموض الأمينية بدرجات انصهار مرتفعة جداً في الحالة الصلبة، ويعزى ذلك بشكل أساسي إلى:",
+          options: [
+            "الروابط التساهمية الأحادية بين ذرات الكربون.",
+            "وجود قوى جذب أيونية قوية ناتجة عن تشكل الشوارد ثنائية القطب.",
+            "سهولة تطايرها عند درجات الحرارة المنخفضة.",
+            "عدم احتوائها على مجموعات مشحونة."
+          ],
+          correct: 1,
+          exp: "وجود الشوارد ثنائية القطب (Zwitterions) يخلق شبكة روابط أيونية جبارة ترفع درجات الانصهار."
         },
         {
           id: "q29",
-          q: "يتميز اللوسين عن الفالين بـ:",
-          options: ["ذرة كربون واحدة", "ذرتي كربون", "وجود زمرة هيدروكسيل", "كل ما سبق خطأ"],
-          correct: 0,
-          exp: "كلاهما من الحموض الأمينية الأليفاتية اللاقطبية، لكن اللوسين يحتوي على 6 ذرات كربون، بينما الفالين يحتوي على 5 ذرات كربون."
+          q: "يمتص الحمض الأميني السيستئين (Cysteine) الضوء بضعف في المنطقة فوق البنفسجية عند طول موجة يعادل:",
+          options: ["280 نانومتر.", "240 نانومتر.", "220 نانومتر.", "300 نانومتر."],
+          correct: 1,
+          exp: "يتميز السيستئين بامتصاص ضعيف محدد عند 240nm بسبب ثنائي الكبريت / زمرة الثيول."
         },
         {
           id: "q30",
-          q: "حمض اميني كبريتي:",
-          options: ["الليزين", "الميثيونين", "السلفهدريل", "الغليسين"],
-          correct: 1,
-          exp: "الميثيونين يُصنف ضمن الحموض الأمينية التي تحتوي على ذرة كبريت في سلسلتها الجانبية."
+          q: "تكون نقطة التعادل الكهربائي (pI) منخفضة (حمضية) للبروتينات التي تمتلك زيادة من المجموعات الكربوكسيلية.",
+          options: ["صح", "خطأ"],
+          correct: 0,
+          exp: "صحيح، زيادة المجموعات الكربوكسيلية الحمضية (Asp, Glu) تحرك نقطة التعادل pI نحو الأوساط الحمضية المنخفضة."
         },
         {
           id: "q31",
-          q: "حمض اميني قطبي و مشحون سلبا:",
-          options: ["اليزين", "ارجينين", "غلوتامين", "اسبارتيك"],
-          correct: 3,
-          exp: "حمض الأسبارتيك من الحموض الأمينية الحمضية، يمتلك زمرة كربوكسيل إضافية في سلسلته الجانبية تتشرد وتمنحه شحنة سالبة قطبية."
+          q: "يقوم الكبد بميتيلة المواد السامة لتسهيل طرحها، وتسمى المركبات الناتجة الغنية بالجذور الميثيلية الثلاثية بـ:",
+          options: ["الأمينات الناقلة.", "البيتايينات (Betaines).", "الشوارد ثنائية القطب.", "الكيتونات الحلقية."],
+          correct: 1,
+          exp: "البيتايينات هي المشتقات الميتيلية الثلاثية المترسبة عن استبدال هيدروجين الزمرة الأمينية بالميتيل."
         },
         {
           id: "q32",
-          q: "الحمض الاميني الذي يكون موجبا في الوسط المعتدل:",
-          options: ["غلوتاميك", "اسبارتيك", "غليسين", "ليزين"],
-          correct: 3,
-          exp: "الليزين هو حمض أميني قلوي شديد القطبية، يحتوي على زمرة أمين إضافية تحمل شحنة موجبة في الوسط المعتدل."
+          q: "ما هما المركبان الناتجان عن عملية نزع الأمين التأكسدي (Oxidative Deamination) لحمض الغلوتاميك في الكبد؟",
+          options: [
+            "البيروفات والألانين.",
+            "ألفا-كيتوغلوتارات والأمونيا (النشادر).",
+            "الغلوتاتيون والماء.",
+            "السيروتونين وثنائي أكسيد الكربون."
+          ],
+          correct: 1,
+          exp: "ينتج عن تفاعل نزع الهيدروجين التأكسدي للغلوتامات مركب أكسالوستات/ألفا-كيتوغلوتارات مع انطلاق غاز الأمونيا."
         },
         {
           id: "q33",
-          q: "التيروزين، كل الخيارات التالية صحيحة:",
-          options: ["تشتق منه هرمونات الغدة الدرقية", "أميني قطبي", "يشتق من الفينيل ألانين بإضافة مجموعة هيدروكسيل", "كلو صحيح"],
-          correct: 3,
-          exp: "التيروزين حمض أميني قطبي بسبب احتوائه على زمرة الهيدروكسيل، ويُصطنع من الفينيل ألانين، وهو الطليعة الأساسية لتصنيع هرمونات الغدة الدرقية."
+          q: "يتخلص الكبد من حمض البنزوئيك السام بربطه بالزمرة الأمينية لحمض:",
+          options: ["الألانين.", "الغلايسين (Glycine).", "الميثيونين.", "الأسبارتات."],
+          correct: 1,
+          exp: "يقترن حمض البنزوئيك بالغلايسين حصراً في الكبد لإنتاج حمض الهيبوريك المطروح في البول."
         },
         {
           id: "q34",
-          q: "التربتوفان , كل ما يلي صحيح ما عدا:",
-          options: ["مادة أولية لاصطناع فيتامين B3", "يصنف من الحموض الاامينية المحبة للماء", "أكبر الحموض", "يحوي حلقة أندولية"],
+          q: "يتشكل الميثيونين الفعال (SAM) حيوياً من تكاثف حمض الهيستيدين مع جزيء ATP.",
+          options: ["صح", "خطأ"],
           correct: 1,
-          exp: "التربتوفان حمض أميني عطري يُصنف كحمض 'ضعيف القطبية'، وبالتالي عبارة أنه محب للماء بشدة هي العبارة الخاطئة للاستثناء."
+          exp: "خطأ علمي متكرر في الأسئلة، الصحيح أن الميثيونين الفعال (SAM) يتشكل من تكاثف حمض الميثيونين نفسه مع الـ ATP."
         },
         {
           id: "q35",
-          q: "الحمض الأميني الغليسين:",
-          options: ["يصنف مع الحموض الاامينية الكارهة للماء", "أصغر و ابسط حمض اميني بحيث الجذر R هو CH3", "فعال ضوئيا", "كل ما سبق خطأ"],
+          q: "يلعب الميثيونين الفعال (SAM) دوراً حيوياً كواهب للميتيل في اصطناع المركبات التالية ما عدا:",
+          options: ["الكرياتين (Creatine).", "الإبينفرين والأدرينالين.", "الميلاتونين (Melatonin).", "الغلوتاتيون (Glutathione)."],
           correct: 3,
-          exp: "كل الخيارات المطروحة خاطئة لأنه أبسط حمض أميني (جذره H وليس CH3)، وهو الحمض الأميني الوحيد غير الفعال ضوئياً لعدم امتلاكه ذرة كربون ألفا غير متناظرة."
+          exp: "الغلوتاتيون ببتيد ثلاثي (غاما غلوتاميل-سيستئيل-غليسين) لا يتطلب عملية نقل ميتيل من SAM لتصنيعه."
         },
         {
           id: "q36",
-          q: "الحمض الأميني الذي يمتص بشدة في 280nm:",
-          options: ["Gln", "Glu", "Gly", "Trp"],
-          correct: 3,
-          exp: "الحموض الأمينية العطرية، وبشكل خاص التربتوفان (Trp)، تمتص الضوء بشدة في المنطقة فوق البنفسجية عند طول موجة 280 نانومتر."
+          q: "يتألف ببتيد الغلوتاتيون (GSH) المضاد للأكسدة من الحموض الأمينية التالية:",
+          options: [
+            "ألانين - فالين - برولين.",
+            "غاما غلوتاميل - سيستئين - غليسين.",
+            "أسبارتات - لايسين - هيستيدين.",
+            "تيروزين - تربتوفان - سيرين."
+          ],
+          correct: 1,
+          exp: "الغلوتاتيون يتألف حيوياً من ارتباط حمض الغلوتاميك (عبر كربون غاما) مع السيستئين والغليسين."
         },
         {
           id: "q37",
-          q: "يمتص التربتوفان الأشعة فوق البنفسجية عند الأطوال الموجية 280nm ويعزى له معظم امتصاص البروتين:",
-          options: ["صح", "خطأ", "يمتص عند 150nm فقط", "لا يمتص الأشعة فوق البنفسجية"],
+          q: "من الحموض الأمينية الأساسية التي لا يصنعها جسم الإنسان:",
+          options: ["Leu (اللوسين)", "Ala (الألانين)", "Gly (الغليسين)", "Ser (السيرين)"],
           correct: 0,
-          exp: "بسبب بنيته العطرية يمتلك التربتوفان أعلى قدرة على امتصاص الأشعة فوق البنفسجية، مما يُستخدم لقياس تركيز البروتينات."
+          exp: "اللوسين حمض أميني تغذوي أساسي."
         },
         {
           id: "q38",
-          q: "اذا كانت المجموعة الأمينية على يمين الحمض الاميني يرمز له بالرمز D:",
-          options: ["صح", "خطأ", "يرمز له بالرمز L", "يرمز له بالرمز R"],
-          correct: 0,
-          exp: "اصطلاحاً يُرمز للحمض الأميني بـ D إذا توضعت الزمرة الأمينية على يمين ذرة الكربون ألفا."
+          q: "يدخل في تركيب حمض البانتوتين (فيتامين B5):",
+          options: ["غاما أمينو وحمض الزبدة (GABA)", "بيتا ألانين (β-Alanine)", "كالدين", "غلوتاتيون"],
+          correct: 1,
+          exp: "بيتا-ألانين حمض غير بروتيني يدخل في تركيب فيتامين B5 ومرافق الإنزيم A."
         },
         {
           id: "q39",
-          q: "جميع البروتينات تبنى من حموض امينية من النوع L:",
-          options: ["صح", "خطأ", "تبنى من النوع D فقط", "تبنى من مزيج متساوٍ من L و D"],
-          correct: 0,
-          exp: "الحموض الأمينية من الشكل الفراغي L هي الوحيدة التي تدخل في تركيب بروتينات الكائنات الحية وتُهضم في العضوية."
+          q: "عند وضع حمض الأسبارتيك في وسط pH = 11 تكون شحنته الكلية الصافية:",
+          options: ["0", "+1", "-1", "-2"],
+          correct: 3,
+          exp: "عند pH=11 تفقد زمرتا الكربوكسيل بروتوناتهما (-2)، وتفقد الأمين بروتونها (0)، فتكون المحصلة -2."
         },
         {
           id: "q40",
-          q: "تعرف نقطة التعادل الكهربائي PI بأنها قيمة الـ PH التي تكون شحنة الأمين تساوي الصفر , و عندها يكون انحلال الحمض الأميني أعلى ما يمكن:",
-          options: ["صح", "خطأ (الانحلالية تكون أصغرية)", "خطأ (الانحلالية لا تتأثر بـ PH)", "خطأ (تكون الشحنة موجبة دائماً)"],
-          correct: 1,
-          exp: "في نقطة التعادل الكهربائي تكون الشحنة الصافية معدومة، ولكن الانحلالية في هذه النقطة تكون 'أصغرية' وليست أعلى ما يمكن."
+          q: "الحمض الأميني الذي يمتص بشدة في المنطقة فوق البنفسجية عند طول الموجة 280nm هو:",
+          options: ["Gln (الغلوتامين)", "Glu (حمض الغلوتاميك)", "Gly (الغليسين)", "Trp (التربتوفان)"],
+          correct: 3,
+          exp: "التربتوفان يحوي حلقة أندول عطرية تمنحه أعلى قمة امتصاص طيفي عند 280nm."
         },
         {
           id: "q41",
-          q: "حموض أمينية يمكن فسفرتها:",
-          options: ["سيرين", "سيستيئين", "تيروزين", "الخياران A و C صحيحان"],
+          q: "أي من الأحماض الأمينية التالية يكون مشحوناً بشحنة موجبة في الوسط المعتدل (pH=7.4)؟",
+          options: ["غلوتاميك", "اسبارتيك", "غليسين", "ليزين"],
           correct: 3,
-          exp: "تتم تفاعلات الفسفرة على زمرة الهيدروكسيل الموجودة في السلاسل الجانبية لحموض معينة مثل السيرين والتيروزين."
+          exp: "الليزين حمض أميني قروي يملك مجموعة أمين جانبية بروتونية إيجابية الشحنة في الوسط الفيزيولوجي."
         },
         {
           id: "q42",
-          q: "تشتق النواقل العصبية الكاتيكولامينات بدءا من الحمض الأميني البرولين:",
-          options: ["صح", "خطأ (تشتق من التيروزين)", "خطأ (تشتق من الغليسين)", "خطأ (تشتق من التربتوفان)"],
-          correct: 1,
-          exp: "الكاتيكولامينات نواقل عصبية هامة تشتق فعلياً من الحمض الأميني 'التيروزين'، وليس البرولين."
+          q: "كل مما يلي يعد من واهبي (مانحي) الميتيل حيوياً ما عدا:",
+          options: ["السيفالين", "الليستين", "الميثيونين الفعال (SAM)", "حمض الفوليك"],
+          correct: 0,
+          exp: "السيفالين مستقبل للميتيل ليتتحول إلى ليستين، وليس مانحاً للميتيل."
         },
         {
           id: "q43",
-          q: "الحمض الأميني الذي يعطي الناقل العصبي السيروتونين هو:",
-          options: ["السيرين", "التربتوفان", "التيروزين", "الغليسين"],
-          correct: 1,
-          exp: "التربتوفان هو الحمض الأميني العطري الذي يُشتق منه الناقل العصبي السيروتونين عن طريق تفاعلات الهدركسلة ونزع الكربوكسيل."
+          q: "حموض أمينية يطرأ عليها تفاعل الفسفرة على زمرة الهيدروكسيل في سلسلتها الجانبية:",
+          options: ["سيرين", "سيستيئين", "تيروزين", "السيرين والتيروزين معا (A+C)"],
+          correct: 3,
+          exp: "تحوي أحماض السيرين، الثريونين، والتيروزين زمر هيدروكسيل حرة قابلة للفسفرة بواسطة إنزيمات الكيناز."
         },
         {
           id: "q44",
-          q: "حمض أميني يُشتق من الألانين نظرياً بحذف ذرة هيدروجين (H) وإضافة زمرة سلفهدريل (SH):",
-          options: ["السيرين", "الميثيونين", "السيستئين", "الثريونين"],
-          correct: 2,
-          exp: "السيستئين هو حمض أميني كبريتي، سلسلته الجانبية هي (CH2-SH)، وبالتالي يشبه في بنيته حمض الألانين (CH3) مع استبدال ذرة هيدروجين بزمرة السلفهدريل (SH)."
+          q: "حمض أميني قطبي ومشحون سلباً عند الرقم الهيدروجيني الفيزيولوجي:",
+          options: ["ليزين", "أرجينين", "غلوتامين", "أسبارتيك (Aspartate)"],
+          correct: 3,
+          exp: "الأسبارتيك والغلوتاميك حمضان قطبيان مشحونان سلباً لاحتوائهما على زمرة كربوكسيل ثانية تأينت لـ COO-."
         },
         {
           id: "q45",
-          q: "كل الحموض الأمينية التالية تمتلك بنية حلقية في سلسلتها الجانبية ما عدا:",
-          options: ["التيروزين", "التربتوفان", "البرولين", "الإيزولوسين"],
-          correct: 3,
-          exp: "الإيزولوسين هو حمض أميني أليفاتي ذو سلسلة جانبية متفرعة (مفتوحة) ولا يحوي أي حلقة، بينما التيروزين والتربتوفان يحويان حلقات عطرية، والبرولين يحوي حلقة إيمينو غير متجانسة."
+          q: "التربتوفان (Tryptophan)، كل مما يلي صحيح ما عدا:",
+          options: [
+            "هو مادة أولية لاصطناع فيتامين B3 (النياسين).",
+            "يصنف من الحموض الأمينية المحبة للماء.",
+            "يعد أكبر الحموض الأمينية المعيارية حجماً."
+          ],
+          correct: 1,
+          exp: "التربتوفان حمض عطري لاقطبي كاره للماء (ضعيف القطبية)."
         },
         {
           id: "q46",
-          q: "بالنسبة للحمض الأميني البرولين، كل العبارات التالية صحيحة ما عدا:",
+          q: "حمض التيروزين (Tyrosine):",
           options: [
-            "يمتلك حلقة غير متجانسة",
-            "له أهمية كبيرة جداً في تشكيل بنية بروتين الكولاجين",
-            "لا يستطيع تكوين الحلزون ألفا بسبب بنيته الهندسية",
-            "تحوله لهيدروكسي برولين شرط أساسي لنضوج فيتامين C"
+            "تشتق منه هرمونات الغدة الدرقية والكاتيكولامينات.",
+            "حمض أميني قطبي لوجود زمرة الهيدروكسيل.",
+            "يشتق من الفينيل ألانين بعملية هيدروكسلة.",
+            "كل ما سبق صحيح."
           ],
           correct: 3,
-          exp: "العبارة الخاطئة هي D؛ العكس هو الصحيح، حيث يُعتبر فيتامين C (حمض الأسكوربيك) عاملاً مرافقاً وشرطاً أساسياً لإتمام تفاعل تحول البرولين إلى هيدروكسي برولين لتشكيل الكولاجين الناضج، وليس العكس."
+          exp: "جميع العبارات المذكورة عن التيروزين صحيحة ومطابقة للحقائق البيوكيميائية."
         },
         {
           id: "q47",
-          q: "الكربوكسيل الإضافي في الحمض الأميني 'الأسبارتيك' متوضع على:",
-          options: ["ذرة الكربون ألفا (α)", "ذرة الكربون بيتا (β)", "ذرة الكربون غاما (γ)", "ذرة الكربون دلتا (δ)"],
-          correct: 1,
-          exp: "حمض الأسبارتيك هو حمض أميني حمضي يمتلك زمرة كربوكسيل ثانية (إضافية) في سلسلته الجانبية، وتتصل هذه الزمرة بذرة الكربون بيتا."
+          q: "يتميز اللوسين عن الفالين بنيوياً بـ:",
+          options: ["ذرة كربون واحدة.", "ذرتي كربون.", "وجود زمرة هيدروكسيل.", "كل ما سبق خطأ."],
+          correct: 0,
+          exp: "يحوي اللوسين 6 ذرات كربون، بينما يحوي الفالين 5 ذرات كربون؛ والفرق بينهما هو زمرة ميتيلين واحدة (CH2)."
         },
         {
           id: "q48",
-          q: "الكربوكسيل الإضافي في الحمض الأميني 'الغلوتاميك' متوضع على:",
-          options: ["ذرة الكربون ألفا (α)", "ذرة الكربون بيتا (β)", "ذرة الكربون غاما (γ)", "ذرة الكربون دلتا (δ)"],
-          correct: 2,
-          exp: "حمض الغلوتاميك أطول من حمض الأسبارتيك بذرة كربون واحدة (ميتيلين إضافية)، لذا فإن زمرته الكربوكسيلية الجانبية تتوضع على ذرة الكربون غاما."
+          q: "حمض أميني كبريتي يحوي ذرة كبريت في سلسلته الجانبية:",
+          options: ["الليسين", "الميثيونين", "السلفهدريل", "الغليسين"],
+          correct: 1,
+          exp: "الميثيونين والسيستئين هما الحمضان الكبريتيان المعياريان."
         },
         {
           id: "q49",
-          q: "الحمض الأميني الليزين (الليسين) يحوي في سلسلته الجانبية على:",
-          options: ["4 زمر ميتيلين (CH2)", "3 زمر ميتيلين (CH2)", "5 زمر ميتيلين (CH2)", "زمرتي ميتيلين (CH2)"],
+          q: "جميع البروتينات في الكائنات الحية تُبنى وتُهضم حصراً من حموض أمينية من النوع L.",
+          options: ["صح", "خطأ"],
           correct: 0,
-          exp: "الليزين هو حمض أميني قلوي، يمتلك سلسلة جانبية أليفاتية طويلة مكونة من 4 زمر ميتيلين (CH2) تنتهي بزمرة أمينية (NH2) تمنحه الشحنة الموجبة."
+          exp: "صحيح، الأنظمة البيولوجية تعتمد الشاكل الفراغي L للحموض الأمينية في تشكيل البروتينات."
         },
         {
           id: "q50",
-          q: "الحمض الأميني الأرجينين يحوي في بنيته الكلية على:",
-          options: ["5 ذرات آزوت", "3 ذرات آزوت", "ذرتين آزوت", "4 ذرات آزوت"],
-          correct: 3,
-          exp: "يحوي الأرجينين 4 ذرات آزوت إجمالاً: ذرة آزوت واحدة في الزمرة الأمينية المرتبطة بالكربون ألفا، و 3 ذرات آزوت ضمن زمرة الغوانيدين (Guanidino) في سلسلته الجانبية."
+          q: "السلاسل الجانبية الأليفاتية للحموض الأمينية تعتبر محبة للماء.",
+          options: ["صح", "خطأ"],
+          correct: 1,
+          exp: "خطأ، السلاسل الأليفاتية الهيدروكربونية لا قطبية وهي كارهة للماء (Hydrophobic)."
         },
         {
           id: "q51",
-          q: "يُعد التيروزين من:",
-          options: [
-            "الحموض الأمينية القطبية غير المشحونة",
-            "الحموض الأمينية غير القطبية المشحونة إيجابياً",
-            "الحموض الأمينية القطبية المشحونة سلبياً",
-            "الحموض الأمينية غير القطبية غير المشحونة"
-          ],
-          correct: 0,
-          exp: "ينتمي التيروزين إلى الحموض العطرية، ولكنه يُصنف كحمض 'قطبي غير مشحون' في درجة الـ pH الفسيولوجية بفضل احتوائه على زمرة الهيدروكسيل (OH) المحبة للماء."
+          q: "ينتج عن إضافة زمرتي ميتيل (CH3) إلى الألانين تشكّل حمض:",
+          options: ["الفينيل ألانين", "اللوسين", "الفالين", "التيروزين"],
+          correct: 2,
+          exp: "إضافة مجموعتي ميتيل على ذرة كربون بيتا للألانين ينتج عنه بنية الفالين المتفرعة."
         },
         {
           id: "q52",
-          q: "تتميز الحموض الأمينية غير البروتينية (مثل بيتا-ألانين) بأن:",
+          q: "حمض الفينيل ألانين (Phenylalanine):",
           options: [
-            "ذرة الكربون فيها محاطة بكربوكسيل وأمين معاً دائماً",
-            "ذرة الكربون فيها غير محاطة بكربوكسيل وأمين أبداً",
-            "ليس من الضرورة أن تكون الزمرة الأمينية والزمرة الكربوكسيلية مرتبطتين على ذرة الكربون (ألفا) نفسها",
-            "جميعها يشكل بروتينات هيكلية داعمة"
+            "حمض أميني قطبي شديد الذوبان.",
+            "يتم اصطناع هرمونات الدرق منه مباشرة.",
+            "يمتص الأشعة فوق البنفسجية لوجود حلقة البنزن.",
+            "يحتوي على زمرة هيدروكسيل."
           ],
           correct: 2,
-          exp: "في الحموض الأمينية غير البروتينية (مثل بيتا-ألانين أو غاما-أمينو الزبدة)، لا ترتبط الزمرة الأمينية بذرة الكربون ألفا، بل بذرات كربون أبعد (بيتا أو غاما)، لذا لا تدخل في تركيب البروتينات المعتادة."
+          exp: "الفينيل ألانين حمض عطري لا قطبي يمتص الأشعة فوق البنفسجية عند 280nm ولا يحوي زمرة هيدروكسيل."
         },
         {
           id: "q53",
-          q: "حمض الفينيل ألانين، أي العبارات التالية صحيحة بشأنه:",
-          options: [
-            "يصنف كحمض أميني شديد القطبية",
-            "يتم اصطناع هرمونات الغدة الدرقية منه بشكل مباشر دون وسائط",
-            "يمتص الأشعة فوق البنفسجية لامتلاكه حلقة عطرية",
-            "يحتوي على زمرة هيدروكسيل في سلسلته الجانبية"
-          ],
-          correct: 2,
-          exp: "الفينيل ألانين حمض عطري يمتص الأشعة فوق البنفسجية، وهو لا يحوي زمرة هيدروكسيل (التي تميز التيروزين)، كما أنه غير قطبي."
+          q: "الجذر الأليفاتي للحمض الأميني يكون محباً للماء.",
+          options: ["صح", "خطأ"],
+          correct: 1,
+          exp: "خطأ، الجذور الأليفاتية كارهة للماء."
         },
         {
           id: "q54",
-          q: "يصنع الأستيل كولين بمساعدة الحمض الأميني:",
-          options: ["الليزين", "الميثيونين", "الغليسين", "الفالين"],
-          correct: 1,
-          exp: "الميثيونين (عن طريق مركب S-adenosyl methionine) يلعب دور 'الواهب الفعال لزمرة الميتيل' في تفاعلات المتيلة (Transmethylation)، وهو دور أساسي في اصطناع الكولين والأستيل كولين."
+          q: "يمتص البروتين الأشعة فوق البنفسجية عند طول الموجة 280 نانومتر.",
+          options: ["صح", "خطأ"],
+          correct: 0,
+          exp: "صحيح، ويعزى ذلك لاحتوائه على أحماض عطرية خاصة التربتوفان والتيروزين."
         },
         {
           id: "q55",
-          q: "ينتج الأسبارجين عن طريق:",
-          options: [
-            "تفاعل الأسبارتيك مع غاز ثاني أكسيد الكربون",
-            "تفاعل الأسبارتيك مع النشادر (أو مجموعة أمينية)",
-            "تفاعل الأسبارتيك مع الزمرة الهيدروكسيلية",
-            "تفاعل الأسبارتيك مع زمرة الميتيل (CH3)"
-          ],
-          correct: 1,
-          exp: "الأسبارجين هو الأميد المشتق من حمض الأسبارتيك، ويُصطنع عن طريق تفاعل (أمدة) زمرة الكربوكسيل الجانبية لحمض الأسبارتيك مع مجموعة أمينية (النشادر)."
+          q: "الحمض الأميني الذي ترتبط فيه ذرة النيتروجين ألفا بالسلسلة الجانبية R بشكل حلقي هو:",
+          options: ["البرولين (Proline)", "الهيستيدين", "السيرين"],
+          correct: 0,
+          exp: "البرولين هو الحمض الإيميني الوحيد الذي تتصل فيه زمرة الأمين بالسلسلة الجانبية في حلقة مغلقة."
         },
         {
           id: "q56",
-          q: "الحمض الأميني الذي يحمل شحنة موجبة في الشروط الفيزيولوجية ($pH=7.4$) هو:",
-          options: ["الليزين (Lys)", "الفالين (Val)", "السيرين (Ser)", "الغلوتاميك (Glu)"],
-          correct: 0,
-          exp: "الليزين هو حمض أميني قاعدي يمتلك زمرة أمينية إضافية في سلسلته الجانبية تتشرد وتكسبه شحنة موجبة في درجة الحموضة الفيزيولوجية."
+          q: "حمض أميني يشتق نظرياً من الألانين باستبدال H بزمرة سلفهدريل (SH):",
+          options: ["السيرين", "السيستيئين", "التربتوفان", "الفينيل ألانين"],
+          correct: 1,
+          exp: "السيستئين هو ألانين متبادل بزمرة سلفهدريل (Sulfhydryl)."
         },
         {
           id: "q57",
-          q: "يشتق الناقل العصبي 'الأدرينالين' في الجسم بدءاً من الحمض الأميني:",
-          options: ["الفينيل ألانين (أو التيروزين)", "الغليسين", "التربتوفان", "الهيستيدين"],
+          q: "يمتص البروتين الأشعة فوق البنفسجية عند الطول الموجي 280nm:",
+          options: ["صح", "خطأ"],
           correct: 0,
-          exp: "الأدرينالين هو من الكاتيكولامينات التي تشتق حيوياً من الحمض الأميني التيروزين، والذي يُصطنع بدوره من الحمض الأميني الأساسي الفينيل ألانين."
+          exp: "عبارة صحيحة وهي معيار لقياس تركيز البروتينات في المختبر."
         },
         {
           id: "q58",
-          q: "الحمض الأميني الذي يحتوي على 'حلقة الإيميدازول' في سلسلتها الجانبية هو:",
-          options: ["الهيستيدين (His)", "البرولين (Pro)", "التيروزين (Tyr)", "التربتوفان (Trp)"],
-          correct: 0,
-          exp: "الهيستيدين حمض أميني قلوي يتميز باحتواء سلسلته الجانبية على حلقة الإيميدازول العطرية."
+          q: "عندما تكون الزمرة الهيدروكسيلية على يسار الحمض الأميني يكون من النوع L.",
+          options: ["صح", "خطأ"],
+          correct: 1,
+          exp: "خطأ، تحديد التناظر L أو D يعتمد على موقع المجموعة الأمينية NH2 وليس الهيدروكسيل."
         },
         {
           id: "q59",
-          q: "أي من الحموض الأمينية التالية يُصنف كحمض أميني 'غير تغذوي' (أي غير أساسي ويستطيع الجسم اصطناعه):",
-          options: ["التيروزين (Tyr)", "اللوسين (Leu)", "الفالين (Val)", "الميثيونين (Met)"],
+          q: "يتشابه الغليسين وثنائي هيدروكسي أسيتون بعدم قدرتهما على تشكيل متماكبات ضوئية.",
+          options: ["صح", "خطأ"],
           correct: 0,
-          exp: "التيروزين حمض أميني غير أساسي لأن الجسم يستطيع اصطناعه بهدركسلة الفينيل ألانين، بينما اللوسين والفالين والميثيونين هي حموض أساسية (تغذوية)."
+          exp: "صحيح، كلاهما يفتقد لذرة كربون غير متناظرة (كيرالية)."
         },
         {
           id: "q60",
-          q: "يتشكل الناقل العصبي المثبط (GABA) في الدماغ انطلاقاً من الحمض الأميني:",
-          options: ["الغلوتامات (Glu)", "الأسبارتات (Asp)", "الغليسين (Gly)", "السيرين (Ser)"],
-          correct: 0,
-          exp: "ينتج حمض غاما أمينو الزبدة (GABA) عن طريق تفاعل نزع الكربوكسيل للحمض الأميني الغلوتامات (Glu) في النسيج الدماغي."
+          q: "يحتاج إنزيم هيدروكسيلاز البرولين المسؤول عن نضج الكولاجين إلى فيتامين E كمرافق.",
+          options: ["صح", "خطأ"],
+          correct: 1,
+          exp: "خطأ، يتطلب تحول البرولين للهيدروكسي برولين وجود فيتامين C (حمض الأسكوربيك)."
         },
         {
           id: "q61",
-          q: "العبارة الخاطئة حول الحموض الأمينية التالية هي:",
-          options: [
-            "الحموض الأمينية المعيارية التي تدخل في تركيب البروتينات هي 20 حمضاً أمينياً.",
-            "جميع الحموض الأمينية تمتلك ذرة كربون ألفا غير متناظرة.",
-            "الحموض الأمينية المعيارية في الإنسان هي من الشكل الفراغي (L).",
-            "بعض الحموض الأمينية لها دور كنواقل عصبية."
-          ],
-          correct: 1,
-          exp: "العبارة الخاطئة هي B، لأن الحمض الأميني 'الغليسين' يمتلك ذرة هيدروجين كجذر جانبي، مما يجعل ذرة كربون ألفا فيه متناظرة (غير فعالة ضوئياً)."
+          q: "تكون الشحنة الكلية للحمض الأميني في الوسط القلوي سالبة.",
+          options: ["صح", "خطأ"],
+          correct: 0,
+          exp: "صحيح، لأن الوسط القلوي ينزع البروتونات من الحمض الأميني فتتغلب الشحنة السالبة لمجموعة الكربوكسيل."
         },
         {
           id: "q62",
-          q: "الحمض الأميني الذي يكون 'غير فعال ضوئياً' (الأقل قطبية كونه الأصغر) مما يلي:",
-          options: ["الفالين (Val)", "الغليسين (Gly)", "الألانين (Ala)", "السيرين (Ser)"],
-          correct: 1,
-          exp: "الغليسين هو الحمض الأميني الوحيد الذي لا يحتوي على ذرة كربون غير متناظرة، لذلك ليس له متماكبات فراغية وهو غير فعال ضوئياً."
+          q: "حمض أميني يمكن اعتباره متذبذب أو بين القطبية واللاقطبية لصغر حجم جذره:",
+          options: ["اسبارجين", "ميتيونين", "لوسين", "غليسين", "سيستئين"],
+          correct: 3,
+          exp: "الغليسين يحوي H فقط كجذر، مما يجعله في حد فاصل بالخواص القطبية."
         },
         {
           id: "q63",
-          q: "الحمض الأميني التالي تكون سلسلتها الجانبية غير قطبية وعطرية:",
-          options: ["التربتوفان (Trp)", "الفينيل ألانين (Phe)", "التيروزين (Tyr)", "الهيستيدين (His)"],
-          correct: 1,
-          exp: "الفينيل ألانين يمتلك حلقة بنزن عطرية في سلسلته الجانبية، وهو يصنف ضمن الحموض الأمينية اللاقطبية (الكارهة للماء)."
+          q: "كل الحموض الأمينية التالية حلقية ما عدا:",
+          options: ["تيروزين", "تربتوفان", "برولين", "إيزولوسين"],
+          correct: 3,
+          exp: "الإيزولوسين حمض أليفاتي مفتوح السلسلة ومتفرع ولا يحوي أي حلقة."
         },
         {
           id: "q64",
-          q: "حمض أميني يحتوي على ذرتي كربون غير متناظرتين (Chiral centers) في بنيته:",
-          options: ["الثريونين (Thr)", "الغليسين (Gly)", "الألانين (Ala)", "السيرين (Ser)"],
-          correct: 0,
-          exp: "الثريونين (بالإضافة إلى الإيزولوسين) يمتلك ذرة كربون ألفا غير متناظرة، وذرة كربون بيتا غير متناظرة أيضاً في سلسلته الجانبية."
+          q: "الحمض الأميني الذي يُصطنع منه الناقل العصبي الدوبامين مباشرة هو:",
+          options: ["ألانين", "تيروزين", "سيرين", "فالين", "تربتوفان"],
+          correct: 1,
+          exp: "يتشكل الدوبامين من التيروزين عبر مرحلة L-DOPA."
         },
         {
           id: "q65",
-          q: "مجموع الشحن الموجبة للحمض الأميني في الوسط المعتدل ($pH=7$) يتواجد على:",
-          options: ["الزمرة الأمينية", "الزمرة الكربوكسيلية", "زمرة الهيدروكسيل (OH)", "زمرة السلفهيدريل (SH)"],
+          q: "الحمض الأميني الذي يساهم محورية في حلقة البولة وتحويل النشادر السام ليوريا هو:",
+          options: ["الأرجنين", "اليزين", "هيستيدين", "تريونين"],
           correct: 0,
-          exp: "في الوسط المعتدل، تتشرد الزمرة الأمينية ($NH_2$) بكسب بروتون لتصبح ($NH_3^+$) وتحمل الشحنة الموجبة، بينما الزمرة الكربوكسيلية تحمل الشحنة السالبة."
+          exp: "الأرجنين يحلمه بواسطة إنزيم الأرجيناز ليعطي البولة (اليوريا) والأورنيثين."
         },
         {
           id: "q66",
-          q: "الشحنة الكلية لحمض الأسبارتيك (ASP) عند وضعِه في وسط شديد الحموضة ($pH=2$) هي:",
-          options: ["-1", "-2", "+1", "+2"],
-          correct: 2,
-          exp: "حمض الأسبارتيك يحوي زمرتي كربوكسيل وزمرة أمين. في الوسط شديد الحموضة ($pH=2$)، تكون زمرتا الكربوكسيل غير متشردتين (شحنة 0)، بينما تتشرد الزمرة الأمينية بكسب بروتون (شحنة +1)، فتكون المحصلة (+1)."
+          q: "الفعالية الضوئية لذرة كربون ألفا تنتج عن:",
+          options: ["التناظر الفراغي", "تدوير الضوء المستقطب", "عدم التناظر (ارتباطها بـ 4 متبادلات مختلفة)", "عدم التناظر وتدوير الضوء المستقطب معا"],
+          correct: 3,
+          exp: "عدم التناظر هو السبب البنيوي الذي يمنح الجزيء القدرة الفيزيائية على تدوير الضوء."
         },
         {
           id: "q67",
-          q: "الشحنة الكلية لحمض الأسبارتيك (ASP) عند وضعه في وسط شديد القلوية ($pH=12$) هي:",
-          options: ["-1", "-2", "+1", "+2"],
-          correct: 1,
-          exp: "في الوسط شديد القلوية ($pH=12$)، تفقد الزمرة الأمينية بروتونها وتصبح معتدلة (0)، بينما تتشرد زمرتا الكربوكسيل (الأصلية والجانبية) بفقدان بروتوناتهما لتعطي كل منهما شحنة سالبة، فتكون المحصلة (-2)."
-        },
-        {
-          id: "q68",
-          q: "الشحنة الكلية للحمض الأميني الليزين (LYS) عند وضعه في وسط شديد الحموضة ($pH=1$) هي:",
+          q: "الشحنة الكلية للحمض الأميني القلوي اللايسين (Lys) عند pH = 1 شديد الحموضة هي:",
           options: ["+1", "+2", "-1", "-2"],
           correct: 1,
-          exp: "الليزين حمض قلوي يحوي زمرتي أمين وزمرة كربوكسيل. في الوسط الشديد الحموضة ($pH=1$)، يكون الكربوكسيل معتدلاً (0)، بينما تتشرد زمرتا الأمين بكسب بروتونات، لتعطي كل منهما شحنة موجبة، فتكون المحصلة (+2)."
-        },
-        {
-          id: "q69",
-          q: "الحمض الأميني الهيستيدين (His) عند درجة حموضة ($pH=6$) يحمل:",
-          options: [
-            "شحنة سالبة فقط",
-            "شحنة موجبة فقط",
-            "شحنة سالبة وموجبة (معتدل تماماً)",
-            "شحنة سالبة وشحنتين موجبتين (جزئياً)"
-          ],
-          correct: 3,
-          exp: "عند ($pH=6$)، تكون زمرة الكربوكسيل متشردة (شحنة سالبة -1)، وزمرة الأمين ألفا متشردة (شحنة موجبة +1). ولأن حلقة الإيميدازول الجانبية للهيستيدين تمتلك $pKa$ يقارب 6.0، فإنها تكون نصف متشردة (تحمل شحنة موجبة +1 إضافية)، مما يجعله يحمل شحنة سالبة وشحنتين موجبتين."
+          exp: "عند pH=1 تتبرتن زمرة الكربوكسيل لتصبح معتدلة، وتتبرتن زمرتا الأمين (ألفا والجانبية) لتصيرا (+1) لكل منهما والمحصلة +2."
         }
       ]
     };
   </script>
 
-  <!-- ==================== المحرك البرمجي المطور ==================== -->
+  <!-- ==================== المحرك البرمجي ==================== -->
   <script>
-    /*************************************************************************
-     * 1. الصوت والتفاعل اللمسي (Audio & Haptics):
-     *************************************************************************/
     const AudioFX = {
       ctx: null,
       init() { if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)(); },
@@ -1026,19 +1002,15 @@
       triggerSelection() { if (tg?.HapticFeedback) try { tg.HapticFeedback.impactOccurred('light'); } catch(e){} }
     };
 
-    /*************************************************************************
-     * 2. متغيرات حالة الكويز والمؤقت الزمني:
-     *************************************************************************/
     let quizQueue = [];
     let originalQuizLength = 0;
     let streakCount = 0;
     let totalAttempts = 0;
     let correctAttempts = 0;
 
-    // حالة المؤقت
     let timerInterval = null;
-    let totalTimeAllocated = 0; // بالثواني
-    let timeRemaining = 0;     // بالثواني
+    let totalTimeAllocated = 0;
+    let timeRemaining = 0;
     let isTimerEnabled = false;
 
     document.addEventListener("DOMContentLoaded", () => {
@@ -1050,15 +1022,12 @@
           tg.setHeaderColor('#0b0b0f'); tg.setBackgroundColor('#0b0b0f');
           const user = tg.initDataUnsafe?.user;
           if (user) {
-            document.getElementById("user-welcome-msg").innerText = `مرحباً ${user.first_name || 'طالبنا العزيز'} • اختر الوقت وابدأ`;
+            document.getElementById("user-welcome-msg").innerText = `مرحباً ${user.first_name || 'طالبنا العزيز'} • اختر الوقت وابدأ المراجعة`;
           }
         } catch (e) {}
       }
     });
 
-    /*************************************************************************
-     * 3. إدارات فتح وإغلاق تبويب الملخص العلمى:
-     *************************************************************************/
     function toggleSummaryDrawer() {
       const drawer = document.getElementById("summary-drawer");
       const backdrop = document.getElementById("summary-backdrop");
@@ -1076,9 +1045,6 @@
       HapticFX.triggerSelection();
     }
 
-    /*************************************************************************
-     * 4. إدارات ضبط الوقت والمؤقت:
-     *************************************************************************/
     function adjustTimeInput(type, change) {
       const input = document.getElementById(type === 'minutes' ? 'input-minutes' : 'input-seconds');
       if (!input) return;
@@ -1104,11 +1070,9 @@
       timeRemaining = totalTimeAllocated;
       isTimerEnabled = totalTimeAllocated > 0;
 
-      // إخفاء كارت الإعداد وإظهار الكويز
       document.getElementById("timer-setup-card").classList.add("hidden");
       document.getElementById("quiz-quiz-container").classList.remove("hidden");
 
-      // إظهار أو إخفاء عداد الوقت في الهيدر
       const headerTimerBox = document.getElementById("header-timer-box");
       if (isTimerEnabled) {
         headerTimerBox.classList.remove("hidden");
@@ -1145,7 +1109,6 @@
       const formatted = `${m < 10 ? '0' + m : m}:${s < 10 ? '0' + s : s}`;
       display.innerText = formatted;
 
-      // تغيير لون العداد عند الاقتراب من الانتهاء (أقل من 30 ثانية)
       if (timeRemaining <= 30 && isTimerEnabled) {
         display.classList.add("text-rose-400", "animate-pulse");
         display.classList.remove("text-amber-300");
@@ -1171,9 +1134,6 @@
       document.getElementById("header-timer-box").classList.add("hidden");
     }
 
-    /*************************************************************************
-     * 5. محرك الكويز والتكرار:
-     *************************************************************************/
     function resetQuizSession() {
       quizQueue = JSON.parse(JSON.stringify(QUIZ_DATA.questions));
       originalQuizLength = quizQueue.length;
@@ -1192,10 +1152,17 @@
 
     function updateProgress() {
       const completed = originalQuizLength - quizQueue.length;
-      const percent = Math.max(0, Math.min(100, (completed / originalQuizLength) * 100));
+      const percent = originalQuizLength > 0 ? Math.min(100, Math.max(0, (completed / originalQuizLength) * 100)) : 0;
       
-      document.getElementById("quiz-progress-fill").style.width = `${percent}%`;
-      document.getElementById("quiz-queue-count").innerText = `${completed} / ${originalQuizLength}`;
+      const fillEl = document.getElementById("quiz-progress-fill");
+      if (fillEl) {
+        fillEl.style.width = `${percent}%`;
+      }
+      
+      const countEl = document.getElementById("quiz-queue-count");
+      if (countEl) {
+        countEl.innerText = `${completed} / ${originalQuizLength}`;
+      }
     }
 
     function renderCurrentQuestion() {
@@ -1208,7 +1175,6 @@
         const acc = totalAttempts > 0 ? Math.round((correctAttempts / totalAttempts) * 100) : 100;
         document.getElementById("stat-accuracy").innerText = `${acc}%`;
 
-        // حساب الوقت المستغرق
         const timeSpentSeconds = totalTimeAllocated - timeRemaining;
         const m = Math.floor(timeSpentSeconds / 60);
         const s = timeSpentSeconds % 60;
@@ -1304,13 +1270,15 @@
 
     function renderMath(element) {
       if (window.renderMathInElement && element) {
-        window.renderMathInElement(element, {
-          delimiters: [
-            {left: "$$", right: "$$", display: true},
-            {left: "$", right: "$", display: false}
-          ],
-          throwOnError: false
-        });
+        try {
+          window.renderMathInElement(element, {
+            delimiters: [
+              {left: "$$", right: "$$", display: true},
+              {left: "$", right: "$", display: false}
+            ],
+            throwOnError: false
+          });
+        } catch (e) {}
       }
     }
   </script>
